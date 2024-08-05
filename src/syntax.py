@@ -1,0 +1,48 @@
+import polars as pl
+
+from .surface import (
+    get_sequence_length,
+    get_num_sentences,
+    get_num_chars
+)
+
+UPOS_TAGS = [
+    'ADJ', 'ADP', 'ADV', 'AUX', 'CONJ', 'CCONJ', 'DET', 'INTJ', 'NOUN',
+    'NUM', 'PART', 'PRON', 'PROPN', 'PUNCT', 'SCONJ', 'SYM', 'VERB', 'X'
+]
+
+def get_num_per_pos(data: pl.DataFrame,
+                backbone: str = 'spacy',
+                pos_tags: list = UPOS_TAGS
+                ) -> pl.DataFrame:
+    if backbone == 'spacy':
+        for pos in pos_tags:
+            data = data.with_columns(
+                pl.col("nlp").map_elements(lambda x: len(
+                    [token for token in x if token.pos_ == pos]),
+                    return_dtype=pl.UInt16
+                    ).alias(f"n_{pos.lower()}"),
+            )
+    elif backbone == 'stanza':
+        raise NotImplementedError(
+            "Not implemented for Stanza backbone yet."
+        )
+    
+    return data
+
+def get_pos_ratio(data: pl.DataFrame,
+                           backbone: str = 'spacy',
+                           pos_tags: list = UPOS_TAGS
+                           ) -> pl.DataFrame:
+    if "n_tokens" not in data.columns:
+        data = get_sequence_length(data, backbone)
+
+    for pos in pos_tags:
+        if f"n_{pos.lower()}" not in data.columns:
+            data = get_num_per_pos(data, backbone, pos_tags)
+        data = data.with_columns(
+            pl.col(f"n_{pos.lower()}" / pl.col("n_tokens")
+            ).alias(f"{pos.lower()}_ratio")
+        )
+    
+    return data
