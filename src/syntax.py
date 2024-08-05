@@ -46,3 +46,25 @@ def get_pos_ratio(data: pl.DataFrame,
         )
     
     return data
+
+def get_pos_per_sent(data: pl.DataFrame,
+                     backbone: str = 'spacy',
+                     pos_tags: list = UPOS_TAGS
+                     ) -> pl.DataFrame:
+    if "n_sentences" not in data.columns:
+        data = get_num_sentences(data, backbone)
+    
+    if backbone == 'spacy':
+        for pos in pos_tags:
+            data = data.with_columns(
+                pl.col("nlp").map_elements(lambda x: len(
+                    [token for token in x if token.pos_ == pos]),
+                    return_dtype=pl.UInt16
+                    ).alias(f"n_{pos.lower()}_per_sent"),
+            )
+    elif backbone == 'stanza':
+        raise NotImplementedError(
+            "Not implemented for Stanza backbone yet."
+        )
+    
+    return data

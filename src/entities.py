@@ -111,7 +111,8 @@ def get_ent_type_per_sentence(data: pl.DataFrame,
                                 ent_types: list = ENT_TYPES
                                 ) -> pl.DataFrame:
         """
-        Calculates the average number of entities per entity type per sentence in the text data.
+        Calculates the average number of entities per entity type per sentence
+        in the text data.
         """
         if "n_sentences" not in data.columns:
             data = get_num_sentences(data, backbone)

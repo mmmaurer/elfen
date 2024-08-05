@@ -9,6 +9,9 @@ from .surface import (
 def get_num_syllables(data: pl.DataFrame,
                         backbone: str = 'spacy'
                         ) -> pl.DataFrame:
+        """
+        Calculates the number of syllables in a text.
+        """
         if backbone == 'spacy':
             data = data.with_columns(
                 pl.col("nlp").map_elements(lambda x: sum(
@@ -26,6 +29,10 @@ def get_num_syllables(data: pl.DataFrame,
 def get_num_polysyllables(data: pl.DataFrame,
                           backbone: str = 'spacy'
                           ) -> pl.DataFrame:
+    """
+    Calculates the number of polysyllables in a text.
+    Polysyllables are words with three or more syllables.
+    """
     if backbone == 'spacy':
         data = data.with_columns(
             pl.col("nlp").map_elements(lambda x: sum(
@@ -43,6 +50,9 @@ def get_num_polysyllables(data: pl.DataFrame,
 def get_flesch_reading_ease(data: pl.DataFrame,
                             backbone: str = 'spacy'
                             ) -> pl.DataFrame:
+    """
+    Calculates the Flesch Reading Ease score of a text.
+    """
     if 'n_tokens' not in data.columns:
         data = get_sequence_length(data, backbone=backbone)
     if 'n_sents' not in data.columns:
@@ -61,6 +71,9 @@ def get_flesch_reading_ease(data: pl.DataFrame,
 def get_flesch_kincaid_grade(data: pl.DataFrame,
                             backbone: str = 'spacy'
                             ) -> pl.DataFrame:
+    """
+    Calculates the Flesch-Kincaid Grade Level of a text.
+    """
     if 'n_tokens' not in data.columns:
         data = get_sequence_length(data, backbone=backbone)
     if 'n_sents' not in data.columns:
@@ -79,6 +92,9 @@ def get_flesch_kincaid_grade(data: pl.DataFrame,
 def get_ari(data: pl.DataFrame,
             backbone: str = 'spacy',
             ) -> pl.DataFrame:
+    """
+    Calculates the Automated Readability Index (ARI) of a text.
+    """
     if 'n_tokens' not in data.columns:
         data = get_sequence_length(data, backbone=backbone)
     if 'n_sents' not in data.columns:
@@ -97,6 +113,9 @@ def get_ari(data: pl.DataFrame,
 def get_smog(data: pl.DataFrame,
             backbone: str = 'spacy',
             ) -> pl.DataFrame:
+    """
+    Calculates the Simple Measure of Gobbledygook (SMOG) of a text.
+    """
     if 'n_sents' not in data.columns:
         data = get_num_sentences(data, backbone=backbone)
     if 'n_polysyllables' not in data.columns:
@@ -112,6 +131,9 @@ def get_smog(data: pl.DataFrame,
 def get_cli(data: pl.DataFrame,
             backbone: str = 'spacy',
             ) -> pl.DataFrame:
+    """
+    Calculates the Coleman-Liau Index (CLI) of a text.
+    """
     if 'n_sents' not in data.columns:
         data = get_num_sentences(data, backbone=backbone)
     if 'n_chars' not in data.columns:
@@ -130,6 +152,9 @@ def get_cli(data: pl.DataFrame,
 def get_gunning_fog(data: pl.DataFrame,
                     backbone: str = 'spacy',
                     ) -> pl.DataFrame:
+    """
+    Calculates the Gunning Fog Index of a text.
+    """
     if 'n_sents' not in data.columns:
         data = get_num_sentences(data, backbone=backbone)
     if 'n_polysyllables' not in data.columns:

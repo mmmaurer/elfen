@@ -8,6 +8,9 @@ from .surface import (
 def get_ttr(data: pl.DataFrame,
             backbone: str = 'spacy'
             ) -> pl.DataFrame:
+    """
+    Calculates the type-token ratio (TTR) of a text: N_types / N_tokens.
+    """
     if 'n_tokens' not in data.columns:
         data = get_sequence_length(data, backbone=backbone)
     if 'n_types' not in data.columns:
@@ -22,6 +25,9 @@ def get_ttr(data: pl.DataFrame,
 def get_rttr(data: pl.DataFrame,
                 backbone: str = 'spacy'
                 ) -> pl.DataFrame:
+        """
+        Calculates the root type-token ratio (RTTR) of a text: N_types / sqrt(N_tokens).
+        """
         if 'n_tokens' not in data.columns:
             data = get_sequence_length(data, backbone=backbone)
         if 'n_types' not in data.columns:
@@ -38,6 +44,9 @@ def get_rttr(data: pl.DataFrame,
 def get_cttr(data: pl.DataFrame,
                 backbone: str = 'spacy'
                 ) -> pl.DataFrame:
+        """
+        Calculates the corrected type-token ratio (CTTR) of a text: N_types / sqrt(2*N_tokens).
+        """
         if 'n_tokens' not in data.columns:
             data = get_sequence_length(data, backbone=backbone)
         if 'n_types' not in data.columns:
@@ -54,6 +63,9 @@ def get_cttr(data: pl.DataFrame,
 def get_herdan_c(data: pl.DataFrame,
                 backbone: str = 'spacy'
                 ) -> pl.DataFrame:
+        """
+        Calculates the Herdan's C of a text: log(N_types) / log(N_tokens).
+        """
         if 'n_tokens' not in data.columns:
             data = get_sequence_length(data, backbone=backbone)
         if 'n_types' not in data.columns:
@@ -69,6 +81,9 @@ def get_herdan_c(data: pl.DataFrame,
 def get_summer_ttr(data: pl.DataFrame,
                     backbone: str = 'spacy'
                     ) -> pl.DataFrame:
+    """
+    Calculates the Summer's TTR of a text: log(log(N_types)) / log(log(N_tokens)).
+    """
     if 'n_tokens' not in data.columns:
         data = get_sequence_length(data, backbone=backbone)
     if 'n_types' not in data.columns:
@@ -84,6 +99,9 @@ def get_summer_ttr(data: pl.DataFrame,
 def get_dougast_ttr(data: pl.DataFrame,
                     backbone: str = 'spacy'
                     ) -> pl.DataFrame:
+    """
+    Calculates the Dougast's TTR of a text: log(N_types)^2 / (N_tokens - N_types).
+    """
     if 'n_tokens' not in data.columns:
         data = get_sequence_length(data, backbone=backbone)
     if 'n_types' not in data.columns:
@@ -99,6 +117,9 @@ def get_dougast_ttr(data: pl.DataFrame,
 def get_maas_ttr(data: pl.DataFrame,
                     backbone: str = 'spacy'
                     ) -> pl.DataFrame:
+    """
+    Calculates the Maas' TTR of a text: (N_tokens - N_types) / log(N_types)^2.
+    """
     if 'n_tokens' not in data.columns:
         data = get_sequence_length(data, backbone=backbone)
     if 'n_types' not in data.columns:
