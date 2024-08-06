@@ -43,9 +43,10 @@ def get_entity_ratio(data: pl.DataFrame,
             data = get_num_entities(data, backbone)
         
         data = data.with_columns(
-            pl.col("n_entities") / pl.col("n_tokens")
+            (
+                 pl.col("n_entities") / pl.col("n_tokens")
             ).alias("entity_ratio")
-        
+        )
         return data
 
 def get_entities_per_sentence(data: pl.DataFrame,
@@ -60,12 +61,13 @@ def get_entities_per_sentence(data: pl.DataFrame,
         data = get_num_entities(data, backbone)
     
     data = data.with_columns(
-        pl.col("n_entities") / pl.col("n_sentences")
+        (
+             pl.col("n_entities") / pl.col("n_sentences")
         ).alias("entities_per_sentence")
-    
+    )
     return data
 
-def get_num_per_ent_type(data: pl.DataFrame,
+def get_num_per_entity_type(data: pl.DataFrame,
                          backbone: str = 'spacy',
                          ent_types: list = ENT_TYPES
                          ) -> pl.DataFrame:
@@ -87,7 +89,7 @@ def get_num_per_ent_type(data: pl.DataFrame,
     
     return data
 
-def get_ent_type_ratio(data: pl.DataFrame,
+def get_entity_type_ratio(data: pl.DataFrame,
                           backbone: str = 'spacy',
                           ent_types: list = ENT_TYPES
                           ) -> pl.DataFrame:
@@ -99,14 +101,15 @@ def get_ent_type_ratio(data: pl.DataFrame,
      
      for ent_type in ent_types:
           if f"n_{ent_type.lower()}" not in data.columns:
-                data = get_num_per_ent_type(data, backbone, ent_types)
+                data = get_num_per_entity_type(data, backbone, ent_types)
           data = data.with_columns(
-                pl.col(f"n_{ent_type.lower()}") / pl.col("n_tokens")
+                (
+                     pl.col(f"n_{ent_type.lower()}") / pl.col("n_tokens")
                 ).alias(f"{ent_type.lower()}_ratio")
-     
+          )
      return data
 
-def get_ent_type_per_sentence(data: pl.DataFrame,
+def get_entity_type_per_sentence(data: pl.DataFrame,
                                 backbone: str = 'spacy',
                                 ent_types: list = ENT_TYPES
                                 ) -> pl.DataFrame:
@@ -118,15 +121,14 @@ def get_ent_type_per_sentence(data: pl.DataFrame,
             data = get_num_sentences(data, backbone)
         if "n_entities" not in data.columns:
             data = get_num_entities(data, backbone)
-        if "n_tokens" not in data.columns:
-            data = get_sequence_length(data, backbone)
         
         for ent_type in ent_types:
             if f"n_{ent_type.lower()}" not in data.columns:
-                data = get_num_per_ent_type(data, backbone, ent_types)
+                data = get_num_per_entity_type(data, backbone, ent_types)
             data = data.with_columns(
-                pl.col(f"n_{ent_type.lower()}") / pl.col("n_sentences")
+                (
+                     pl.col(f"n_{ent_type.lower()}") / pl.col("n_sentences")
                 ).alias(f"{ent_type.lower()}_per_sentence")
-        
+            )
         return data
 

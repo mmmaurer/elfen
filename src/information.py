@@ -12,7 +12,7 @@ def get_compressibility(data: pl.DataFrame,
     data = data.with_columns(
         pl.col(text_column).map_elements(
             lambda x: len(bz2.compress(x.encode('utf-8'))) / len(x),
-            return_dtype=pl.UInt16
+            return_dtype=pl.Float64
             ).alias("compressibility"),
     )
     

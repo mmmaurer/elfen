@@ -38,8 +38,8 @@ def get_rttr(data: pl.DataFrame,
             data = get_num_types(data, backbone=backbone)
         
         data = data.with_columns(
-            (pl.col("n_types") / pl.col("n_tokens"). \
-             map_elements(lambda x: x**0.5)
+            (
+                pl.col("n_types") / pl.col("n_tokens") **0.5
              ).alias("rttr"),
         )
     
@@ -58,9 +58,9 @@ def get_cttr(data: pl.DataFrame,
             data = get_num_types(data, backbone=backbone)
         
         data = data.with_columns(
-            (pl.col("n_types") / pl.col("n_tokens"). \
-             map_elements(lambda x: (2*x)**0.5, return_dtype=pl.Float64)
-             ).alias("cttr"),
+            (
+                pl.col("n_types") / ((2 * pl.col("n_tokens")) ** 0.5)
+            ).alias("cttr"),
         )
     
         return data
@@ -78,13 +78,14 @@ def get_herdan_c(data: pl.DataFrame,
             data = get_num_types(data, backbone=backbone)
         
         data = data.with_columns(
-            (pl.col("n_types").log() / pl.col("n_tokens").log()
-             ).alias("herdan_c"),
+            (
+                pl.col("n_types").log() / pl.col("n_tokens").log()
+             ).fill_nan(1).alias("herdan_c"), # convention to fill NaNs with 1
         )
     
         return data
 
-def get_summer_ttr(data: pl.DataFrame,
+def get_summer_index(data: pl.DataFrame,
                     backbone: str = 'spacy'
                     ) -> pl.DataFrame:
     """
@@ -98,16 +99,16 @@ def get_summer_ttr(data: pl.DataFrame,
     
     data = data.with_columns(
         (pl.col("n_types").log().log() / pl.col("n_tokens").log().log()
-         ).alias("summer_ttr"),
+         ).fill_nan(1).alias("summer_index"), # convention to fill NaNs with 1
     )
 
     return data
 
-def get_dougast_ttr(data: pl.DataFrame,
+def get_dougast_u(data: pl.DataFrame,
                     backbone: str = 'spacy'
                     ) -> pl.DataFrame:
     """
-    Calculates the Dougast's TTR of a text:
+    Calculates the Dougast's Uber index of a text:
     log(N_types)^2 / (N_tokens - N_types).
     """
     if 'n_tokens' not in data.columns:
@@ -117,12 +118,12 @@ def get_dougast_ttr(data: pl.DataFrame,
     
     data = data.with_columns(
         (pl.col("n_types").log()**2 / (pl.col("n_tokens") - pl.col("n_types"))
-         ).alias("dougast_ttr"),
+         ).fill_nan(1).alias("dougast_u"), # convention to fill NaNs with 1
     )
 
     return data
 
-def get_maas_ttr(data: pl.DataFrame,
+def get_maas_index(data: pl.DataFrame,
                     backbone: str = 'spacy'
                     ) -> pl.DataFrame:
     """
@@ -136,7 +137,7 @@ def get_maas_ttr(data: pl.DataFrame,
     
     data = data.with_columns(
         ((pl.col("n_tokens") - pl.col("n_types")) / pl.col("n_types").log()**2 
-         ).alias("dougast_ttr"),
+         ).fill_nan(1).alias("maas_index"), # convention to fill NaNs with 1
     )
 
     return data
@@ -175,12 +176,12 @@ def get_hapax_legomena_ratio(data: pl.DataFrame,
     
     data = data.with_columns(
         (pl.col("n_hapax_legomena") / pl.col("n_tokens")
-         ).alias("hapax_legomena_token_ratio"),
+         ).alias("hapax_legomena_ratio"),
     )
 
     return data
 
-def get_htr(data: pl.DataFrame,
+def get_hapax_legomenat_type_ratio(data: pl.DataFrame,
             backbone: str = 'spacy'
             ) -> pl.DataFrame:
     """

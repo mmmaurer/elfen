@@ -19,7 +19,7 @@ def get_num_lexical_tokens(data: pl.DataFrame,
             pl.col("nlp").map_elements(lambda x: len(
                 [token for token in x if token.pos_ in lex]),
                 return_dtype=pl.UInt16
-                ).alias("n_lex_tokens"),
+                ).alias("n_lexical_tokens"),
         )
     elif backbone == 'stanza':
         raise NotImplementedError(
@@ -58,7 +58,8 @@ def get_pos_ratio(data: pl.DataFrame,
         if f"n_{pos.lower()}" not in data.columns:
             data = get_num_per_pos(data, backbone, pos_tags)
         data = data.with_columns(
-            pl.col(f"n_{pos.lower()}" / pl.col("n_tokens")
+            (
+                pl.col(f"n_{pos.lower()}") / pl.col("n_tokens")
             ).alias(f"{pos.lower()}_ratio")
         )
     
