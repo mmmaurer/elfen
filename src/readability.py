@@ -1,7 +1,7 @@
 import polars as pl
 
 from .surface import (
-    get_sequence_length,
+    get_num_tokens,
     get_num_sentences,
     get_num_characters
 )
@@ -60,7 +60,7 @@ def get_flesch_reading_ease(data: pl.DataFrame,
     Calculates the Flesch Reading Ease score of a text.
     """
     if 'n_tokens' not in data.columns:
-        data = get_sequence_length(data, backbone=backbone)
+        data = get_num_tokens(data, backbone=backbone)
     if 'n_sentences' not in data.columns:
         data = get_num_sentences(data, backbone=backbone)
     if 'n_syllables' not in data.columns:
@@ -81,7 +81,7 @@ def get_flesch_kincaid_grade(data: pl.DataFrame,
     Calculates the Flesch-Kincaid Grade Level of a text.
     """
     if 'n_tokens' not in data.columns:
-        data = get_sequence_length(data, backbone=backbone)
+        data = get_num_tokens(data, backbone=backbone)
     if 'n_sentences' not in data.columns:
         data = get_num_sentences(data, backbone=backbone)
     if 'n_syllables' not in data.columns:
@@ -102,7 +102,7 @@ def get_ari(data: pl.DataFrame,
     Calculates the Automated Readability Index (ARI) of a text.
     """
     if 'n_tokens' not in data.columns:
-        data = get_sequence_length(data, backbone=backbone)
+        data = get_num_tokens(data, backbone=backbone)
     if 'n_sentences' not in data.columns:
         data = get_num_sentences(data, backbone=backbone)
     if 'n_characters' not in data.columns:
@@ -145,7 +145,7 @@ def get_cli(data: pl.DataFrame,
     if 'n_characters' not in data.columns:
         data = get_num_characters(data, backbone=backbone)
     if 'n_tokens' not in data.columns:
-        data = get_sequence_length(data, backbone=backbone)
+        data = get_num_tokens(data, backbone=backbone)
 
     data = data.with_columns(
         (0.0588 * (pl.col("n_characters") / pl.col("n_tokens") * 100) - \
@@ -166,7 +166,7 @@ def get_gunning_fog(data: pl.DataFrame,
     if 'n_polysyllables' not in data.columns:
         data = get_num_polysyllables(data, backbone=backbone)
     if 'n_tokens' not in data.columns:
-        data = get_sequence_length(data, backbone=backbone)
+        data = get_num_tokens(data, backbone=backbone)
 
     data = data.with_columns(
         (0.4 * ((pl.col("n_tokens") / pl.col("n_sentences")) + \

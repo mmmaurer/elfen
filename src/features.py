@@ -1,5 +1,3 @@
-from collections import Counter
-
 import polars as pl
 import spacy
 from spacy_syllables import SpacySyllables

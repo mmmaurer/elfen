@@ -1,7 +1,7 @@
 import polars as pl
 
 from .surface import (
-    get_sequence_length,
+    get_num_tokens,
     get_num_sentences
 )
 
@@ -31,13 +31,13 @@ def get_num_entities(data: pl.DataFrame,
     return data
 
 def get_entity_ratio(data: pl.DataFrame,
-                        backbone: str = 'spacy'
-                        ) -> pl.DataFrame:
+                     backbone: str = 'spacy'
+                     ) -> pl.DataFrame:
         """
         Calculates the ratio of entities to tokens in the text data.
         """
         if "n_tokens" not in data.columns:
-            data = get_sequence_length(data, backbone)
+            data = get_num_tokens(data, backbone)
         
         if "n_entities" not in data.columns:
             data = get_num_entities(data, backbone)
@@ -68,9 +68,9 @@ def get_entities_per_sentence(data: pl.DataFrame,
     return data
 
 def get_num_per_entity_type(data: pl.DataFrame,
-                         backbone: str = 'spacy',
-                         ent_types: list = ENT_TYPES
-                         ) -> pl.DataFrame:
+                            backbone: str = 'spacy',
+                            ent_types: list = ENT_TYPES
+                            ) -> pl.DataFrame:
     """
     Calculates the number of entities per entity type in the text data.
     """
@@ -97,7 +97,7 @@ def get_entity_type_ratio(data: pl.DataFrame,
      Calculates the ratio of entities per entity type to tokens in the text data.
      """
      if "n_tokens" not in data.columns:
-          data = get_sequence_length(data, backbone)
+          data = get_num_tokens(data, backbone)
      
      for ent_type in ent_types:
           if f"n_{ent_type.lower()}" not in data.columns:
@@ -110,9 +110,9 @@ def get_entity_type_ratio(data: pl.DataFrame,
      return data
 
 def get_entity_type_per_sentence(data: pl.DataFrame,
-                                backbone: str = 'spacy',
-                                ent_types: list = ENT_TYPES
-                                ) -> pl.DataFrame:
+                                 backbone: str = 'spacy',
+                                 ent_types: list = ENT_TYPES
+                                 ) -> pl.DataFrame:
         """
         Calculates the average number of entities per entity type per sentence
         in the text data.

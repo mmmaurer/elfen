@@ -1,7 +1,7 @@
 import polars as pl
 
 from .surface import (
-    get_sequence_length,
+    get_num_tokens,
     get_num_sentences,
 )
 
@@ -52,7 +52,7 @@ def get_pos_ratio(data: pl.DataFrame,
                            pos_tags: list = UPOS_TAGS
                            ) -> pl.DataFrame:
     if "n_tokens" not in data.columns:
-        data = get_sequence_length(data, backbone)
+        data = get_num_tokens(data, backbone)
 
     for pos in pos_tags:
         if f"n_{pos.lower()}" not in data.columns:
@@ -86,3 +86,24 @@ def get_pos_per_sent(data: pl.DataFrame,
         )
     
     return data
+
+def get_num_lemmas(data: pl.DataFrame,
+                          backbone: str = 'spacy'
+                          ) -> pl.DataFrame:
+    """
+    Returns the number of unique lemmas in the text.
+    """
+    if backbone == 'spacy':
+        data = data.with_columns(
+            pl.col("nlp").map_elements(lambda x: len(set(
+                [token.lemma_ for token in x])),
+                return_dtype=pl.UInt16
+                ).alias("n_lemmas"),
+        )
+    elif backbone == 'stanza':
+        raise NotImplementedError(
+            "Not implemented for Stanza backbone yet."
+        )
+    
+    return data
+

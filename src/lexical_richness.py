@@ -2,10 +2,32 @@ import numpy as np
 import polars as pl
 
 from .surface import (
-    get_sequence_length,
+    get_num_tokens,
     get_num_types
 )
-from .syntax import get_num_lexical_tokens
+from .syntax import (
+    get_num_lexical_tokens,
+    get_num_lemmas
+)
+
+def get_lemma_token_ratio(data: pl.DataFrame,
+                            backbone: str = 'spacy'
+                            ) -> pl.DataFrame:
+    """
+    Calculates the lemma/token ratio of a text:
+    N_lemmas / N_tokens.
+    """
+    if 'n_tokens' not in data.columns:
+        data = get_num_tokens(data, backbone=backbone)
+    if 'n_lex_tokens' not in data.columns:
+        data = get_num_lexical_tokens(data, backbone=backbone)
+    
+    data = data.with_columns(
+        (pl.col("n_lex_tokens") / pl.col("n_tokens")
+         ).alias("lemma_token_ratio"),
+    )
+
+    return data
 
 def get_ttr(data: pl.DataFrame,
             backbone: str = 'spacy'
@@ -15,7 +37,7 @@ def get_ttr(data: pl.DataFrame,
     N_types / N_tokens.
     """
     if 'n_tokens' not in data.columns:
-        data = get_sequence_length(data, backbone=backbone)
+        data = get_num_tokens(data, backbone=backbone)
     if 'n_types' not in data.columns:
         data = get_num_types(data)
     
@@ -33,7 +55,7 @@ def get_rttr(data: pl.DataFrame,
         N_types / sqrt(N_tokens).
         """
         if 'n_tokens' not in data.columns:
-            data = get_sequence_length(data, backbone=backbone)
+            data = get_num_tokens(data, backbone=backbone)
         if 'n_types' not in data.columns:
             data = get_num_types(data, backbone=backbone)
         
@@ -53,7 +75,7 @@ def get_cttr(data: pl.DataFrame,
         N_types / sqrt(2*N_tokens).
         """
         if 'n_tokens' not in data.columns:
-            data = get_sequence_length(data, backbone=backbone)
+            data = get_num_tokens(data, backbone=backbone)
         if 'n_types' not in data.columns:
             data = get_num_types(data, backbone=backbone)
         
@@ -73,7 +95,7 @@ def get_herdan_c(data: pl.DataFrame,
         log(N_types) / log(N_tokens).
         """
         if 'n_tokens' not in data.columns:
-            data = get_sequence_length(data, backbone=backbone)
+            data = get_num_tokens(data, backbone=backbone)
         if 'n_types' not in data.columns:
             data = get_num_types(data, backbone=backbone)
         
@@ -93,7 +115,7 @@ def get_summer_index(data: pl.DataFrame,
     log(log(N_types)) / log(log(N_tokens)).
     """
     if 'n_tokens' not in data.columns:
-        data = get_sequence_length(data, backbone=backbone)
+        data = get_num_tokens(data, backbone=backbone)
     if 'n_types' not in data.columns:
         data = get_num_types(data, backbone=backbone)
     
@@ -112,7 +134,7 @@ def get_dougast_u(data: pl.DataFrame,
     log(N_types)^2 / (N_tokens - N_types).
     """
     if 'n_tokens' not in data.columns:
-        data = get_sequence_length(data, backbone=backbone)
+        data = get_num_tokens(data, backbone=backbone)
     if 'n_types' not in data.columns:
         data = get_num_types(data, backbone=backbone)
     
@@ -131,7 +153,7 @@ def get_maas_index(data: pl.DataFrame,
     (N_tokens - N_types) / log(N_types)^2.
     """
     if 'n_tokens' not in data.columns:
-        data = get_sequence_length(data, backbone=backbone)
+        data = get_num_tokens(data, backbone=backbone)
     if 'n_types' not in data.columns:
         data = get_num_types(data, backbone=backbone)
     
@@ -157,8 +179,8 @@ def get_n_hapax_legomena(data: pl.DataFrame,
         )
 
     elif backbone == 'stanza':
-         raise NotImplementedError("Hapax legomena calculation is not "
-                                   "implemented for Stanza.")
+        raise NotImplementedError("Hapax legomena calculation is not "
+                                  "implemented for Stanza.")
     
     return data
 
@@ -170,7 +192,7 @@ def get_hapax_legomena_ratio(data: pl.DataFrame,
     N_hapax_legomena / N_tokens.
     """
     if 'n_tokens' not in data.columns:
-        data = get_sequence_length(data, backbone=backbone)
+        data = get_num_tokens(data, backbone=backbone)
     if 'n_hapax_legomena' not in data.columns:
         data = get_n_hapax_legomena(data, backbone=backbone)
     
@@ -208,7 +230,7 @@ def get_lexical_density(data: pl.DataFrame,
     N_lex / N_tokens.
     """
     if 'n_tokens' not in data.columns:
-        data = get_sequence_length(data, backbone=backbone)
+        data = get_num_tokens(data, backbone=backbone)
     if 'n_lex_tokens' not in data.columns:
         data = get_num_lexical_tokens(data, backbone=backbone)
     

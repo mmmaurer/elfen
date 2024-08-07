@@ -14,7 +14,7 @@ def get_raw_sequence_length(data: pl.DataFrame,
     
     return data
 
-def get_sequence_length(data: pl.DataFrame,
+def get_num_tokens(data: pl.DataFrame,
                         backbone: str = 'spacy'
                        ) -> pl.DataFrame:
     """
@@ -63,7 +63,7 @@ def get_tokens_per_sentence(data: pl.DataFrame,
     Calculates the average number of tokens per sentence in a text.
     """
     if 'n_tokens' not in data.columns:
-        data = get_sequence_length(data, backbone=backbone)
+        data = get_num_tokens(data, backbone=backbone)
     if 'n_sentences' not in data.columns:
         data = get_num_sentences(data, backbone=backbone)
 
@@ -141,7 +141,7 @@ def get_avg_word_length(data: pl.DataFrame,
     Calculates the average word length in a text.
     """
     if 'n_tokens' not in data.columns:
-        data = get_sequence_length(data, backbone=backbone)
+        data = get_num_tokens(data, backbone=backbone)
     if 'raw_sequence_length' not in data.columns:
         data = get_raw_sequence_length(data, text_column=text_column)
 
