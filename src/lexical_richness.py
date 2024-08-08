@@ -102,7 +102,9 @@ def get_herdan_c(data: pl.DataFrame,
         data = data.with_columns(
             (
                 pl.col("n_types").log() / pl.col("n_tokens").log()
-             ).fill_nan(1).alias("herdan_c"), # convention to fill NaNs with 1
+             ).fill_nan(1).alias("herdan_c")
+             # convention to fill NaNs with 1 as log(1) = 0 and 
+             # division by 0 is not defined.
         )
     
         return data
@@ -121,7 +123,9 @@ def get_summer_index(data: pl.DataFrame,
     
     data = data.with_columns(
         (pl.col("n_types").log().log() / pl.col("n_tokens").log().log()
-         ).fill_nan(1).alias("summer_index"), # convention to fill NaNs with 1
+         ).fill_nan(1).alias("summer_index")
+         # convention to fill NaNs with 1 as log(1) = 0 and
+         # division by 0 is not defined.
     )
 
     return data
@@ -140,7 +144,9 @@ def get_dougast_u(data: pl.DataFrame,
     
     data = data.with_columns(
         (pl.col("n_types").log()**2 / (pl.col("n_tokens") - pl.col("n_types"))
-         ).fill_nan(1).alias("dougast_u"), # convention to fill NaNs with 1
+         ).fill_nan(1).alias("dougast_u")
+         # convention to fill NaNs with 1 as log(1) = 0 and
+         # division by 0 is not defined.
     )
 
     return data
@@ -159,7 +165,9 @@ def get_maas_index(data: pl.DataFrame,
     
     data = data.with_columns(
         ((pl.col("n_tokens") - pl.col("n_types")) / pl.col("n_types").log()**2 
-         ).fill_nan(1).alias("maas_index"), # convention to fill NaNs with 1
+         ).fill_nan(1).alias("maas_index")
+         # convention to fill NaNs with 1 as log(1) = 0 and
+         # division by 0 is not defined.
     )
 
     return data

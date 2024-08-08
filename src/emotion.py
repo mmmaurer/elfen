@@ -1,6 +1,10 @@
 import numpy as np
 import polars as pl
 
+from .features import (
+    get_lemmas,
+    get_tokens
+)
 from .surface import (
     get_num_tokens,
 )
@@ -46,35 +50,40 @@ def load_vad_lexicon(path: str = VAD_PATH,
     """
     Returns the VAD lexicon as a polars DataFrame.
     """
-    vad_lexicon = pl.read_csv(path = path,
+    vad_lexicon = pl.read_csv(path,
                               has_header=has_header,
                               schema=schema,
                               separator=separator)
     return vad_lexicon
 
+def filter_vad_lexicon(vad_lexicon: pl.DataFrame,
+                       words: list
+                       ) -> pl.DataFrame:
+    """
+    Filters the VAD lexicon for the given words.
+    """
+    filtered_vad_lexicon = vad_lexicon.filter(pl.col("word").is_in(words))
+    return filtered_vad_lexicon
+
 def get_avg_valence(data: pl.DataFrame,
-                vad_lexicon: pl.DataFrame,
-                backbone: str = "spacy",
-                ) -> pl.DataFrame:
+                    vad_lexicon: pl.DataFrame,
+                    backbone: str = "spacy",
+                    nan_value: float = 0.0
+                    ) -> pl.DataFrame:
     """
     Returns the valence of the text.
     """
+    if "lemmas" not in data.columns:
+        data = get_lemmas(data, backbone=backbone)
     if backbone == "spacy":
         data = data.with_columns(
-             pl.col("nlp").map_elements(
-                  lambda x: np.mean(
-                       [vad_lexicon.filter(pl.col("word") == lemma). \
-                        select("valence").item()
-                        for lemma 
-                        in [
-                             token.lemma_ 
-                             for token
-                             in x
-                        ]
-                        if vad_lexicon.filter(pl.col("word") == lemma). \
-                            shape[0]==1]
-                 )
-             ).alias("avg_valence")
+             pl.col("lemmas").map_elements(
+                  lambda x: filter_vad_lexicon(vad_lexicon,x). \
+                    select("valence").mean().item(),
+                    return_dtype=pl.Float64
+             ).fill_nan(nan_value).alias("avg_valence")
+             # convention to fill NaNs with 0 as valence is in [0,1]
+             # and 0 is the neutral value for the NRC-VAD lexicon
         )
     elif backbone == "stanza":
         raise NotImplementedError("VAD calculation is not "
@@ -85,26 +94,22 @@ def get_avg_valence(data: pl.DataFrame,
 def get_avg_arousal(data: pl.DataFrame,
                     vad_lexicon: pl.DataFrame,
                     backbone: str = "spacy",
+                    nan_value: float = 0.0
                     ) -> pl.DataFrame:
     """
     Returns the arousal of the text.
     """
+    if "lemmas" not in data.columns:
+        data = get_lemmas(data, backbone=backbone)
     if backbone == "spacy":
         data = data.with_columns(
-             pl.col("nlp").map_elements(
-                  lambda x: np.mean(
-                       [vad_lexicon.filter(pl.col("word") == lemma). \
-                        select("arousal").item()
-                        for lemma 
-                        in [
-                             token.lemma_ 
-                             for token
-                             in x
-                        ]
-                        if vad_lexicon.filter(pl.col("word") == lemma). \
-                            shape[0]==1]
-                 )
-             ).alias("avg_arousal")
+             pl.col("lemmas").map_elements(
+                  lambda x: filter_vad_lexicon(vad_lexicon,x). \
+                    select("arousal").mean().item(),
+                    return_dtype=pl.Float64
+             ).fill_nan(nan_value).alias("avg_arousal")
+             # convention to fill NaNs with 0 as arousal is in [0,1]
+             # and 0 is the neutral value for the NRC-VAD lexicon
         )
     elif backbone == "stanza":
         raise NotImplementedError("VAD calculation is not "
@@ -115,26 +120,22 @@ def get_avg_arousal(data: pl.DataFrame,
 def get_avg_dominance(data: pl.DataFrame,
                       vad_lexicon: pl.DataFrame,
                       backbone: str = "spacy",
+                      nan_value: float = 0.0
                       ) -> pl.DataFrame:
         """
         Returns the dominance of the text.
         """
+        if "lemmas" not in data.columns:
+            data = get_lemmas(data, backbone=backbone)
         if backbone == "spacy":
             data = data.with_columns(
-                 pl.col("nlp").map_elements(
-                    lambda x: np.mean(
-                         [vad_lexicon.filter(pl.col("word") == lemma). \
-                            select("dominance").item()
-                            for lemma 
-                            in [
-                                 token.lemma_ 
-                                 for token
-                                 in x
-                            ]
-                            if vad_lexicon.filter(pl.col("word") == lemma). \
-                                shape[0]==1]
-                     )
-                 ).alias("avg_dominance")
+                 pl.col("lemmas").map_elements(
+                    lambda x: filter_vad_lexicon(vad_lexicon,x). \
+                        select("dominance").mean().item(),
+                        return_dtype=pl.Float64
+                 ).fill_nan(nan_value).alias("avg_dominance")
+                 # convention to fill NaNs with 0 as dominance is in [0,1]
+                 # and 0 is the neutral value for the NRC-VAD lexicon
             )
         elif backbone == "stanza":
             raise NotImplementedError("VAD calculation is not "
@@ -150,21 +151,15 @@ def get_n_low_valence(data: pl.DataFrame,
     """
     Returns the number of words with valence lower than the threshold.
     """
+    if "lemmas" not in data.columns:
+        data = get_lemmas(data, backbone=backbone)
     if backbone == "spacy":
         data = data.with_columns(
-             pl.col("nlp").map_elements(
-                  lambda x: np.sum(
-                       [vad_lexicon.filter(pl.col("word") == lemma). \
-                        select("valence").item() < threshold
-                        for lemma 
-                        in [
-                             token.lemma_ 
-                             for token
-                             in x
-                        ]
-                        if vad_lexicon.filter(pl.col("word") == lemma). \
-                            shape[0]==1]
-                 )
+             pl.col("lemmas").map_elements(
+                  lambda x: filter_vad_lexicon(vad_lexicon,x). \
+                    select("valence").filter(
+                        pl.col("valence") < threshold).shape[0],
+                    return_dtype=pl.UInt32
              ).alias("n_low_valence")
         )
     elif backbone == "stanza":
@@ -176,26 +171,20 @@ def get_n_low_valence(data: pl.DataFrame,
 def get_n_high_valence(data: pl.DataFrame,
                        vad_lexicon: pl.DataFrame,
                        backbone: str = "spacy",
-                       threshold: float = 3.33
+                       threshold: float = 0.66
                        ) -> pl.DataFrame:
     """
     Returns the number of words with valence higher than the threshold.
     """
+    if "lemmas" not in data.columns:
+        data = get_lemmas(data, backbone=backbone)
     if backbone == "spacy":
         data = data.with_columns(
-             pl.col("nlp").map_elements(
-                  lambda x: np.sum(
-                       [vad_lexicon.filter(pl.col("word") == lemma). \
-                        select("valence").item() > threshold
-                        for lemma 
-                        in [
-                             token.lemma_ 
-                             for token
-                             in x
-                        ]
-                        if vad_lexicon.filter(pl.col("word") == lemma). \
-                            shape[0]==1]
-                 )
+             pl.col("lemmas").map_elements(
+                  lambda x: filter_vad_lexicon(vad_lexicon,x). \
+                    select("valence").filter(
+                        pl.col("valence") > threshold).shape[0],
+                    return_dtype=pl.UInt32
              ).alias("n_high_valence")
         )
     elif backbone == "stanza":
@@ -207,26 +196,20 @@ def get_n_high_valence(data: pl.DataFrame,
 def get_n_low_arousal(data: pl.DataFrame,
                       vad_lexicon: pl.DataFrame,
                       backbone: str = "spacy",
-                      threshold: float = 1.66
+                      threshold: float = 0.33
                       ) -> pl.DataFrame:
     """
     Returns the number of words with arousal lower than the threshold.
     """
+    if "lemmas" not in data.columns:
+        data = get_lemmas(data, backbone=backbone)
     if backbone == "spacy":
         data = data.with_columns(
-             pl.col("nlp").map_elements(
-                  lambda x: np.sum(
-                       [vad_lexicon.filter(pl.col("word") == lemma). \
-                        select("arousal").item() < threshold
-                        for lemma 
-                        in [
-                             token.lemma_ 
-                             for token
-                             in x
-                        ]
-                        if vad_lexicon.filter(pl.col("word") == lemma). \
-                            shape[0]==1]
-                 )
+             pl.col("lemmas").map_elements(
+                  lambda x: filter_vad_lexicon(vad_lexicon,x). \
+                    select("arousal").filter(
+                        pl.col("arousal") < threshold).shape[0],
+                    return_dtype=pl.UInt32
              ).alias("n_low_arousal")
         )
     elif backbone == "stanza":
@@ -238,26 +221,20 @@ def get_n_low_arousal(data: pl.DataFrame,
 def get_n_high_arousal(data: pl.DataFrame,
                        vad_lexicon: pl.DataFrame,
                        backbone: str = "spacy",
-                       threshold: float = 3.33
+                       threshold: float = 0.66
                        ) -> pl.DataFrame:
     """
     Returns the number of words with arousal higher than the threshold.
     """
+    if "lemmas" not in data.columns:
+        data = get_lemmas(data, backbone=backbone)
     if backbone == "spacy":
         data = data.with_columns(
-             pl.col("nlp").map_elements(
-                  lambda x: np.sum(
-                       [vad_lexicon.filter(pl.col("word") == lemma). \
-                        select("arousal").item() > threshold
-                        for lemma 
-                        in [
-                             token.lemma_ 
-                             for token
-                             in x
-                        ]
-                        if vad_lexicon.filter(pl.col("word") == lemma). \
-                            shape[0]==1]
-                 )
+             pl.col("lemmas").map_elements(
+                  lambda x: filter_vad_lexicon(vad_lexicon,x). \
+                    select("arousal").filter(
+                        pl.col("arousal") > threshold).shape[0],
+                    return_dtype=pl.UInt32
              ).alias("n_high_arousal")
         )
     elif backbone == "stanza":
@@ -269,7 +246,7 @@ def get_n_high_arousal(data: pl.DataFrame,
 def get_n_low_dominance(data: pl.DataFrame,
                         vad_lexicon: pl.DataFrame,
                         backbone: str = "spacy",
-                        threshold: float = 1.66
+                        threshold: float = 0.33
                         ) -> pl.DataFrame:
     """
     Returns the number of words with dominance lower than the threshold.
@@ -277,18 +254,10 @@ def get_n_low_dominance(data: pl.DataFrame,
     if backbone == "spacy":
         data = data.with_columns(
              pl.col("nlp").map_elements(
-                  lambda x: np.sum(
-                       [vad_lexicon.filter(pl.col("word") == lemma). \
-                        select("dominance").item() < threshold
-                        for lemma 
-                        in [
-                             token.lemma_ 
-                             for token
-                             in x
-                        ]
-                        if vad_lexicon.filter(pl.col("word") == lemma). \
-                            shape[0]==1]
-                 )
+                  lambda x: filter_vad_lexicon(vad_lexicon, x). \
+                    select("dominance").filter(
+                        pl.col("dominance") < threshold).shape[0],
+                    return_dtype=pl.UInt32
              ).alias("n_low_dominance")
         )
     elif backbone == "stanza":
@@ -300,7 +269,7 @@ def get_n_low_dominance(data: pl.DataFrame,
 def get_n_high_dominance(data: pl.DataFrame,
                          vad_lexicon: pl.DataFrame,
                          backbone: str = "spacy",
-                         threshold: float = 3.33
+                         threshold: float = 0.66
                          ) -> pl.DataFrame:
     """
     Returns the number of words with dominance higher than the threshold.
@@ -308,18 +277,9 @@ def get_n_high_dominance(data: pl.DataFrame,
     if backbone == "spacy":
         data = data.with_columns(
              pl.col("nlp").map_elements(
-                  lambda x: np.sum(
-                       [vad_lexicon.filter(pl.col("word") == lemma). \
-                        select("dominance").item() > threshold
-                        for lemma 
-                        in [
-                             token.lemma_ 
-                             for token
-                             in x
-                        ]
-                        if vad_lexicon.filter(pl.col("word") == lemma). \
-                            shape[0]==1]
-                 )
+                  lambda x: len(filter_vad_lexicon(vad_lexicon,x). \
+                    select("dominance").filter(pl.col("dominance") > threshold)),
+                    return_dtype=pl.UInt32
              ).alias("n_high_dominance")
         )
     elif backbone == "stanza":
@@ -331,7 +291,7 @@ def get_n_high_dominance(data: pl.DataFrame,
 def get_high_valence_ratio(data: pl.DataFrame,
                             vad_lexicon: pl.DataFrame,
                             backbone: str = "spacy",
-                            threshold: float = 3.33
+                            threshold: float = 0.66
                             ) -> pl.DataFrame:
      """
      Returns the ratio of words with valence higher than the threshold.
@@ -353,7 +313,7 @@ def get_high_valence_ratio(data: pl.DataFrame,
 def get_low_valence_ratio(data: pl.DataFrame,
                           vad_lexicon: pl.DataFrame,
                           backbone: str = "spacy",
-                          threshold: float = 1.66
+                          threshold: float = 0.33
                           ) -> pl.DataFrame:
     """
     Returns the ratio of words with valence lower than the threshold.
@@ -375,7 +335,7 @@ def get_low_valence_ratio(data: pl.DataFrame,
 def get_high_arousal_ratio(data: pl.DataFrame,
                            vad_lexicon: pl.DataFrame,
                            backbone: str = "spacy",
-                           threshold: float = 3.33
+                           threshold: float = 0.66
                            ) -> pl.DataFrame:
     """
     Returns the ratio of words with arousal higher than the threshold.
@@ -397,7 +357,7 @@ def get_high_arousal_ratio(data: pl.DataFrame,
 def get_low_arousal_ratio(data: pl.DataFrame,
                           vad_lexicon: pl.DataFrame,
                           backbone: str = "spacy",
-                          threshold: float = 1.66
+                          threshold: float = 0.33
                           ) -> pl.DataFrame:
     """
     Returns the ratio of words with arousal lower than the threshold.
@@ -419,7 +379,7 @@ def get_low_arousal_ratio(data: pl.DataFrame,
 def get_high_dominance_ratio(data: pl.DataFrame,
                              vad_lexicon: pl.DataFrame,
                              backbone: str = "spacy",
-                             threshold: float = 3.33
+                             threshold: float = 0.66
                              ) -> pl.DataFrame:
     """
     Returns the ratio of words with dominance higher than the threshold.
@@ -441,7 +401,7 @@ def get_high_dominance_ratio(data: pl.DataFrame,
 def get_low_dominance_ratio(data: pl.DataFrame,
                             vad_lexicon: pl.DataFrame,
                             backbone: str = "spacy",
-                            threshold: float = 1.66
+                            threshold: float = 0.33
                             ) -> pl.DataFrame:
     """
     Returns the ratio of words with dominance lower than the threshold.
@@ -472,11 +432,24 @@ def load_intensity_lexicon(path: str = INTENSITY_PATH,
     """
     Returns the intensity lexicon as a polars DataFrame.
     """
-    intensity_lexicon = pl.read_csv(path = path,
+    intensity_lexicon = pl.read_csv(path,
                                     has_header=has_header,
                                     schema=schema,
                                     separator=separator)
     return intensity_lexicon
+
+def filter_intensity_lexicon(intensity_lexicon: pl.DataFrame,
+                             words: list,
+                             emotion: str
+                             ) -> pl.DataFrame:
+    """
+    Filters the intensity lexicon for the given words and emotions.
+    """
+    filtered_intensity_lexicon = intensity_lexicon.filter(
+        (pl.col("word").is_in(words)) &
+        (pl.col("emotion") == emotion)
+    )
+    return filtered_intensity_lexicon
 
 def get_avg_emotion_intensity(data: pl.DataFrame,
                               intensity_lexicon: pl.DataFrame,
@@ -486,26 +459,16 @@ def get_avg_emotion_intensity(data: pl.DataFrame,
     """
     Returns the average emotion intensity of the text.
     """
+    if "lemmas" not in data.columns:
+        data = get_lemmas(data, backbone=backbone)
     if backbone == "spacy":
         for emotion in emotions:
             data = data.with_columns(
-                pl.col("nlp").map_elements(
-                    lambda x: np.mean(
-                        [intensity_lexicon.filter(
-                            (pl.col("word") == lemma) & 
-                            (pl.col("emotion") == emotion)
-                        ).select("emotion_intensity").item()
-                        for lemma
-                        in [
-                            token.lemma_
-                            for token
-                            in x
-                        ]
-                        if intensity_lexicon.filter(
-                            (pl.col("word") == lemma) &
-                            (pl.col("emotion") == emotion)
-                        ).shape[0] == 1]
-                    )
+                pl.col("lemmas").map_elements(
+                    lambda x: filter_intensity_lexicon(
+                        intensity_lexicon, x, emotion). \
+                        select("emotion_intensity").mean().item(),
+                    return_dtype=pl.Float64
                 ).alias(f"avg_intensity_{emotion}")
             )
     elif backbone == "stanza":
@@ -523,26 +486,17 @@ def get_n_low_intensity(data: pl.DataFrame,
     """
     Returns the number of words with emotion intensity lower than the threshold.
     """
+    if "lemmas" not in data.columns:
+        data = get_lemmas(data, backbone=backbone)
     if backbone == "spacy":
         for emotion in emotions:
             data = data.with_columns(
-                pl.col("nlp").map_elements(
-                    lambda x: np.sum(
-                        [intensity_lexicon.filter(
-                            (pl.col("word") == lemma) &
-                            (pl.col("emotion") == emotion)
-                        ).select("emotion_intensity").item() < threshold
-                        for lemma
-                        in [
-                            token.lemma_
-                            for token
-                            in x
-                        ]
-                        if intensity_lexicon.filter(
-                            (pl.col("word") == lemma) &
-                            (pl.col("emotion") == emotion)
-                        ).shape[0] == 1]
-                    )
+                pl.col("lemmas").map_elements(
+                    lambda x: filter_intensity_lexicon(
+                        intensity_lexicon, x, emotion). \
+                        select("emotion_intensity").filter(
+                            pl.col("emotion_intensity") < threshold).shape[0],
+                    return_dtype=pl.UInt32
                 ).alias(f"n_low_intensity_{emotion}")
             )
     elif backbone == "stanza":
@@ -560,26 +514,17 @@ def get_n_high_intensity(data: pl.DataFrame,
     """
     Returns the number of words with emotion intensity higher than the threshold.
     """
+    if "lemmas" not in data.columns:
+        data = get_lemmas(data, backbone=backbone)
     if backbone == "spacy":
         for emotion in emotions:
             data = data.with_columns(
-                pl.col("nlp").map_elements(
-                    lambda x: np.sum(
-                        [intensity_lexicon.filter(
-                            (pl.col("word") == lemma) &
-                            (pl.col("emotion") == emotion)
-                        ).select("emotion_intensity").item() > threshold
-                        for lemma
-                        in [
-                            token.lemma_
-                            for token
-                            in x
-                        ]
-                        if intensity_lexicon.filter(
-                            (pl.col("word") == lemma) &
-                            (pl.col("emotion") == emotion)
-                        ).shape[0] == 1]
-                    )
+                pl.col("lemmas").map_elements(
+                    lambda x: filter_intensity_lexicon(
+                        intensity_lexicon, x, emotion). \
+                        select("emotion_intensity").filter(
+                            pl.col("emotion_intensity") > threshold).shape[0],
+                    return_dtype=pl.UInt32
                 ).alias(f"n_high_{emotion}_intensity")
             )
     elif backbone == "stanza":
