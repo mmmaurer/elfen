@@ -1,0 +1,141 @@
+import requests
+import zipfile
+import os
+
+import polars as pl
+
+
+RESOURCE_MAP = {
+    # Warriner, A. B., Kuperman, V., & Brysbaert, M. (2013).
+    # Norms of valence, arousal, and dominance for 13,915 English lemmas.
+    # Behavior Research Methods, 45(4), 1191-1207.
+    "vad_warrier": {
+        "link": "https://static-content.springer.com/esm/"
+                "art%3A10.3758%2Fs13428-012-0314-x/MediaObjects/"
+                "13428_2012_314_MOESM1_ESM.zip",
+        "area": "Emotion",
+        "subarea": "VAD",
+        "filename": "BRM-emot-submit.xlsx"
+    },
+    # Mohammad, S. M. (2018).
+    # Obtaining reliable human ratings of valence, arousal, and dominance for 
+    # 20,000 English words.
+    # In Proceedings of the 56th Annual Meeting of the Association for
+    # Computational Linguistics (Volume 1: Long Papers) (pp. 174-184).
+    "vad_nrc": {
+        "link": "https://saifmohammad.com/WebDocs/Lexicons/"
+                "NRC-VAD-Lexicon.zip",
+        "area": "Emotion",
+        "subarea": "VAD",
+        "filename": "NRC-VAD-Lexicon/NRC-VAD-Lexicon.txt"
+    },
+    # Mohammad, S. M. (2018)
+    # Word affect intensity.
+    # In Proceedings of the 56th Annual Meeting of the Association for
+    # Computational Linguistics (Volume 1: Long Papers) (pp. 1609-1619).
+    "intensity_nrc": {
+        "link": "https://saifmohammad.com/WebDocs/Lexicons/"
+                "NRC-Emotion-Intensity-Lexicon.zip",
+        "area": "Emotion",
+        "subarea": "Intensity",
+        "filename": "NRC-Emotion-Intensity/"
+                    "NRC-Emotion-Intensity-Lexicon-v1.txt"
+    },
+    # Brysbaert, M., Warriner, A. B., & Kuperman, V. (2014).
+    # Concreteness ratings for 40 thousand generally known English word lemmas.
+    # Behavior Research Methods, 46(3), 904-911.
+    "concreteness_brysbaert": {
+        "link": "https://static-content.springer.com/esm/"
+                "art%3A10.3758%2Fs13428-013-0403-5/MediaObjects/"
+                "13428_2013_403_MOESM1_ESM.xlsx",
+        "area": "Concreteness",
+        "subarea": "Brysbaert",
+    },
+    # Brysbaert, M., Mandera, P., McCormick, S. F., & Keuleers, E. (2019).
+    # Word prevalence norms for 62,000 English lemmas.
+    # Behavior Research Methods, 51(2), 467-479.
+    "prevalence_brysbaert": {
+        "link": "https://static-content.springer.com/"
+                "esm/art%3A10.3758%2Fs13428-018-1077-9/"
+                "MediaObjects/13428_2018_1077_MOESM2_ESM.xlsx",
+        "area": "Prevalence",
+        "subarea": "Brysbaert",
+        "filename": "13428_2018_1077_MOESM2_ESM.xlsx"
+    },
+    # Kuperman, V., Stadthagen-Gonzalez, H., & Brysbaert, M. (2013).
+    # Age-of-acquisition ratings for 30,000 English words.
+    # Behavior Research Methods, 45(4), 1191-1207.
+    "aoa_kuperman": {
+        "link": "https://static-content.springer.com/esm/"
+                "art%3A10.3758%2Fs13428-013-0348-8/"
+                "MediaObjects/13428_2013_348_MOESM1_ESM.xlsx",
+        "area": "AgeOfAcquisition",
+        "subarea": "Kuperman",
+    },
+}
+
+
+def download_lexicon(link: str,
+                     path: str,
+                     ) -> None:
+    """
+    Download a lexicon from a link and save it to a path.
+    
+    Parameters
+    ----------
+    link : str
+        The link to the lexicon.
+    path : str
+        The path to save the lexicon.
+    """
+    # Headers to avoid 406 response
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64;"
+                      " rv:91.0) Gecko/20100101 Firefox/91.0",
+        "Accept": "text/html,application/xhtml+xml,application/"
+                  "xml;q=0.9,image/webp,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.5",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Upgrade-Insecure-Requests": "1",
+        "Pragma": "no-cache",
+        "Cache-Control": "no-cache"
+    }
+    response = requests.get(link, headers=headers)
+
+    if link.endswith(".zip"):
+        with open("temp.zip", "wb") as f:
+            f.write(response.content)
+        with zipfile.ZipFile("temp.zip", "r") as zip_ref:
+            zip_ref.extractall(path)
+        os.remove("temp.zip")
+    elif link.endswith(".xlsx"):
+        filename = link.split("/")[-1]
+        with open(os.path.join(path + filename), "wb") as f:
+            f.write(response.content)
+    
+def get_resource(feature: str) -> None:
+    """
+    Download a resource from the RESOURCE_MAP.
+    
+    Parameters
+    ----------
+    feature : str
+        The feature to download.
+    """
+    if feature not in RESOURCE_MAP:
+        raise ValueError(f"Feature {feature} not found in RESOURCE_MAP.")
+    
+    project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+    # Making sure all the necessary directories exist
+    os.makedirs(os.path.join(project_path, "resources",
+                              RESOURCE_MAP[feature]["area"],
+                              RESOURCE_MAP[feature]["subarea"]),
+                              exist_ok=True)
+    
+    download_lexicon(RESOURCE_MAP[feature]["link"],
+                     os.path.join(project_path, "resources",
+                                  RESOURCE_MAP[feature]["area"],
+                                  RESOURCE_MAP[feature]["subarea"]))
+
