@@ -80,7 +80,7 @@ def get_n_low_concreteness(data: pl.DataFrame,
 
 def get_n_high_concreteness(data: pl.DataFrame,
                             concreteness_norms: pl.DataFrame,
-                            threshold: float = 4.66,
+                            threshold: float = 3.33,
                             backbone: str = 'spacy'
                             ) -> pl.DataFrame:
     """
@@ -115,7 +115,7 @@ def get_low_concreteness_ratio(data: pl.DataFrame,
     if "n_tokens" not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
     data = data.with_columns(
-        pl.col("n_low_concreteness") / pl.col("n_tokens"). \
+        (pl.col("n_low_concreteness") / pl.col("n_tokens")). \
             fill_nan(nan_value).alias("low_concreteness_ratio")
     )
 
@@ -123,7 +123,7 @@ def get_low_concreteness_ratio(data: pl.DataFrame,
 
 def get_high_concreteness_ratio(data: pl.DataFrame,
                                 concreteness_norms: pl.DataFrame,
-                                threshold: float = 4.66,
+                                threshold: float = 3.33,
                                 backbone: str = 'spacy',
                                 nan_value: float = 0.0
                                 ) -> pl.DataFrame:
@@ -136,7 +136,7 @@ def get_high_concreteness_ratio(data: pl.DataFrame,
     if "n_tokens" not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
     data = data.with_columns(
-        pl.col("n_high_concreteness") / pl.col("n_tokens"). \
+        (pl.col("n_high_concreteness") / pl.col("n_tokens")). \
             fill_nan(nan_value).alias("high_concreteness_ratio")
     )
 
@@ -236,7 +236,7 @@ def get_low_aoa_ratio(data: pl.DataFrame,
     if "n_tokens" not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
     data = data.with_columns(
-        pl.col("n_low_aoa") / pl.col("n_tokens"). \
+        (pl.col("n_low_aoa") / pl.col("n_tokens")). \
             fill_nan(nan_value).alias("low_aoa_ratio")
     )
 
@@ -257,7 +257,7 @@ def get_high_aoa_ratio(data: pl.DataFrame,
     if "n_tokens" not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
     data = data.with_columns(
-        pl.col("n_high_aoa") / pl.col("n_tokens"). \
+        (pl.col("n_high_aoa") / pl.col("n_tokens")). \
             fill_nan(nan_value).alias("high_aoa_ratio")
     )
 
@@ -357,7 +357,7 @@ def get_low_prevalence_ratio(data: pl.DataFrame,
     if "n_tokens" not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
     data = data.with_columns(
-        pl.col("n_low_prevalence") / pl.col("n_tokens"). \
+        (pl.col("n_low_prevalence") / pl.col("n_tokens")). \
             fill_nan(nan_value).alias("low_prevalence_ratio")
     )
 
@@ -378,7 +378,7 @@ def get_high_prevalence_ratio(data: pl.DataFrame,
     if "n_tokens" not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
     data = data.with_columns(
-        pl.col("n_high_prevalence") / pl.col("n_tokens"). \
+        (pl.col("n_high_prevalence") / pl.col("n_tokens")). \
             fill_nan(nan_value).alias("high_prevalence_ratio")
     )
 
