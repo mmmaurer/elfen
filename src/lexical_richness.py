@@ -7,7 +7,6 @@ from .surface import (
 )
 from .syntax import (
     get_num_lexical_tokens,
-    get_num_lemmas
 )
 
 def get_lemma_token_ratio(data: pl.DataFrame,

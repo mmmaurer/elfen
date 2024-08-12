@@ -8,23 +8,20 @@ from .features import (
 from .surface import (
     get_num_tokens,
 )
+from .schemas import (
+    VAD_SCHEMA_NRC,
+    INTENSITY_SCHEMA
+)
 
-VAD_PATH = "../resources/NRC-VAD-Lecixon/NRC-VAD-Lexicon.txt"
-VAD_SCHEMA = {
-    "word": pl.String,
-    "valence": pl.Float32,
-    "arousal": pl.Float32,
-    "dominance": pl.Float32,
-}
+from .util import (
+    filter_lexicon,
+)
+
+# TODO: FIX PATHS ONCE DOWNLOAD UTIL IS IMPLEMENTED
+VAD_NRC_PATH = "../resources/NRC-VAD-Lecixon/NRC-VAD-Lexicon.txt"
 
 INTENSITY_PATH = "../resources/NRC-Emotion-Intensity-Lexicon/" \
     "NRC-Emotion-Intensity-Lexicon-v1.txt"
-
-INTENSITY_SCHEMA = {
-    "word": pl.String,
-    "emotion": pl.String,
-    "emotion_intensity": pl.Float32,
-}
 
 EMOTIONS = [
     "anger",
@@ -42,8 +39,8 @@ EMOTIONS = [
 #                           VAD dimensions                              #
 # --------------------------------------------------------------------- #
 
-def load_vad_lexicon(path: str = VAD_PATH,
-                     schema: dict = VAD_SCHEMA,
+def load_vad_lexicon(path: str = VAD_NRC_PATH,
+                     schema: dict = VAD_SCHEMA_NRC,
                      has_header: bool = False,
                      separator: str = "\t",
                      ) -> pl.DataFrame:
@@ -56,15 +53,6 @@ def load_vad_lexicon(path: str = VAD_PATH,
                               separator=separator)
     return vad_lexicon
 
-def filter_vad_lexicon(vad_lexicon: pl.DataFrame,
-                       words: list
-                       ) -> pl.DataFrame:
-    """
-    Filters the VAD lexicon for the given words.
-    """
-    filtered_vad_lexicon = vad_lexicon.filter(pl.col("word").is_in(words))
-    return filtered_vad_lexicon
-
 def get_avg_valence(data: pl.DataFrame,
                     vad_lexicon: pl.DataFrame,
                     backbone: str = "spacy",
@@ -75,20 +63,18 @@ def get_avg_valence(data: pl.DataFrame,
     """
     if "lemmas" not in data.columns:
         data = get_lemmas(data, backbone=backbone)
-    if backbone == "spacy":
-        data = data.with_columns(
-             pl.col("lemmas").map_elements(
-                  lambda x: filter_vad_lexicon(vad_lexicon,x). \
-                    select("valence").mean().item(),
-                    return_dtype=pl.Float64
-             ).fill_nan(nan_value).alias("avg_valence")
-             # convention to fill NaNs with 0 as valence is in [0,1]
-             # and 0 is the neutral value for the NRC-VAD lexicon
+    data = data.with_columns(
+        pl.col("lemmas").map_elements(
+            lambda x: filter_lexicon(lexicon=vad_lexicon,
+                                     words=x,
+                                     word_column="word"). \
+               select("valence").mean().item(),
+               return_dtype=pl.Float64
+        ).fill_nan(nan_value).alias("avg_valence")
+        # convention to fill NaNs with 0 as valence is in [0,1]
+        # and 0 is the neutral value for the NRC-VAD lexicon
         )
-    elif backbone == "stanza":
-        raise NotImplementedError("VAD calculation is not "
-                                  "implemented for Stanza yet.")
-
+    
     return data
 
 def get_avg_arousal(data: pl.DataFrame,
@@ -104,7 +90,9 @@ def get_avg_arousal(data: pl.DataFrame,
     if backbone == "spacy":
         data = data.with_columns(
              pl.col("lemmas").map_elements(
-                  lambda x: filter_vad_lexicon(vad_lexicon,x). \
+                  lambda x: filter_lexicon(lexicon=vad_lexicon,
+                                           words=x,
+                                           word_column="word"). \
                     select("arousal").mean().item(),
                     return_dtype=pl.Float64
              ).fill_nan(nan_value).alias("avg_arousal")
@@ -127,19 +115,17 @@ def get_avg_dominance(data: pl.DataFrame,
         """
         if "lemmas" not in data.columns:
             data = get_lemmas(data, backbone=backbone)
-        if backbone == "spacy":
-            data = data.with_columns(
-                 pl.col("lemmas").map_elements(
-                    lambda x: filter_vad_lexicon(vad_lexicon,x). \
-                        select("dominance").mean().item(),
-                        return_dtype=pl.Float64
-                 ).fill_nan(nan_value).alias("avg_dominance")
-                 # convention to fill NaNs with 0 as dominance is in [0,1]
-                 # and 0 is the neutral value for the NRC-VAD lexicon
-            )
-        elif backbone == "stanza":
-            raise NotImplementedError("VAD calculation is not "
-                                      "implemented for Stanza yet.")
+        data = data.with_columns(
+             pl.col("lemmas").map_elements(
+              lambda x: filter_lexicon(lexicon=vad_lexicon,
+                                       words=x,
+                                       word_column="word"). \
+                    select("dominance").mean().item(),
+                    return_dtype=pl.Float64
+             ).fill_nan(nan_value).alias("avg_dominance")
+             # convention to fill NaNs with 0 as dominance is in [0,1]
+             # and 0 is the neutral value for the NRC-VAD lexicon
+        )
     
         return data
 
@@ -156,7 +142,9 @@ def get_n_low_valence(data: pl.DataFrame,
     if backbone == "spacy":
         data = data.with_columns(
              pl.col("lemmas").map_elements(
-                  lambda x: filter_vad_lexicon(vad_lexicon,x). \
+                  lambda x: filter_lexicon(lexicon=vad_lexicon,
+                                           words=x,
+                                           word_column="word"). \
                     select("valence").filter(
                         pl.col("valence") < threshold).shape[0],
                     return_dtype=pl.UInt32
@@ -181,7 +169,9 @@ def get_n_high_valence(data: pl.DataFrame,
     if backbone == "spacy":
         data = data.with_columns(
              pl.col("lemmas").map_elements(
-                  lambda x: filter_vad_lexicon(vad_lexicon,x). \
+                 lambda x: filter_lexicon(lexicon=vad_lexicon,
+                                           words=x,
+                                           word_column="word"). \
                     select("valence").filter(
                         pl.col("valence") > threshold).shape[0],
                     return_dtype=pl.UInt32
@@ -206,7 +196,9 @@ def get_n_low_arousal(data: pl.DataFrame,
     if backbone == "spacy":
         data = data.with_columns(
              pl.col("lemmas").map_elements(
-                  lambda x: filter_vad_lexicon(vad_lexicon,x). \
+                  lambda x: filter_lexicon(lexicon=vad_lexicon,
+                                           words=x,
+                                           word_column="word"). \
                     select("arousal").filter(
                         pl.col("arousal") < threshold).shape[0],
                     return_dtype=pl.UInt32
@@ -231,7 +223,9 @@ def get_n_high_arousal(data: pl.DataFrame,
     if backbone == "spacy":
         data = data.with_columns(
              pl.col("lemmas").map_elements(
-                  lambda x: filter_vad_lexicon(vad_lexicon,x). \
+                  lambda x: filter_lexicon(lexicon=vad_lexicon,
+                                           words=x,
+                                           word_column="word"). \
                     select("arousal").filter(
                         pl.col("arousal") > threshold).shape[0],
                     return_dtype=pl.UInt32
@@ -254,7 +248,9 @@ def get_n_low_dominance(data: pl.DataFrame,
     if backbone == "spacy":
         data = data.with_columns(
              pl.col("nlp").map_elements(
-                  lambda x: filter_vad_lexicon(vad_lexicon, x). \
+                  lambda x: filter_lexicon(lexicon=vad_lexicon,
+                                           words=x,
+                                           word_column="word"). \
                     select("dominance").filter(
                         pl.col("dominance") < threshold).shape[0],
                     return_dtype=pl.UInt32
@@ -277,8 +273,10 @@ def get_n_high_dominance(data: pl.DataFrame,
     if backbone == "spacy":
         data = data.with_columns(
              pl.col("nlp").map_elements(
-                  lambda x: len(filter_vad_lexicon(vad_lexicon,x). \
-                    select("dominance").filter(pl.col("dominance") > threshold)),
+                  lambda x: filter_lexicon(lexicon=vad_lexicon,
+                                           words=x,
+                                           word_column="word"). \
+                    select("dominance").filter(pl.col("dominance") > threshold),
                     return_dtype=pl.UInt32
              ).alias("n_high_dominance")
         )

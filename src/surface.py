@@ -1,8 +1,8 @@
 import polars as pl
 
 def get_raw_sequence_length(data: pl.DataFrame,
-                        text_column: str = 'text',
-                        ) -> pl.DataFrame:
+                            text_column: str = 'text',
+                            ) -> pl.DataFrame:
     """
     Calculates the raw text length (number of characters) of a text.
     """
@@ -15,8 +15,8 @@ def get_raw_sequence_length(data: pl.DataFrame,
     return data
 
 def get_num_tokens(data: pl.DataFrame,
-                        backbone: str = 'spacy'
-                       ) -> pl.DataFrame:
+                   backbone: str = 'spacy'
+                   ) -> pl.DataFrame:
     """
     Calculates the sequence length (number of tokens) of a text.
     """
@@ -36,8 +36,8 @@ def get_num_tokens(data: pl.DataFrame,
     return data
 
 def get_num_sentences(data: pl.DataFrame,
-                        backbone: str = 'spacy'
-                         ) -> pl.DataFrame:
+                      backbone: str = 'spacy'
+                      ) -> pl.DataFrame:
     """
     Calculates the number of sentences in a text.
     """

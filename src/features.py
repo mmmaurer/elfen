@@ -1,3 +1,5 @@
+from typing import Callable
+
 import polars as pl
 import spacy
 from spacy_syllables import SpacySyllables
