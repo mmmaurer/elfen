@@ -9,7 +9,7 @@ RESOURCE_MAP = {
     # Warriner, A. B., Kuperman, V., & Brysbaert, M. (2013).
     # Norms of valence, arousal, and dominance for 13,915 English lemmas.
     # Behavior Research Methods, 45(4), 1191-1207.
-    "vad_warrier": {
+    "vad_warriner": {
         "link": "https://static-content.springer.com/esm/"
                 "art%3A10.3758%2Fs13428-012-0314-x/MediaObjects/"
                 "13428_2012_314_MOESM1_ESM.zip",
@@ -48,8 +48,9 @@ RESOURCE_MAP = {
         "link": "https://static-content.springer.com/esm/"
                 "art%3A10.3758%2Fs13428-013-0403-5/MediaObjects/"
                 "13428_2013_403_MOESM1_ESM.xlsx",
-        "area": "Concreteness",
-        "subarea": "Brysbaert",
+        "area": "Psycholinguistics",
+        "subarea": "Concreteness",
+        "filename": "13428_2013_403_MOESM1_ESM.xlsx"
     },
     # Brysbaert, M., Mandera, P., McCormick, S. F., & Keuleers, E. (2019).
     # Word prevalence norms for 62,000 English lemmas.
@@ -58,8 +59,8 @@ RESOURCE_MAP = {
         "link": "https://static-content.springer.com/"
                 "esm/art%3A10.3758%2Fs13428-018-1077-9/"
                 "MediaObjects/13428_2018_1077_MOESM2_ESM.xlsx",
-        "area": "Prevalence",
-        "subarea": "Brysbaert",
+        "area": "Psycholinguistics",
+        "subarea": "Prevalence",
         "filename": "13428_2018_1077_MOESM2_ESM.xlsx"
     },
     # Kuperman, V., Stadthagen-Gonzalez, H., & Brysbaert, M. (2013).
@@ -69,14 +70,16 @@ RESOURCE_MAP = {
         "link": "https://static-content.springer.com/esm/"
                 "art%3A10.3758%2Fs13428-013-0348-8/"
                 "MediaObjects/13428_2013_348_MOESM1_ESM.xlsx",
-        "area": "AgeOfAcquisition",
-        "subarea": "Kuperman",
+        "area": "Psycholinguistics",
+        "subarea": "AgeOfAcquisition",
+        "filename": "13428_2013_348_MOESM1_ESM.xlsx"
     },
 }
 
 
 def download_lexicon(link: str,
                      path: str,
+                     filename: str = None
                      ) -> None:
     """
     Download a lexicon from a link and save it to a path.
@@ -111,17 +114,12 @@ def download_lexicon(link: str,
         os.remove("temp.zip")
     elif link.endswith(".xlsx"):
         filename = link.split("/")[-1]
-        with open(os.path.join(path + filename), "wb") as f:
+        with open(os.path.join(path, filename), "wb") as f:
             f.write(response.content)
     
 def get_resource(feature: str) -> None:
     """
     Download a resource from the RESOURCE_MAP.
-    
-    Parameters
-    ----------
-    feature : str
-        The feature to download.
     """
     if feature not in RESOURCE_MAP:
         raise ValueError(f"Feature {feature} not found in RESOURCE_MAP.")
@@ -133,9 +131,13 @@ def get_resource(feature: str) -> None:
                               RESOURCE_MAP[feature]["area"],
                               RESOURCE_MAP[feature]["subarea"]),
                               exist_ok=True)
-    
-    download_lexicon(RESOURCE_MAP[feature]["link"],
-                     os.path.join(project_path, "resources",
-                                  RESOURCE_MAP[feature]["area"],
-                                  RESOURCE_MAP[feature]["subarea"]))
+    # Downloading the lexicon if it does not exist
+    if not os.path.exists(os.path.join(project_path, "resources",
+                                      RESOURCE_MAP[feature]["area"],
+                                      RESOURCE_MAP[feature]["subarea"],
+                                      RESOURCE_MAP[feature]["filename"])):
+        download_lexicon(RESOURCE_MAP[feature]["link"],
+                        os.path.join(project_path, "resources",
+                                    RESOURCE_MAP[feature]["area"],
+                                    RESOURCE_MAP[feature]["subarea"]))
 
