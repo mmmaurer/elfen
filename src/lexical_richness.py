@@ -5,7 +5,7 @@ from .surface import (
     get_num_tokens,
     get_num_types
 )
-from .syntax import (
+from .pos import (
     get_num_lexical_tokens,
 )
 

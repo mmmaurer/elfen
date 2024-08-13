@@ -3,7 +3,6 @@ import polars as pl
 
 from .features import (
     get_lemmas,
-    get_tokens
 )
 from .surface import (
     get_num_tokens,
