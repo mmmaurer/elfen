@@ -88,8 +88,12 @@ def get_num_characters(data: pl.DataFrame,
                     ).alias("n_characters"),
             )
         elif backbone == 'stanza':
-            raise NotImplementedError(
-                "Not implemented for Stanza backbone yet."
+            data = data.with_columns(
+                pl.col("nlp").map_elements(lambda x: sum(
+                    [len(token.text) for sent
+                     in x.sentences for token in sent.tokens]),
+                    return_dtype=pl.UInt16
+                    ).alias("n_characters"),
             )
         
         return data
@@ -167,8 +171,13 @@ def get_num_types(data: pl.DataFrame,
                              ).alias("n_types"),
         )
     elif backbone == 'stanza':
-        raise NotImplementedError(
-            "Not implemented for Stanza backbone yet."
+        data = data.with_columns(
+            pl.col("nlp"). \
+                map_elements(lambda x: len(
+                    set([token.text for sent
+                         in x.sentences for token in sent.tokens])),
+                         return_dtype=pl.UInt16
+                         ).alias("n_types"),
         )
         
     return data

@@ -22,7 +22,7 @@ def get_num_syllables(data: pl.DataFrame,
             )
         elif backbone == 'stanza':
             raise NotImplementedError(
-                "Not implemented for Stanza backbone yet."
+                "Not supported for Stanza backbone."
             )
         
         return data
@@ -48,7 +48,7 @@ def get_num_polysyllables(data: pl.DataFrame,
         )
     elif backbone == 'stanza':
         raise NotImplementedError(
-            "Not implemented for Stanza backbone yet."
+            "Not supported for Stanza backbone."
         )
 
     return data

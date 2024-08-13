@@ -22,8 +22,12 @@ def get_num_lexical_tokens(data: pl.DataFrame,
                 ).alias("n_lexical_tokens"),
         )
     elif backbone == 'stanza':
-        raise NotImplementedError(
-            "Not implemented for Stanza backbone yet."
+        data = data.with_columns(
+            pl.col("nlp").map_elements(lambda x: len(
+                [token for sent in x.sentences for token
+                 in sent.words if token.upos in lex]),
+                return_dtype=pl.UInt16
+                ).alias("n_lexical_tokens"),
         )
     
     return data
@@ -41,9 +45,14 @@ def get_num_per_pos(data: pl.DataFrame,
                     ).alias(f"n_{pos.lower()}"),
             )
     elif backbone == 'stanza':
-        raise NotImplementedError(
-            "Not implemented for Stanza backbone yet."
-        )
+        for pos in pos_tags:
+            data = data.with_columns(
+                pl.col("nlp").map_elements(lambda x: len(
+                    [token for sent in x.sentences for token
+                     in sent.words if token.upos == pos]),
+                    return_dtype=pl.UInt16
+                    ).alias(f"n_{pos.lower()}"),
+            )
     
     return data
 
@@ -81,9 +90,14 @@ def get_pos_per_sent(data: pl.DataFrame,
                     ).alias(f"n_{pos.lower()}_per_sent"),
             )
     elif backbone == 'stanza':
-        raise NotImplementedError(
-            "Not implemented for Stanza backbone yet."
-        )
+        for pos in pos_tags:
+            data = data.with_columns(
+                pl.col("nlp").map_elements(lambda x: len(
+                    [token for sent in x.sentences for token
+                     in sent.words if token.upos == pos]),
+                    return_dtype=pl.UInt16
+                    ).alias(f"n_{pos.lower()}_per_sent"),
+            )
     
     return data
 
@@ -101,8 +115,12 @@ def get_num_lemmas(data: pl.DataFrame,
                 ).alias("n_lemmas"),
         )
     elif backbone == 'stanza':
-        raise NotImplementedError(
-            "Not implemented for Stanza backbone yet."
+        data = data.with_columns(
+            pl.col("nlp").map_elements(lambda x: len(set(
+                [token.lemma for sent in x.sentences for token
+                 in sent.words])),
+                return_dtype=pl.UInt16
+                ).alias("n_lemmas"),
         )
     
     return data

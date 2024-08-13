@@ -24,8 +24,10 @@ def get_num_entities(data: pl.DataFrame,
                                        ).alias("n_entities"),
         )
     elif backbone == 'stanza':
-        raise NotImplementedError(
-            "Not implemented for Stanza backbone yet."
+        data = data.with_columns(
+            pl.col("nlp").map_elements(lambda x: len(x.entities),
+                                       return_dtype=pl.UInt16
+                                       ).alias("n_entities"),
         )
     
     return data
@@ -83,9 +85,13 @@ def get_num_per_entity_type(data: pl.DataFrame,
                     ).alias(f"n_{ent_type.lower()}"),
             )
     elif backbone == 'stanza':
-        raise NotImplementedError(
-            "Not implemented for Stanza backbone yet."
-        )
+        for ent_type in ent_types:
+            data = data.with_columns(
+                pl.col("nlp").map_elements(lambda x: len(
+                    [ent for ent in x.entities if ent.type == ent_type]),
+                    return_dtype=pl.UInt16
+                    ).alias(f"n_{ent_type.lower()}"),
+            )
     
     return data
 
