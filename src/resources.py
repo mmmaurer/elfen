@@ -6,6 +6,13 @@ import polars as pl
 
 
 RESOURCE_MAP = {
+    # Hedges, https://github.com/words/hedges
+    "hedges": {
+        "link": "https://raw.githubusercontent.com/words/hedges/main/data.txt",
+        "area": "Semantics",
+        "subarea": "Hedges",
+        "filename": "hedges.txt"
+    },
     # Warriner, A. B., Kuperman, V., & Brysbaert, M. (2013).
     # Norms of valence, arousal, and dominance for 13,915 English lemmas.
     # Behavior Research Methods, 45(4), 1191-1207.
@@ -106,6 +113,9 @@ def download_lexicon(link: str,
     }
     response = requests.get(link, headers=headers)
 
+    if filename is None:
+        filename = link.split("/")[-1]
+
     if link.endswith(".zip"):
         with open("temp.zip", "wb") as f:
             f.write(response.content)
@@ -114,6 +124,9 @@ def download_lexicon(link: str,
         os.remove("temp.zip")
     elif link.endswith(".xlsx"):
         filename = link.split("/")[-1]
+        with open(os.path.join(path, filename), "wb") as f:
+            f.write(response.content)
+    elif link.endswith(".txt"):
         with open(os.path.join(path, filename), "wb") as f:
             f.write(response.content)
     
@@ -139,5 +152,6 @@ def get_resource(feature: str) -> None:
         download_lexicon(RESOURCE_MAP[feature]["link"],
                         os.path.join(project_path, "resources",
                                     RESOURCE_MAP[feature]["area"],
-                                    RESOURCE_MAP[feature]["subarea"]))
+                                    RESOURCE_MAP[feature]["subarea"]),
+                                    RESOURCE_MAP[feature]["filename"])
 

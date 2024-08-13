@@ -32,6 +32,30 @@ def get_num_lexical_tokens(data: pl.DataFrame,
     
     return data
 
+def get_pos_variability(data: pl.DataFrame,
+                        backbone: str = 'spacy'
+                        ) -> pl.DataFrame:
+    if "n_tokens" not in data.columns:
+        data = get_num_tokens(data, backbone)
+    
+    if backbone == 'spacy':
+        data = data.with_columns(
+            (pl.col("nlp").map_elements(lambda x: len(set(
+                [token.pos_ for token in x])),
+                return_dtype=pl.UInt16) / 
+            pl.col("n_tokens")).alias("pos_variability"),
+        )
+    elif backbone == 'stanza':
+        data = data.with_columns(
+            (pl.col("nlp").map_elements(lambda x: len(set(
+                [token.upos for sent in x.sentences for token
+                 in sent.words])),
+                return_dtype=pl.UInt16) / 
+            pl.col("n_tokens")).alias("pos_variability"),
+        )
+
+    return data
+
 def get_num_per_pos(data: pl.DataFrame,
                 backbone: str = 'spacy',
                 pos_tags: list = UPOS_TAGS
