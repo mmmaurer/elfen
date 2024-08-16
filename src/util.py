@@ -40,3 +40,18 @@ def filter_lexicon(lexicon: pl.DataFrame,
     Filter a lexicon to only include the words in a list.
     """
     return lexicon.filter(pl.col(word_column).is_in(words))
+
+def upos_to_swn(upos_tag: str) -> str:
+    """
+    Convert a Universal POS tag to a SentiWordNet POS tag.
+    """
+    if upos_tag in {"NOUN", "PROPN"}:
+        return "n"
+    elif upos_tag in {"VERB", "AUX"}:
+        return "v"
+    elif upos_tag in {"ADV"}:
+        return "r"
+    elif upos_tag in {"ADJ"}:
+        return "a"
+    else:
+        return None

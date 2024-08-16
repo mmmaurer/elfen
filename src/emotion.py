@@ -9,7 +9,8 @@ from .surface import (
 )
 from .schemas import (
     VAD_SCHEMA_NRC,
-    INTENSITY_SCHEMA
+    INTENSITY_SCHEMA,
+    SENTIWORDNET_SCHEMA,
 )
 
 from .util import (
@@ -17,10 +18,12 @@ from .util import (
 )
 
 # TODO: FIX PATHS ONCE DOWNLOAD UTIL IS IMPLEMENTED
-VAD_NRC_PATH = "../resources/NRC-VAD-Lecixon/NRC-VAD-Lexicon.txt"
+VAD_NRC_PATH = "../resources/VAD/NRC-VAD-Lecixon/NRC-VAD-Lexicon.txt"
 
 INTENSITY_PATH = "../resources/NRC-Emotion-Intensity-Lexicon/" \
     "NRC-Emotion-Intensity-Lexicon-v1.txt"
+
+SENTIWORDNET_PATH = "../resources/Emotion/Sentiment/SentiWordNet_3.0.0.txt"
 
 EMOTIONS = [
     "anger",
@@ -542,4 +545,20 @@ def get_high_intensity_ratio(data: pl.DataFrame,
 # --------------------------------------------------------------------- #
 #                           SENTIMENT ANALYSIS                          #
 # --------------------------------------------------------------------- #
+
+def load_sentiwordnet(path: str = SENTIWORDNET_PATH,
+                      schema: dict = SENTIWORDNET_SCHEMA,
+                      has_header: bool = False,
+                      separator: str = "\t",
+                      ) -> pl.DataFrame:
+    """
+    Returns the SentiWordNet lexicon as a polars DataFrame.
+    """
+    sentiwordnet = pl.read_csv(path,
+                              has_header=has_header,
+                              schema=schema,
+                              separator=separator,
+                              # First 26 rows are comments/documentation
+                              skip_rows=27)
+    return sentiwordnet
 

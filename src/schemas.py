@@ -94,6 +94,19 @@ INTENSITY_SCHEMA = {
     "emotion_intensity": pl.Float32,
 }
 
+# ---------------------------------------- #
+#               Sentiment                  #
+# ---------------------------------------- #
+
+SENTIWORDNET_SCHEMA = {
+    "POS": pl.String,
+    "ID": pl.UInt32,
+    "PosScore": pl.Float32,
+    "NegScore": pl.Float32,
+    "SynsetTerms": pl.String,
+    "Gloss": pl.String,
+}
+
 # ======================================== #
 #        Psycholinguistic Features         #
 # ======================================== #

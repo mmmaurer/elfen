@@ -81,6 +81,17 @@ RESOURCE_MAP = {
         "subarea": "AgeOfAcquisition",
         "filename": "13428_2013_348_MOESM1_ESM.xlsx"
     },
+    # Baccianella, S., Esuli, A., & Sebastiani, F. (2010).
+    # SentiWordNet 3.0: An enhanced lexical resource for sentiment
+    # analysis and opinion mining.
+    # In LREC (Vol. 10, pp. 2200-2204).
+    "sentiwordnet": {
+        "link": "https://raw.githubusercontent.com/aesuli/SentiWordNet/"
+                "master/data/SentiWordNet_3.0.0.txt",
+        "area": "Emotion",
+        "subarea": "Sentiment",
+        "filename": "SentiWordNet_3.0.0.txt"
+    },
 }
 
 
