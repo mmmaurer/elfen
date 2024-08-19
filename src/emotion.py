@@ -72,7 +72,7 @@ def get_avg_valence(data: pl.DataFrame,
                                      word_column="word"). \
                select("valence").mean().item(),
                return_dtype=pl.Float64
-        ).fill_nan(nan_value).alias("avg_valence")
+        ).fill_nan(nan_value).fill_null(nan_value).alias("avg_valence")
         # convention to fill NaNs with 0 as valence is in [0,1]
         # and 0 is the neutral value for the NRC-VAD lexicon
     )
@@ -96,7 +96,7 @@ def get_avg_arousal(data: pl.DataFrame,
                                       word_column="word"). \
                select("arousal").mean().item(),
                return_dtype=pl.Float64
-        ).fill_nan(nan_value).alias("avg_arousal")
+        ).fill_nan(nan_value).fill_null(nan_value).alias("avg_arousal")
         # convention to fill NaNs with 0 as arousal is in [0,1]
         # and 0 is the neutral value for the NRC-VAD lexicon
     )
@@ -120,7 +120,7 @@ def get_avg_dominance(data: pl.DataFrame,
                                    word_column="word"). \
                 select("dominance").mean().item(),
                 return_dtype=pl.Float64
-         ).fill_nan(nan_value).alias("avg_dominance")
+         ).fill_nan(nan_value).fill_null(nan_value).alias("avg_dominance")
          # convention to fill NaNs with 0 as dominance is in [0,1]
          # and 0 is the neutral value for the NRC-VAD lexicon
     )
@@ -130,7 +130,8 @@ def get_avg_dominance(data: pl.DataFrame,
 def get_n_low_valence(data: pl.DataFrame,
                       vad_lexicon: pl.DataFrame,
                       backbone: str = "spacy",
-                      threshold: float = 1.66
+                      threshold: float = 1.66,
+                      nan_value: float = 0.0
                       ) -> pl.DataFrame:
     """
     Returns the number of words with valence lower than the threshold.
@@ -145,7 +146,7 @@ def get_n_low_valence(data: pl.DataFrame,
                select("valence").filter(
                    pl.col("valence") < threshold).shape[0],
                return_dtype=pl.UInt32
-        ).alias("n_low_valence")
+        ).fill_nan(nan_value).fill_null(nan_value).alias("n_low_valence")
     )
     
     return data
@@ -153,7 +154,8 @@ def get_n_low_valence(data: pl.DataFrame,
 def get_n_high_valence(data: pl.DataFrame,
                        vad_lexicon: pl.DataFrame,
                        backbone: str = "spacy",
-                       threshold: float = 0.66
+                       threshold: float = 0.66,
+                       nan_value: float = 0.0
                        ) -> pl.DataFrame:
     """
     Returns the number of words with valence higher than the threshold.
@@ -168,7 +170,7 @@ def get_n_high_valence(data: pl.DataFrame,
                select("valence").filter(
                    pl.col("valence") > threshold).shape[0],
                return_dtype=pl.UInt32
-        ).alias("n_high_valence")
+        ).fill_nan(nan_value).fill_null(nan_value).alias("n_high_valence")
     )
     
     return data
@@ -176,7 +178,8 @@ def get_n_high_valence(data: pl.DataFrame,
 def get_n_low_arousal(data: pl.DataFrame,
                       vad_lexicon: pl.DataFrame,
                       backbone: str = "spacy",
-                      threshold: float = 0.33
+                      threshold: float = 0.33,
+                      nan_value: float = 0.0
                       ) -> pl.DataFrame:
     """
     Returns the number of words with arousal lower than the threshold.
@@ -191,7 +194,7 @@ def get_n_low_arousal(data: pl.DataFrame,
                select("arousal").filter(
                    pl.col("arousal") < threshold).shape[0],
                return_dtype=pl.UInt32
-        ).alias("n_low_arousal")
+        ).fill_nan(nan_value).fill_null(nan_value).alias("n_low_arousal")
     )
     
     return data
@@ -199,7 +202,8 @@ def get_n_low_arousal(data: pl.DataFrame,
 def get_n_high_arousal(data: pl.DataFrame,
                        vad_lexicon: pl.DataFrame,
                        backbone: str = "spacy",
-                       threshold: float = 0.66
+                       threshold: float = 0.66,
+                       nan_value: float = 0.0
                        ) -> pl.DataFrame:
     """
     Returns the number of words with arousal higher than the threshold.
@@ -214,7 +218,7 @@ def get_n_high_arousal(data: pl.DataFrame,
                select("arousal").filter(
                    pl.col("arousal") > threshold).shape[0],
                return_dtype=pl.UInt32
-        ).alias("n_high_arousal")
+        ).fill_nan(nan_value).fill_null(nan_value).alias("n_high_arousal")
     )
     
     return data
@@ -222,7 +226,8 @@ def get_n_high_arousal(data: pl.DataFrame,
 def get_n_low_dominance(data: pl.DataFrame,
                         vad_lexicon: pl.DataFrame,
                         backbone: str = "spacy",
-                        threshold: float = 0.33
+                        threshold: float = 0.33,
+                        nan_value: float = 0.0
                         ) -> pl.DataFrame:
     """
     Returns the number of words with dominance lower than the threshold.
@@ -235,7 +240,7 @@ def get_n_low_dominance(data: pl.DataFrame,
                select("dominance").filter(
                    pl.col("dominance") < threshold).shape[0],
                return_dtype=pl.UInt32
-        ).alias("n_low_dominance")
+        ).fill_nan(nan_value).fill_null(nan_value).alias("n_low_dominance")
     )
     
     return data
@@ -243,7 +248,8 @@ def get_n_low_dominance(data: pl.DataFrame,
 def get_n_high_dominance(data: pl.DataFrame,
                          vad_lexicon: pl.DataFrame,
                          backbone: str = "spacy",
-                         threshold: float = 0.66
+                         threshold: float = 0.66,
+                         nan_value: float = 0.0
                          ) -> pl.DataFrame:
     """
     Returns the number of words with dominance higher than the threshold.
@@ -255,7 +261,7 @@ def get_n_high_dominance(data: pl.DataFrame,
                                       word_column="word"). \
                select("dominance").filter(pl.col("dominance") > threshold),
                return_dtype=pl.UInt32
-        ).alias("n_high_dominance")
+        ).fill_nan(nan_value).fill_null(nan_value).alias("n_high_dominance")
     )
     
     return data
@@ -263,7 +269,8 @@ def get_n_high_dominance(data: pl.DataFrame,
 def get_high_valence_ratio(data: pl.DataFrame,
                             vad_lexicon: pl.DataFrame,
                             backbone: str = "spacy",
-                            threshold: float = 0.66
+                            threshold: float = 0.66,
+                            nan_value: float = 0.0
                             ) -> pl.DataFrame:
      """
      Returns the ratio of words with valence higher than the threshold.
@@ -277,7 +284,8 @@ def get_high_valence_ratio(data: pl.DataFrame,
      
      data = data.with_columns(
           (pl.col("n_high_valence") / pl.col("n_tokens")
-            ).alias("high_valence_ratio"),
+            ).fill_nan(nan_value).fill_null(nan_value). \
+                alias("high_valence_ratio"),
      )
     
      return data
@@ -285,7 +293,8 @@ def get_high_valence_ratio(data: pl.DataFrame,
 def get_low_valence_ratio(data: pl.DataFrame,
                           vad_lexicon: pl.DataFrame,
                           backbone: str = "spacy",
-                          threshold: float = 0.33
+                          threshold: float = 0.33,
+                          nan_value: float = 0.0
                           ) -> pl.DataFrame:
     """
     Returns the ratio of words with valence lower than the threshold.
@@ -299,7 +308,8 @@ def get_low_valence_ratio(data: pl.DataFrame,
     
     data = data.with_columns(
         (pl.col("n_low_valence") / pl.col("n_tokens")
-            ).alias("low_valence_ratio"),
+            ).fill_nan(nan_value).fill_null(nan_value). \
+                alias("low_valence_ratio"),
     )
     
     return data
@@ -307,7 +317,8 @@ def get_low_valence_ratio(data: pl.DataFrame,
 def get_high_arousal_ratio(data: pl.DataFrame,
                            vad_lexicon: pl.DataFrame,
                            backbone: str = "spacy",
-                           threshold: float = 0.66
+                           threshold: float = 0.66,
+                           nan_value: float = 0.0
                            ) -> pl.DataFrame:
     """
     Returns the ratio of words with arousal higher than the threshold.
@@ -321,7 +332,8 @@ def get_high_arousal_ratio(data: pl.DataFrame,
     
     data = data.with_columns(
         (pl.col("n_high_arousal") / pl.col("n_tokens")
-            ).alias("high_arousal_ratio"),
+            ).fill_nan(nan_value).fill_null(nan_value). \
+                alias("high_arousal_ratio"),
     )
     
     return data
@@ -329,7 +341,8 @@ def get_high_arousal_ratio(data: pl.DataFrame,
 def get_low_arousal_ratio(data: pl.DataFrame,
                           vad_lexicon: pl.DataFrame,
                           backbone: str = "spacy",
-                          threshold: float = 0.33
+                          threshold: float = 0.33,
+                          nan_value: float = 0.0
                           ) -> pl.DataFrame:
     """
     Returns the ratio of words with arousal lower than the threshold.
@@ -343,7 +356,8 @@ def get_low_arousal_ratio(data: pl.DataFrame,
     
     data = data.with_columns(
         (pl.col("n_low_arousal") / pl.col("n_tokens")
-            ).alias("low_arousal_ratio"),
+            ).fill_nan(nan_value).fill_null(nan_value). \
+                alias("low_arousal_ratio"),
     )
     
     return data
@@ -351,7 +365,8 @@ def get_low_arousal_ratio(data: pl.DataFrame,
 def get_high_dominance_ratio(data: pl.DataFrame,
                              vad_lexicon: pl.DataFrame,
                              backbone: str = "spacy",
-                             threshold: float = 0.66
+                             threshold: float = 0.66,
+                             nan_value: float = 0.0
                              ) -> pl.DataFrame:
     """
     Returns the ratio of words with dominance higher than the threshold.
@@ -365,7 +380,8 @@ def get_high_dominance_ratio(data: pl.DataFrame,
     
     data = data.with_columns(
         (pl.col("n_high_dominance") / pl.col("n_tokens")
-            ).alias("high_dominance_ratio"),
+            ).fill_nan(nan_value).fill_null(nan_value) \
+                .alias("high_dominance_ratio"),
     )
 
     return data
@@ -373,7 +389,8 @@ def get_high_dominance_ratio(data: pl.DataFrame,
 def get_low_dominance_ratio(data: pl.DataFrame,
                             vad_lexicon: pl.DataFrame,
                             backbone: str = "spacy",
-                            threshold: float = 0.33
+                            threshold: float = 0.33,
+                            nan_value: float = 0.0
                             ) -> pl.DataFrame:
     """
     Returns the ratio of words with dominance lower than the threshold.
@@ -387,7 +404,8 @@ def get_low_dominance_ratio(data: pl.DataFrame,
     
     data = data.with_columns(
         (pl.col("n_low_dominance") / pl.col("n_tokens")
-            ).alias("low_dominance_ratio"),
+            ).fill_nan(nan_value).fill_null(nan_value). \
+                alias("low_dominance_ratio"),
     )
 
     return data
@@ -427,7 +445,8 @@ def filter_intensity_lexicon(intensity_lexicon: pl.DataFrame,
 def get_avg_emotion_intensity(data: pl.DataFrame,
                               intensity_lexicon: pl.DataFrame,
                               backbone: str = "spacy",
-                              emotions: list = EMOTIONS
+                              emotions: list = EMOTIONS,
+                              nan_value: float = 0.0
                               ) -> pl.DataFrame:
     """
     Returns the average emotion intensity of the text.
@@ -441,7 +460,8 @@ def get_avg_emotion_intensity(data: pl.DataFrame,
                     intensity_lexicon, x, emotion). \
                     select("emotion_intensity").mean().item(),
                 return_dtype=pl.Float64
-            ).alias(f"avg_intensity_{emotion}")
+            ).fill_nan(nan_value).fill_null(nan_value). \
+                alias(f"avg_intensity_{emotion}")
         )
 
     return data
@@ -450,7 +470,8 @@ def get_n_low_intensity(data: pl.DataFrame,
                         intensity_lexicon: pl.DataFrame,
                         backbone: str = "spacy",
                         emotions: list = EMOTIONS,
-                        threshold: float = 0.33
+                        threshold: float = 0.33,
+                        nan_value: float = 0.0
                         ) -> pl.DataFrame:
     """
     Returns the number of words with emotion intensity lower than the threshold.
@@ -465,7 +486,8 @@ def get_n_low_intensity(data: pl.DataFrame,
                     select("emotion_intensity").filter(
                         pl.col("emotion_intensity") < threshold).shape[0],
                 return_dtype=pl.UInt32
-            ).alias(f"n_low_intensity_{emotion}")
+            ).fill_null(nan_value).fill_nan(nan_value). \
+                alias(f"n_low_intensity_{emotion}")
         )
 
     return data
@@ -474,7 +496,8 @@ def get_n_high_intensity(data: pl.DataFrame,
                          intensity_lexicon: pl.DataFrame,
                          backbone: str = "spacy",
                          emotions: list = EMOTIONS,
-                         threshold: float = 0.66
+                         threshold: float = 0.66,
+                         nan_value: float = 0.0
                          ) -> pl.DataFrame:
     """
     Returns the number of words with emotion intensity higher than the threshold.
@@ -489,7 +512,8 @@ def get_n_high_intensity(data: pl.DataFrame,
                     select("emotion_intensity").filter(
                         pl.col("emotion_intensity") > threshold).shape[0],
                 return_dtype=pl.UInt32
-            ).alias(f"n_high_{emotion}_intensity")
+            ).fill_nan(nan_value).fill_null(nan_value). \
+                alias(f"n_high_{emotion}_intensity")
         )
 
     return data
@@ -498,7 +522,8 @@ def get_low_intensity_ratio(data: pl.DataFrame,
                             intensity_lexicon: pl.DataFrame,
                             backbone: str = "spacy",
                             emotions: list = EMOTIONS,
-                            threshold: float = 0.33
+                            threshold: float = 0.33,
+                            nan_value: float = 0.0
                             ) -> pl.DataFrame:
     """
     Returns the ratio of words with emotion intensity lower than the threshold.
@@ -513,7 +538,8 @@ def get_low_intensity_ratio(data: pl.DataFrame,
     for emotion in emotions:
         data = data.with_columns(
             (pl.col(f"n_low_{emotion}_intensity") / pl.col("n_tokens")
-                ).alias(f"low_intensity_{emotion}_ratio"),
+                ).fill_nan(nan_value).fill_null(nan_value). \
+                    alias(f"low_intensity_{emotion}_ratio"),
         )
     
     return data
@@ -522,7 +548,8 @@ def get_high_intensity_ratio(data: pl.DataFrame,
                              intensity_lexicon: pl.DataFrame,
                              backbone: str = "spacy",
                              emotions: list = EMOTIONS,
-                             threshold: float = 0.66
+                             threshold: float = 0.66,
+                             nan_value: float = 0.0
                              ) -> pl.DataFrame:
     """
     Returns the ratio of words with emotion intensity higher than the threshold.
@@ -537,7 +564,8 @@ def get_high_intensity_ratio(data: pl.DataFrame,
     for emotion in emotions:
         data = data.with_columns(
             (pl.col(f"n_high_{emotion}_intensity") / pl.col("n_tokens")
-                ).alias(f"high_intensity_ratio_{emotion}"),
+                ).fill_nan(nan_value).fill_null(nan_value). \
+                    alias(f"high_intensity_ratio_{emotion}"),
         )
     
     return data

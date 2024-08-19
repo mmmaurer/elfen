@@ -50,7 +50,8 @@ def get_avg_concreteness(data: pl.DataFrame,
                                      words=x,
                                      word_column="Word"). \
                 select(pl.col("Conc.M")).mean().item(),
-                return_dtype=pl.Float64).fill_nan(nan_value). \
+                return_dtype=pl.Float64
+                ).fill_nan(nan_value).fill_null(nan_value). \
                     alias("avg_concreteness")
     )
 
@@ -171,7 +172,8 @@ def get_avg_aoa(data: pl.DataFrame,
                                      words=x,
                                      word_column="Word"). \
                 select(pl.col("Rating.Mean")).mean().item(),
-                return_dtype=pl.Float64).fill_nan(nan_value). \
+                return_dtype=pl.Float64
+                ).fill_nan(nan_value).fill_null(nan_value). \
                     alias("avg_aoa")
     )
 
@@ -192,7 +194,8 @@ def get_n_low_aoa(data: pl.DataFrame,
                 lambda x: filter_lexicon(lexicon=aoa_norms,
                                          words=x,
                                          word_column="Word"). \
-                    select(pl.col("Rating.Mean")).filter(pl.col("Rating.Mean") < threshold). \
+                    select(pl.col("Rating.Mean")
+                           ).filter(pl.col("Rating.Mean") < threshold). \
                         count().item(),
                     return_dtype=pl.Int64).alias("n_low_aoa")
         )
@@ -292,7 +295,8 @@ def get_avg_prevalence(data: pl.DataFrame,
                                      words=x,
                                      word_column="Word"). \
                 select(pl.col("Prevalence")).mean().item(),
-                return_dtype=pl.Float64).fill_nan(nan_value). \
+                return_dtype=pl.Float64
+                ).fill_nan(nan_value).fill_null(nan_value). \
                     alias("avg_prevalence")
     )
 
@@ -313,7 +317,8 @@ def get_n_low_prevalence(data: pl.DataFrame,
             lambda x: filter_lexicon(lexicon=prevalence_norms,
                                      words=x,
                                      word_column="Word"). \
-                select(pl.col("Prevalence")).filter(pl.col("Prevalence") < threshold). \
+                select(pl.col("Prevalence")).filter(
+                    pl.col("Prevalence") < threshold). \
                     count().item(),
                 return_dtype=pl.Int64).alias("n_low_prevalence")
     )
@@ -335,7 +340,8 @@ def get_n_high_prevalence(data: pl.DataFrame,
             lambda x: filter_lexicon(lexicon=prevalence_norms,
                                      words=x,
                                      word_column="Word"). \
-                select(pl.col("Prevalence")).filter(pl.col("Prevalence") > threshold). \
+                select(pl.col("Prevalence")).filter(
+                    pl.col("Prevalence") > threshold). \
                     count().item(),
                 return_dtype=pl.Int64).alias("n_high_prevalence")
     )

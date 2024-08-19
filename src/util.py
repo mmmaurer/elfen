@@ -41,9 +41,9 @@ def filter_lexicon(lexicon: pl.DataFrame,
     """
     return lexicon.filter(pl.col(word_column).is_in(words))
 
-def upos_to_swn(upos_tag: str) -> str:
+def upos_to_wn(upos_tag: str) -> str:
     """
-    Convert a Universal POS tag to a SentiWordNet POS tag.
+    Convert a Universal POS tag to a (Senti)WordNet POS tag.
     """
     if upos_tag in {"NOUN", "PROPN"}:
         return "n"

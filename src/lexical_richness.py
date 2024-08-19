@@ -18,11 +18,11 @@ def get_lemma_token_ratio(data: pl.DataFrame,
     """
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
-    if 'n_lex_tokens' not in data.columns:
+    if 'n_lexical_tokens' not in data.columns:
         data = get_num_lexical_tokens(data, backbone=backbone)
     
     data = data.with_columns(
-        (pl.col("n_lex_tokens") / pl.col("n_tokens")
+        (pl.col("n_lexical_tokens") / pl.col("n_tokens")
          ).alias("lemma_token_ratio"),
     )
 
@@ -38,7 +38,7 @@ def get_ttr(data: pl.DataFrame,
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
     if 'n_types' not in data.columns:
-        data = get_num_types(data)
+        data = get_num_types(data, backbone=backbone)
     
     data = data.with_columns(
         (pl.col("n_types") / pl.col("n_tokens")).alias("ttr"),
@@ -186,8 +186,15 @@ def get_n_hapax_legomena(data: pl.DataFrame,
         )
 
     elif backbone == 'stanza':
-        raise NotImplementedError("Hapax legomena calculation is not "
-                                  "implemented for Stanza.")
+        data = data.with_columns(
+            pl.col("nlp").map_elements(lambda x: np.sum(
+                np.unique(np.array([token.text 
+                                    for sent 
+                                    in x.sentences 
+                                    for token in sent.tokens]),
+                          return_counts=True)[1] == 1),
+                          return_dtype=pl.UInt32).alias("n_hapax_legomena")
+        )
     
     return data
 
@@ -238,11 +245,11 @@ def get_lexical_density(data: pl.DataFrame,
     """
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
-    if 'n_lex_tokens' not in data.columns:
+    if 'n_lexical_tokens' not in data.columns:
         data = get_num_lexical_tokens(data, backbone=backbone)
     
     data = data.with_columns(
-        (pl.col("n_lex_tokens") / pl.col("n_tokens")
+        (pl.col("n_lexical_tokens") / pl.col("n_tokens")
          ).alias("lexical_density"),
     )
 
