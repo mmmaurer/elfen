@@ -1,1 +1,1 @@
-# Linguistic Feature Extraction Toolkit
+# FLFE - Fast linguistic feature extraction for tabular text datasets
