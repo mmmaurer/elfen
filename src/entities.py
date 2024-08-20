@@ -1,3 +1,7 @@
+"""
+This module contains functions to extract named entity-related features
+from text data.
+"""
 import polars as pl
 
 from .surface import (
@@ -16,6 +20,15 @@ def get_num_entities(data: pl.DataFrame,
                      ) -> pl.DataFrame:
     """
     Calculates the number of entities in the text data.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+
+    Returns:
+    - data: A Polars DataFrame containing the number of entities in the
+            text data.
     """
     if backbone == 'spacy':
         data = data.with_columns(
@@ -37,6 +50,15 @@ def get_entity_ratio(data: pl.DataFrame,
                      ) -> pl.DataFrame:
         """
         Calculates the ratio of entities to tokens in the text data.
+
+        Args:
+        - data: A Polars DataFrame containing the text data.
+        - backbone: The NLP library used to process the text data.
+                    Either 'spacy' or 'stanza'.
+        
+        Returns:
+        - data: A Polars DataFrame containing the entity ratio in the
+                text data.
         """
         if "n_tokens" not in data.columns:
             data = get_num_tokens(data, backbone)
@@ -56,6 +78,15 @@ def get_entities_per_sentence(data: pl.DataFrame,
                               ) -> pl.DataFrame:
     """
     Calculates the average number of entities per sentence in the text data.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+
+    Returns:
+    - data: A Polars DataFrame containing the average number of entities
+            per sentence in the text data.
     """
     if "n_sentences" not in data.columns:
         data = get_num_sentences(data, backbone)
@@ -75,6 +106,18 @@ def get_num_per_entity_type(data: pl.DataFrame,
                             ) -> pl.DataFrame:
     """
     Calculates the number of entities per entity type in the text data.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+    - ent_types: A list of entity types to calculate the number of entities for.
+                 Default is the list of entity types in the spaCy/stanza
+                 libraries.
+    
+    Returns:
+    - data: A Polars DataFrame containing the number of entities per entity type
+            in the text data.
     """
     if backbone == 'spacy':
         for ent_type in ent_types:
@@ -99,21 +142,31 @@ def get_entity_type_ratio(data: pl.DataFrame,
                           backbone: str = 'spacy',
                           ent_types: list = ENT_TYPES
                           ) -> pl.DataFrame:
-     """
-     Calculates the ratio of entities per entity type to tokens in the text data.
-     """
-     if "n_tokens" not in data.columns:
-          data = get_num_tokens(data, backbone)
-     
-     for ent_type in ent_types:
-          if f"n_{ent_type.lower()}" not in data.columns:
-                data = get_num_per_entity_type(data, backbone, ent_types)
-          data = data.with_columns(
-                (
-                     pl.col(f"n_{ent_type.lower()}") / pl.col("n_tokens")
-                ).alias(f"{ent_type.lower()}_ratio")
-          )
-     return data
+    """
+    Calculates the ratio of entities per entity type to tokens in the
+    text data.
+
+    Args:
+    = data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+
+    Returns:
+    - data: A Polars DataFrame containing the entity type ratio in the
+            text data.
+    """
+    if "n_tokens" not in data.columns:
+         data = get_num_tokens(data, backbone)
+    
+    for ent_type in ent_types:
+         if f"n_{ent_type.lower()}" not in data.columns:
+               data = get_num_per_entity_type(data, backbone, ent_types)
+         data = data.with_columns(
+               (
+                    pl.col(f"n_{ent_type.lower()}") / pl.col("n_tokens")
+               ).alias(f"{ent_type.lower()}_ratio")
+         )
+    return data
 
 def get_entity_type_per_sentence(data: pl.DataFrame,
                                  backbone: str = 'spacy',
@@ -122,6 +175,19 @@ def get_entity_type_per_sentence(data: pl.DataFrame,
         """
         Calculates the average number of entities per entity type per sentence
         in the text data.
+
+        Args:
+        - data: A Polars DataFrame containing the text data.
+        - backbone: The NLP library used to process the text data.
+                    Either 'spacy' or 'stanza'.
+        - ent_types: A list of entity types to calculate the number of entities
+                     for.
+                     Default is the list of entity types in the spaCy/stanza
+                     libraries.
+
+        Returns:
+        - data: A Polars DataFrame containing the average number of entities
+                per entity type per sentence in the text data.
         """
         if "n_sentences" not in data.columns:
             data = get_num_sentences(data, backbone)

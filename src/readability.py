@@ -1,9 +1,14 @@
+"""
+This module contains functions to calculate readability scores
+from text data.
+"""
 import polars as pl
 
 from .surface import (
     get_num_tokens,
     get_num_sentences,
-    get_num_characters
+    get_num_characters,
+    get_num_long_words
 )
 
 def get_num_syllables(data: pl.DataFrame,
@@ -11,6 +16,21 @@ def get_num_syllables(data: pl.DataFrame,
                         ) -> pl.DataFrame:
         """
         Calculates the number of syllables in a text.
+
+        Syllables are calculated using the syllables_count attribute
+        of the tokens in the text data.
+
+        Args:
+        - data: A Polars DataFrame containing the text data.
+        - backbone: The NLP library used to process the text data.
+                    Either 'spacy' or 'stanza'.
+                    Not supported for Stanza backbone.
+
+        Returns:
+        - data: A Polars DataFrame containing the number of syllables
+                in the text data.
+                The number of syllables is stored in a new column
+                named 'n_syllables'.
         """
         if backbone == 'spacy':
             data = data.with_columns(
@@ -32,7 +52,20 @@ def get_num_polysyllables(data: pl.DataFrame,
                           ) -> pl.DataFrame:
     """
     Calculates the number of polysyllables in a text.
+
     Polysyllables are words with three or more syllables.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+                Not supported for Stanza backbone.
+
+    Returns:
+    - data: A Polars DataFrame containing the number of polysyllables
+            in the text data.
+            The number of polysyllables is stored in a new column
+            named 'n_polysyllables'.
     """
     if backbone == 'spacy':
         data = data.with_columns(
@@ -58,6 +91,17 @@ def get_flesch_reading_ease(data: pl.DataFrame,
                             ) -> pl.DataFrame:
     """
     Calculates the Flesch Reading Ease score of a text.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+                Not supported for Stanza backbone.
+
+    Returns:
+    - data: A Polars DataFrame containing the Flesch Reading Ease score
+            of the text data. The Flesch Reading Ease score is stored
+            in a new column named 'flesch_reading_ease'.
     """
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
@@ -79,6 +123,17 @@ def get_flesch_kincaid_grade(data: pl.DataFrame,
                             ) -> pl.DataFrame:
     """
     Calculates the Flesch-Kincaid Grade Level of a text.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+                Not supported for Stanza backbone.
+
+    Returns:
+    - data: A Polars DataFrame containing the Flesch-Kincaid Grade Level
+            of the text data. The Flesch-Kincaid Grade Level is stored
+            in a new column named 'flesch_kincaid_grade'.
     """
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
@@ -100,6 +155,17 @@ def get_ari(data: pl.DataFrame,
             ) -> pl.DataFrame:
     """
     Calculates the Automated Readability Index (ARI) of a text.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+                Not supported for Stanza backbone.
+
+    Returns:
+    - data: A Polars DataFrame containing the Automated Readability Index
+            of the text data. The Automated Readability Index is stored
+            in a new column named 'ari'.
     """
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
@@ -121,6 +187,17 @@ def get_smog(data: pl.DataFrame,
             ) -> pl.DataFrame:
     """
     Calculates the Simple Measure of Gobbledygook (SMOG) of a text.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+                Not supported for Stanza backbone.
+
+    Returns:
+    - data: A Polars DataFrame containing the Simple Measure of Gobbledygook
+            of the text data. The Simple Measure of Gobbledygook is stored
+            in a new column named 'smog'.
     """
     if 'n_sentences' not in data.columns:
         data = get_num_sentences(data, backbone=backbone)
@@ -139,6 +216,17 @@ def get_cli(data: pl.DataFrame,
             ) -> pl.DataFrame:
     """
     Calculates the Coleman-Liau Index (CLI) of a text.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+                Not supported for Stanza backbone.
+
+    Returns:
+    - data: A Polars DataFrame containing the Coleman-Liau Index
+            of the text data. The Coleman-Liau Index is stored
+            in a new column named 'cli'.
     """
     if 'n_sentences' not in data.columns:
         data = get_num_sentences(data, backbone=backbone)
@@ -160,6 +248,17 @@ def get_gunning_fog(data: pl.DataFrame,
                     ) -> pl.DataFrame:
     """
     Calculates the Gunning Fog Index of a text.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+                Not supported for Stanza backbone.
+
+    Returns:
+    - data: A Polars DataFrame containing the Gunning Fog Index
+            of the text data. The Gunning Fog Index is stored
+            in a new column named 'gunning_fog'.
     """
     if 'n_sentences' not in data.columns:
         data = get_num_sentences(data, backbone=backbone)
@@ -175,3 +274,62 @@ def get_gunning_fog(data: pl.DataFrame,
     )
 
     return data
+
+def get_lix(data: pl.DataFrame,
+            backbone: str = 'spacy',
+            ) -> pl.DataFrame:
+    """
+    Calculates the LIX of a text.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+
+    Returns:
+    - data: A Polars DataFrame containing the LIX of the text data.
+            The LIX is stored in a new column named 'lix'.
+    """
+    if 'n_tokens' not in data.columns:
+        data = get_num_tokens(data, backbone=backbone)
+    if 'n_sentences' not in data.columns:
+        data = get_num_sentences(data, backbone=backbone)
+    if 'n_long_words' not in data.columns:
+        data = get_num_long_words(data, backbone=backbone)
+
+    data = data.with_columns(
+        (pl.col("n_tokens") / pl.col("n_sentences") + \
+         100 * pl.col("n_long_words") / pl.col("n_tokens")
+         ).alias("lix"),
+    )
+
+    return data
+
+def get_rix(data: pl.DataFrame,
+            backbone: str = 'spacy',
+            ) -> pl.DataFrame:
+    """
+    Calculates the RIX of a text.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+                Not supported for Stanza backbone.
+
+    Returns:
+    - data: A Polars DataFrame containing the RIX of the text data.
+            The RIX is stored in a new column named 'rix'.
+    """
+    if 'n_sentences' not in data.columns:
+        data = get_num_sentences(data, backbone=backbone)
+    if 'n_long_words' not in data.columns:
+        data = get_num_long_words(data, backbone=backbone)
+
+    data = data.with_columns(
+        (pl.col("n_long_words") / pl.col("n_sentences")
+         ).alias("rix"),
+    )
+
+    return data
+

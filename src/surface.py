@@ -1,3 +1,7 @@
+"""
+This module contains functions to calculate various surface-level features
+from text data.
+"""
 import polars as pl
 
 def get_raw_sequence_length(data: pl.DataFrame,
@@ -178,6 +182,33 @@ def get_num_types(data: pl.DataFrame,
                          in x.sentences for token in sent.tokens])),
                          return_dtype=pl.UInt16
                          ).alias("n_types"),
+        )
+        
+    return data
+
+def get_num_long_words(data: pl.DataFrame,
+                       backbone: str = 'spacy',
+                       threshold: int = 6
+                      ) -> pl.DataFrame:
+    """
+    Calculates the number of long words in a text.
+    """
+    if backbone == 'spacy':
+        data = data.with_columns(
+            pl.col("nlp"). \
+                map_elements(lambda x: len([token for token in x
+                                           if len(token.text) >= threshold]),
+                             return_dtype=pl.UInt16
+                             ).alias("n_long_words"),
+        )
+    elif backbone == 'stanza':
+        data = data.with_columns(
+            pl.col("nlp"). \
+                map_elements(lambda x: len([token for sent
+                                           in x.sentences for token in sent.tokens
+                                           if len(token.text) >= threshold]),
+                             return_dtype=pl.UInt16
+                             ).alias("n_long_words"),
         )
         
     return data

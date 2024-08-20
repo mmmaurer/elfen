@@ -1,3 +1,7 @@
+"""
+This module contains functions to calculate various part-of-speech (POS) related
+features from text data.
+"""
 import polars as pl
 
 from .surface import (
@@ -13,6 +17,21 @@ UPOS_TAGS = [
 def get_num_lexical_tokens(data: pl.DataFrame,
                             backbone: str = 'spacy'
                             ) -> pl.DataFrame:
+    """
+    Calculates the number of lexical tokens in the text.
+
+    Lexical tokens are tokens that are nouns, verbs, adjectives, or adverbs.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+
+    Returns:
+    - data: A Polars DataFrame containing the number of lexical tokens in the
+            text data. The number of lexical tokens is stored in a new column
+            named 'n_lexical_tokens'.
+    """
     lex = ["NOUN", "VERB", "ADJ", "ADV"]
     if backbone == 'spacy':
         data = data.with_columns(
@@ -35,6 +54,22 @@ def get_num_lexical_tokens(data: pl.DataFrame,
 def get_pos_variability(data: pl.DataFrame,
                         backbone: str = 'spacy'
                         ) -> pl.DataFrame:
+    """
+    Calculates the variability of part-of-speech tags in the text data.
+
+    The variability is the ratio of the number of unique part-of-speech tags to
+    the number of tokens in the text data.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+
+    Returns:
+    - data: A Polars DataFrame containing the variability of part-of-speech tags
+            in the text data. The variability is stored in a new column named 
+            'pos_variability'.
+    """
     if "n_tokens" not in data.columns:
         data = get_num_tokens(data, backbone)
     
@@ -60,6 +95,23 @@ def get_num_per_pos(data: pl.DataFrame,
                 backbone: str = 'spacy',
                 pos_tags: list = UPOS_TAGS
                 ) -> pl.DataFrame:
+    """
+    Calculates the number of tokens per part-of-speech tag in the text data.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+    - pos_tags: A list of part-of-speech tags to calculate the number of
+                tokens for.
+                Default is the Universal POS tagset.
+
+    Returns:
+    - data: A Polars DataFrame containing the number of tokens per
+            part-of-speech tag in the text data. The number of tokens
+            per part-of-speech tag is stored in new columns named 'n_{pos}'
+            where {pos} is the part-of speech tag.
+    """
     if backbone == 'spacy':
         for pos in pos_tags:
             data = data.with_columns(
@@ -84,6 +136,24 @@ def get_pos_ratio(data: pl.DataFrame,
                            backbone: str = 'spacy',
                            pos_tags: list = UPOS_TAGS
                            ) -> pl.DataFrame:
+    """
+    Calculates the ratio of tokens per part-of-speech tag to the number
+    of tokens in the text data.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+    - pos_tags: A list of part-of-speech tags to calculate the ratio of
+                tokens for.
+                Default is the Universal POS tagset.
+
+    Returns:
+    - data: A Polars DataFrame containing the ratio of tokens per
+            part-of-speech tag to the number of tokens in the text data.
+            The ratio is stored in new columns named '{pos}_ratio'
+            where {pos} is the part-of-speech tag.
+    """
     if "n_tokens" not in data.columns:
         data = get_num_tokens(data, backbone)
 
@@ -102,6 +172,22 @@ def get_pos_per_sent(data: pl.DataFrame,
                      backbone: str = 'spacy',
                      pos_tags: list = UPOS_TAGS
                      ) -> pl.DataFrame:
+    """
+    Calculates the number of tokens per part-of-speech tag per sentence
+    in the text data.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+
+    Returns:
+    - data: A Polars DataFrame containing the number of tokens per
+            part-of-speech tag per sentence in the text data.
+            The number of tokens per part-of-speech tag per sentence
+            is stored in new columns named 'n_{pos}_per_sent'
+            where {pos} is the part-of-speech tag.
+    """
     if "n_sentences" not in data.columns:
         data = get_num_sentences(data, backbone)
     
@@ -129,7 +215,17 @@ def get_num_lemmas(data: pl.DataFrame,
                           backbone: str = 'spacy'
                           ) -> pl.DataFrame:
     """
-    Returns the number of unique lemmas in the text.
+    Calculates the number of unique lemmas in the text.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+    
+    Returns:
+    - data: A Polars DataFrame containing the number of unique lemmas in the
+            text data. The number of unique lemmas is stored in a new column
+            named 'n_lemmas'.
     """
     if backbone == 'spacy':
         data = data.with_columns(

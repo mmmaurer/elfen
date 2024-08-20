@@ -1,10 +1,15 @@
-import numpy as np
+"""
+Semantic features.
+
+The WordNet features are collected using the `wn` package. It uses Open
+Multilingual WordNet to provide information about words in different languages.
+
+If you are using the resources for research, please cite the original authors of
+Open Multilingual WordNet.
+"""
 import polars as pl
 import wn
 
-from .features import (
-    get_tokens,
-)
 from .surface import (
     get_num_tokens,
 )
@@ -19,6 +24,12 @@ from .util import (
 def load_hedges(hedges_file: str) -> list[str]:
     """
     Loads the hedges from the given file.
+
+    Args:
+    - hedges_file: Path to the file containing the hedges.
+
+    Returns:
+    - hedges: List of hedges.
     """
     with open(hedges_file, 'r') as f:
         raw = f.readlines()
@@ -36,6 +47,14 @@ def get_num_hedges(data: pl.DataFrame,
                    ) -> pl.DataFrame:
     """
     Calculates the number of hedges in a text.
+
+    Args:
+    - data: Polars DataFrame.
+    - hedges: List of hedges.
+    - text_column: Name of the column containing the text.
+
+    Returns:
+    - data: Polars DataFrame with the number of hedges.
     """
     def n_matches(string: str, patterns: list[str]) -> int:
         """
@@ -63,6 +82,15 @@ def get_hedges_ratio(data: pl.DataFrame,
                      ) -> pl.DataFrame:
     """
     Calculates the ratio of hedges in a text.
+
+    Args:
+    - data: Polars DataFrame.
+    - hedges: List of hedges.
+    - text_column: Name of the column containing the text.
+    - backbone: NLP library used.
+
+    Returns:
+    - data: Polars DataFrame with the hedges ratio.
     """
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
@@ -90,6 +118,20 @@ def get_synsets(data: pl.DataFrame,
                 ) -> pl.DataFrame:
     """
     Calculates the number of synsets in a text per token.
+
+    WordNet synsets serve as a proxy for the ambiguity/polysemy of a word.
+
+    Args:
+    - data: Polars DataFrame.
+    - backbone: NLP library used.
+    - language: Language of the text.
+                Defaults to English ('en').
+    - pos_tags: List of POS tags to consider.
+                Defaults to lexical tokens.
+
+    Returns:
+    - data: Polars DataFrame with the numbers of synsets per text.
+            The columns are named 'synsets' and 'synsets_{pos}'.
     """
     if backbone == 'spacy':
         data = data.with_columns(
@@ -149,6 +191,21 @@ def get_avg_num_synsets(data: pl.DataFrame,
                         ) -> pl.DataFrame:
     """
     Calculates the average number of synsets in a text.
+
+    WordNet synsets serve as a proxy for the ambiguity/polysemy of a word.
+
+    Args:
+    - data: Polars DataFrame.
+    - backbone: NLP library used.
+                'spacy' or 'stanza'.
+    - language: Language of the text.
+                Defaults to English ('en').
+    - pos_tags: List of POS tags to consider.
+                Defaults to lexical tokens.
+
+    Returns:
+    - data: Polars DataFrame with the average number of synsets.
+            The column is named 'avg_num_synsets'.
     """
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
@@ -174,40 +231,18 @@ def get_avg_num_synsets_per_pos(data: pl.DataFrame,
                                 ) -> pl.DataFrame:
     """
     Calculates the average number of synsets per POS in a text.
+
+    Args:
+    - data: Polars DataFrame.
+    - backbone: NLP library used.
+                'spacy' or 'stanza'.
+    - language: Language of the text.
+                Defaults to English ('en').
+    - pos_tags: List of POS tags to consider.
+                Defaults to lexical tokens.
+    - nan_value: Value to fill NaNs with.
+                    Defaults to 0.
     """
-    # if backbone == 'spacy':
-    #     for pos in pos_tags:
-    #         data = data.with_columns(
-    #             (pl.col("nlp").map_elements(lambda x:
-    #                                             [
-    #                                                 len(wn.synsets(
-    #                                                     token.text,
-    #                                                     lang=language,
-    #                                                     pos=upos_to_wn(pos)
-    #                                                 ))
-    #                                                 for token in x
-    #                                                 if token.pos_ == pos
-    #                                             ],
-    #             return_dtype=pl.List(pl.Int64)).list.mean()
-    #             ).fill_null(0).alias(f"avg_num_synsets_{pos.lower()}")
-    #         )
-    # elif backbone == 'stanza':
-    #     for pos in pos_tags:
-    #         data = data.with_columns(
-    #             (pl.col("nlp").map_elements(lambda x:
-    #                                        [
-    #                                             len(wn.synsets(
-    #                                                 word.text,
-    #                                                 lang=language,
-    #                                                 pos=upos_to_wn(pos)
-    #                                             ))
-    #                                             for sent in x.sentences
-    #                                             for word in sent.words
-    #                                             if word.upos == pos
-    #                                         ],
-    #             return_dtype=pl.List(pl.Int64)).list.mean()
-    #             ).fill_null(0).alias(f"avg_num_synsets_{pos.lower()}")
-    #         )
     if "synsets" not in data.columns:  # ensures all synsets are calculated
         data = get_synsets(data, backbone=backbone,
                            language=language,
@@ -238,37 +273,22 @@ def get_num_low_synsets(data: pl.DataFrame,
                         ) -> pl.DataFrame:
     """
     Calculates the number of words with a low number of synsets in a text.
+
+    Args:
+    - data: Polars DataFrame.
+    - backbone: NLP library used.
+                'spacy' or 'stanza'.
+    - language: Language of the text.
+                Defaults to English ('en').
+    - pos_tags: List of POS tags to consider.
+                Defaults to lexical tokens.
+    - threshold: Threshold for the number of synsets.
+                    Defaults to 2.
+
+    Returns:
+    - data: Polars DataFrame with the number of low synsets.
+            The column is named 'n_low_synsets'.
     """
-    # if  backbone == 'spacy':
-    #     data = data.with_columns(
-    #         pl.col("nlp").map_elements(lambda x:
-    #                                     [
-    #                                         1 for token in x
-    #                                         if len(wn.synsets(
-    #                                             token.text,
-    #                                             lang=language,
-    #                                             pos=upos_to_wn(token.pos_)
-    #                                         )) <= threshold
-    #                                         and token.pos_ in pos_tags
-    #                                         ],
-    #         return_dtype=pl.List(pl.Int64)
-    #         ).list.len().alias("n_low_synsets"))
-    # elif backbone == 'stanza':
-    #     data = data.with_columns(
-    #         pl.col("nlp").map_elements(lambda x:
-    #                                     [
-    #                                         1 for sent in x.sentences
-    #                                         for word in sent.words
-    #                                         if len(wn.synsets(
-    #                                             word.text,
-    #                                             lang=language,
-    #                                             pos=upos_to_wn(word.upos)
-    #                                         )) <= threshold
-    #                                         and word.upos in pos_tags
-    #                                     ],
-    #         return_dtype=pl.List(pl.Int64)
-    #         ).list.len().alias("n_low_synsets")
-    #     )
     if "synsets" not in data.columns:
         data = get_synsets(data, backbone=backbone,
                            language=language,
@@ -296,6 +316,21 @@ def get_low_synsets_ratio(data: pl.DataFrame,
                           ) -> pl.DataFrame:
     """
     Calculates the ratio of words with a low number of synsets in a text.
+
+    Args:
+    - data: Polars DataFrame.
+    - backbone: NLP library used.
+                'spacy' or 'stanza'.
+    - language: Language of the text.
+                Defaults to English ('en').
+    - pos_tags: List of POS tags to consider.
+                Defaults to lexical tokens.
+    - threshold: Threshold for the number of synsets.
+                    Defaults to 2.
+
+    Returns:
+    - data: Polars DataFrame with the low synsets ratio.
+            The column is named 'low_synsets_ratio'.
     """
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
@@ -322,37 +357,22 @@ def get_num_high_synsets(data: pl.DataFrame,
                         ) -> pl.DataFrame:
     """
     Calculates the number of words with a high number of synsets in a text.
+
+    Args:
+    - data: Polars DataFrame.
+    - backbone: NLP library used.
+                'spacy' or 'stanza'.
+    - language: Language of the text.
+                Defaults to English ('en').
+    - pos_tags: List of POS tags to consider.
+                Defaults to lexical tokens.
+    - threshold: Threshold for the number of synsets.
+                    Defaults to 5.
+
+    Returns:
+    - data: Polars DataFrame with the number of high synsets.
+            The column is named 'n_high_synsets'.
     """
-    # if  backbone == 'spacy':
-    #     data = data.with_columns(
-    #         pl.col("nlp").map_elements(lambda x:
-    #                                    [
-    #                                         1 for token in x
-    #                                         if len(wn.synsets(
-    #                                             token.text,
-    #                                             lang=language,
-    #                                             pos=upos_to_wn(token.pos_)
-    #                                         )) >= threshold
-    #                                         and token.pos_ in pos_tags
-    #                                     ],
-    #         return_dtype=pl.List(pl.Int64)).list.len().alias("n_high_synsets")
-    #     )
-    # elif backbone == 'stanza':
-    #     data = data.with_columns(
-    #         pl.col("nlp").map_elements(lambda x:
-    #                                    [
-    #                                         1 for sent in x.sentences
-    #                                         for word in sent.words
-    #                                         if len(wn.synsets(
-    #                                             word.text,
-    #                                             lang=language,
-    #                                             pos=upos_to_wn(word.upos)
-    #                                         )) >= threshold
-    #                                         and word.upos in pos_tags
-    #                                     ],
-    #         return_dtype=pl.List(pl.Int64)).list.len().alias("n_high_synsets"))
-    
-    # return data
     if "synsets" not in data.columns:
         data = get_synsets(data, backbone=backbone,
                            language=language,
@@ -379,6 +399,21 @@ def get_high_synsets_ratio(data: pl.DataFrame,
                             ) -> pl.DataFrame:
     """
     Calculates the ratio of words with a high number of synsets in a text.
+
+    Args:
+    - data: Polars DataFrame.
+    - backbone: NLP library used.
+                'spacy' or 'stanza'.
+    - language: Language of the text.
+                Defaults to English ('en').
+    - pos_tags: List of POS tags to consider.
+                Defaults to lexical tokens.
+    - threshold: Threshold for the number of synsets.
+                    Defaults to 5.
+
+    Returns:
+    - data: Polars DataFrame with the high synsets ratio.
+            The column is named 'high_synsets_ratio'.
     """
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)

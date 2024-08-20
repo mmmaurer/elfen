@@ -1,3 +1,8 @@
+"""
+This module contains schema definitions for the different external
+resources. These schemas are used in Polars to enable type-safe and
+fast data manipulation.
+"""
 import polars as pl
 
 

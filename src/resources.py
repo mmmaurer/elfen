@@ -1,8 +1,11 @@
+"""
+This module contains functions to download external resources.
+
+If you are using the resources for research, please cite the original authors.
+"""
 import requests
 import zipfile
 import os
-
-import polars as pl
 
 
 RESOURCE_MAP = {
@@ -114,12 +117,13 @@ def download_lexicon(link: str,
     """
     Download a lexicon from a link and save it to a path.
     
-    Parameters
-    ----------
-    link : str
-        The link to the lexicon.
-    path : str
-        The path to save the lexicon.
+    Args:
+    - link: Link to the lexicon.
+    - path: Path to save the lexicon.
+    - filename: Name of the file to save the lexicon.
+
+    Returns:
+    - None
     """
     # Headers to avoid 406 response
     headers = {
@@ -156,6 +160,12 @@ def download_lexicon(link: str,
 def get_resource(feature: str) -> None:
     """
     Download a resource from the RESOURCE_MAP.
+
+    Args:
+    - feature: Name of the feature to download.
+
+    Returns:
+    - None
     """
     if feature not in RESOURCE_MAP:
         raise ValueError(f"Feature {feature} not found in RESOURCE_MAP.")
@@ -177,4 +187,18 @@ def get_resource(feature: str) -> None:
                                     RESOURCE_MAP[feature]["area"],
                                     RESOURCE_MAP[feature]["subarea"]),
                                     RESOURCE_MAP[feature]["filename"])
+
+def list_external_resources() -> None:
+    """
+    List all the external resources available in the RESOURCE_MAP.
+
+    Args:
+    - None
+
+    Returns:
+    - None
+    """
+    for feature in RESOURCE_MAP:
+        print(f"Feature: {feature}")
+        print("\n")
 
