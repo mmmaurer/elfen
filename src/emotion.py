@@ -11,6 +11,7 @@ from .schemas import (
     VAD_SCHEMA_NRC,
     INTENSITY_SCHEMA,
     SENTIWORDNET_SCHEMA,
+    SENTIMENT_NRC_SCHEMA,
 )
 
 from .util import (
@@ -574,6 +575,8 @@ def get_high_intensity_ratio(data: pl.DataFrame,
 #                           SENTIMENT ANALYSIS                          #
 # --------------------------------------------------------------------- #
 
+# ---------------------------- SentiWordNet --------------------------- #
+
 def load_sentiwordnet(path: str = SENTIWORDNET_PATH,
                       schema: dict = SENTIWORDNET_SCHEMA,
                       has_header: bool = False,
@@ -590,3 +593,177 @@ def load_sentiwordnet(path: str = SENTIWORDNET_PATH,
                               skip_rows=27)
     return sentiwordnet
 
+# ---------------------------- Sentiment NRC --------------------------- #
+
+def load_sentiment_nrc_lexicon(path: str,
+                               schema: dict = SENTIMENT_NRC_SCHEMA,
+                               has_header: bool = False,
+                               separator: str = "\t",
+                               ) -> pl.DataFrame:
+    """
+    Returns the sentiment NRC lexicon as a polars DataFrame.
+    """
+    sentiment_nrc = pl.read_csv(path,
+                               has_header=has_header,
+                               schema=schema,
+                               separator=separator)
+    return sentiment_nrc
+
+def filter_sentiment_nrc_lexicon(sentiment_nrc: pl.DataFrame,
+                                 words: list,
+                                 sentiment: str
+                                 ) -> pl.DataFrame:
+    """
+    Filters the sentiment NRC lexicon for the given words and emotions.
+    """
+    filtered_sentiment_nrc = sentiment_nrc.filter(
+        (pl.col("emotion") == sentiment) &
+        (pl.col("label") == 1) &
+        (pl.col("word").is_in(words))
+    )
+    
+    return filtered_sentiment_nrc
+
+def get_n_positive_sentiment(data: pl.DataFrame,
+                            sentiment_nrc: pl.DataFrame,
+                            backbone: str = "spacy",
+                            nan_value: float = 0.0
+                            ) -> pl.DataFrame:
+        """
+        Returns the number of words with positive sentiment.
+
+        Args:
+        - data (pl.DataFrame): The preprocessed input data. Contains the
+                               "nlp" column produced by the NLP backbone.
+        - sentiment_nrc (pl.DataFrame): The sentiment NRC lexicon.
+        - backbone (str): The NLP backbone to use.
+        - nan_value (float): The value to use for NaNs.
+
+        """
+        if "lemmas" not in data.columns:
+            data = get_lemmas(data, backbone=backbone)
+        data = data.with_columns(
+            pl.col("lemmas").map_elements(
+                lambda x: filter_sentiment_nrc_lexicon(
+                    sentiment_nrc, x, sentiment="positive").shape[0],
+                return_dtype=pl.UInt32
+            ).fill_nan(nan_value).fill_null(nan_value). \
+            # convention to fill NaNs with 0 as this maps to
+            # the absence of positive sentiment words
+                alias("n_positive_sentiment")
+        )
+    
+        return data
+
+def get_n_negative_sentiment(data: pl.DataFrame,
+                            sentiment_nrc: pl.DataFrame,
+                            backbone: str = "spacy",
+                            nan_value: float = 0.0
+                            ) -> pl.DataFrame:
+        """
+        Returns the number of words with negative sentiment.
+        """
+        if "lemmas" not in data.columns:
+            data = get_lemmas(data, backbone=backbone)
+        data = data.with_columns(
+            pl.col("lemmas").map_elements(
+                lambda x: filter_sentiment_nrc_lexicon(
+                    sentiment_nrc, x, sentiment="negative").shape[0],
+                return_dtype=pl.UInt32
+            ).fill_nan(nan_value).fill_null(nan_value). \
+            # convention to fill NaNs with 0 as this maps to
+            # the absence of negative sentiment words
+                alias("n_negative_sentiment")
+        )
+    
+        return data
+
+def get_positive_sentiment_ratio(data: pl.DataFrame,
+                                sentiment_nrc: pl.DataFrame,
+                                backbone: str = "spacy",
+                                nan_value: float = 0.0
+                                ) -> pl.DataFrame:
+        """
+        Returns the ratio of words with positive sentiment.
+        """
+        if 'n_tokens' not in data.columns:
+            data = get_num_tokens(data, backbone=backbone)
+        if 'n_positive_sentiment' not in data.columns:
+            data = get_n_positive_sentiment(data, sentiment_nrc,
+                                            backbone=backbone)
+        
+        data = data.with_columns(
+            (pl.col("n_positive_sentiment") / pl.col("n_tokens")
+                ).fill_nan(nan_value).fill_null(nan_value). \
+                # convention to fill NaNs with 0 as this maps to
+                # the absence of positive sentiment words
+                    alias("positive_sentiment_ratio"),
+        )
+        
+        return data
+
+def get_negative_sentiment_ratio(data: pl.DataFrame,
+                                sentiment_nrc: pl.DataFrame,
+                                backbone: str = "spacy",
+                                nan_value: float = 0.0
+                                ) -> pl.DataFrame:
+        """
+        Returns the ratio of words with negative sentiment.
+        """
+        if 'n_tokens' not in data.columns:
+            data = get_num_tokens(data, backbone=backbone)
+        if 'n_negative_sentiment' not in data.columns:
+            data = get_n_negative_sentiment(data, sentiment_nrc,
+                                            backbone=backbone)
+        
+        data = data.with_columns(
+            (pl.col("n_negative_sentiment") / pl.col("n_tokens")
+                ).fill_nan(nan_value).fill_null(nan_value). \
+                # convention to fill NaNs with 0 as this maps to
+                # the absence of negative sentiment words
+                    alias("negative_sentiment_ratio"),
+        )
+        
+        return data
+
+def get_sentiment_score(data: pl.DataFrame,
+                        sentiment_nrc: pl.DataFrame,
+                        backbone: str = "spacy",
+                        nan_value: float = 0.0
+                        ) -> pl.DataFrame:
+    """
+    Returns the sentiment score of the text.
+
+    The sentiment score is calculated as the difference between the number of
+    positive and negative sentiment words divided by the number of tokens.
+    The sentiment score is in the range [-1, 1], where -1 indicates negative
+    sentiment, 0 indicates neutral sentiment, and 1 indicates positive sentiment.
+
+    Args:
+    - data (pl.DataFrame): The preprocessed input data. Contains the
+                           "nlp" column produced by the NLP backbone.
+    - sentiment_nrc (pl.DataFrame): The sentiment NRC lexicon.
+    - backbone (str): The NLP backbone to use.
+    - nan_value (float): The value to use for NaNs.
+
+    Returns:
+    - data (pl.DataFrame): The input data with the sentiment score column.
+    """
+    if "n_positive_sentiment" not in data.columns:
+        data = get_n_positive_sentiment(data,
+                                        sentiment_nrc,
+                                        backbone=backbone)
+    if "n_negative_sentiment" not in data.columns:
+        data = get_n_negative_sentiment(data,
+                                        sentiment_nrc,
+                                        backbone=backbone)
+    if "n_tokens" not in data.columns:
+        data = get_num_tokens(data, backbone=backbone)
+    
+    data = data.with_columns(
+        ((pl.col("n_positive_sentiment") - pl.col("n_negative_sentiment")) /
+         pl.col("n_tokens")).fill_nan(nan_value).fill_null(nan_value). \
+         alias("sentiment_score")
+    )
+
+    return data

@@ -107,6 +107,12 @@ SENTIWORDNET_SCHEMA = {
     "Gloss": pl.String,
 }
 
+SENTIMENT_NRC_SCHEMA = {
+    "word": pl.String,
+    "emotion": pl.String,
+    "label": pl.UInt8,
+}
+
 # ======================================== #
 #        Psycholinguistic Features         #
 # ======================================== #

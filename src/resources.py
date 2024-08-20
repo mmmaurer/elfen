@@ -92,6 +92,18 @@ RESOURCE_MAP = {
         "subarea": "Sentiment",
         "filename": "SentiWordNet_3.0.0.txt"
     },
+    # Mohammad, S. M., & Turney, P. D. (2013).
+    # Emotions evoked by common words and phrases:
+    # Using Mechanical Turk to create an emotion lexicon.
+    # In Proceedings of the NAACL HLT 2013 Workshop on
+    # Computational Approaches to Analysis and Generation
+    # of Emotion in Text (pp. 26-34).
+    "sentiment_nrc": {
+        "link": "https://saifmohammad.com/WebDocs/Lexicons/NRC-Emotion-Lexicon.zip",
+        "area": "Emotion",
+        "subarea": "Sentiment",
+        "filename": "NRC-Emotion-Lexicon/NRC-Emotion-Lexicon-Wordlevel-v0.92.txt"
+    },
 }
 
 
