@@ -310,47 +310,6 @@ def get_num_low_synsets(data: pl.DataFrame,
 
     return data
 
-def get_low_synsets_ratio(data: pl.DataFrame,
-                          backbone: str = 'spacy',
-                          language: str = 'en',
-                          pos_tags: list[str] = [
-                              'NOUN', 'VERB', 'ADJ', 'ADV'
-                              ],
-                          threshold: int = 2
-                          ) -> pl.DataFrame:
-    """
-    Calculates the ratio of words with a low number of synsets in a text.
-
-    Args:
-    - data: Polars DataFrame.
-    - backbone: NLP library used.
-                'spacy' or 'stanza'.
-    - language: Language of the text.
-                Defaults to English ('en').
-    - pos_tags: List of POS tags to consider.
-                Defaults to lexical tokens.
-    - threshold: Threshold for the number of synsets.
-                    Defaults to 2.
-
-    Returns:
-    - data: Polars DataFrame with the low synsets ratio.
-            The column is named 'low_synsets_ratio'.
-    """
-    if 'n_tokens' not in data.columns:
-        data = get_num_tokens(data, backbone=backbone)
-    if 'n_low_synsets' not in data.columns:
-        data = get_num_low_synsets(data, backbone=backbone,
-                                   language=language,
-                                   threshold=threshold,
-                                   pos_tags=pos_tags)
-    
-    data = data.with_columns(
-        (pl.col("n_low_synsets") / pl.col("n_tokens")
-         ).alias("low_synsets_ratio"),
-    )
-
-    return data
-
 def get_num_high_synsets(data: pl.DataFrame,
                          backbone: str = 'spacy',
                          language: str = 'en',
@@ -389,47 +348,6 @@ def get_num_high_synsets(data: pl.DataFrame,
                                            if synset >= threshold
                                        ],
         return_dtype=pl.List(pl.Int64)).list.len().alias("n_high_synsets")
-    )
-
-    return data
-
-def get_high_synsets_ratio(data: pl.DataFrame,
-                           backbone: str = 'spacy',
-                           language: str = 'en',
-                            pos_tags: list[str] = [
-                                 'NOUN', 'VERB', 'ADJ', 'ADV'
-                                 ],
-                            threshold: int = 5
-                            ) -> pl.DataFrame:
-    """
-    Calculates the ratio of words with a high number of synsets in a text.
-
-    Args:
-    - data: Polars DataFrame.
-    - backbone: NLP library used.
-                'spacy' or 'stanza'.
-    - language: Language of the text.
-                Defaults to English ('en').
-    - pos_tags: List of POS tags to consider.
-                Defaults to lexical tokens.
-    - threshold: Threshold for the number of synsets.
-                    Defaults to 5.
-
-    Returns:
-    - data: Polars DataFrame with the high synsets ratio.
-            The column is named 'high_synsets_ratio'.
-    """
-    if 'n_tokens' not in data.columns:
-        data = get_num_tokens(data, backbone=backbone)
-    if 'n_high_synsets' not in data.columns:
-        data = get_num_high_synsets(data, backbone=backbone,
-                                   language=language,
-                                   threshold=threshold,
-                                   pos_tags=pos_tags)
-        
-    data = data.with_columns(
-        (pl.col("n_high_synsets") / pl.col("n_tokens")
-         ).alias("high_synsets_ratio"),
     )
 
     return data
