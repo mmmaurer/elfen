@@ -60,9 +60,9 @@ def get_num_sentences(data: pl.DataFrame,
     
     return data
 
-def get_tokens_per_sentence(data: pl.DataFrame,
-                            backbone: str = 'spacy'
-                            ) -> pl.DataFrame:
+def get_num_tokens_per_sentence(data: pl.DataFrame,
+                                backbone: str = 'spacy'
+                                ) -> pl.DataFrame:
     """
     Calculates the average number of tokens per sentence in a text.
     """
@@ -212,3 +212,38 @@ def get_num_long_words(data: pl.DataFrame,
         )
         
     return data
+
+def get_num_lemmas(data: pl.DataFrame,
+                          backbone: str = 'spacy'
+                          ) -> pl.DataFrame:
+    """
+    Calculates the number of unique lemmas in the text.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+    
+    Returns:
+    - data: A Polars DataFrame containing the number of unique lemmas in the
+            text data. The number of unique lemmas is stored in a new column
+            named 'n_lemmas'.
+    """
+    if backbone == 'spacy':
+        data = data.with_columns(
+            pl.col("nlp").map_elements(lambda x: len(set(
+                [token.lemma_ for token in x])),
+                return_dtype=pl.UInt16
+                ).alias("n_lemmas"),
+        )
+    elif backbone == 'stanza':
+        data = data.with_columns(
+            pl.col("nlp").map_elements(lambda x: len(set(
+                [token.lemma for sent in x.sentences for token
+                 in sent.words])),
+                return_dtype=pl.UInt16
+                ).alias("n_lemmas"),
+        )
+    
+    return data
+

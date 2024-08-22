@@ -47,6 +47,45 @@ def get_num_syllables(data: pl.DataFrame,
         
         return data
 
+def get_num_monosyllables(data: pl.DataFrame,
+                          backbone: str = 'spacy'
+                          ) -> pl.DataFrame:
+    """
+    Calculates the number of monosyllables in a text.
+
+    Monosyllables are words with one syllable.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+                Not supported for Stanza backbone.
+
+    Returns:
+    - data: A Polars DataFrame containing the number of monosyllables
+            in the text data.
+            The number of monosyllables is stored in a new column
+            named 'n_monosyllables'.
+    """
+    if backbone == 'spacy':
+        data = data.with_columns(
+            pl.col("nlp").map_elements(lambda x: sum(
+                [1 for syllables_count in [
+                    token._.syllables_count
+                    for token
+                    in x
+                    if token._.syllables_count != None
+                    ] if syllables_count == 1]
+                    ), return_dtype=pl.UInt16
+                ).alias("n_monosyllables"),
+        )
+    elif backbone == 'stanza':
+        raise NotImplementedError(
+            "Not supported for Stanza backbone."
+        )
+
+    return data
+
 def get_num_polysyllables(data: pl.DataFrame,
                           backbone: str = 'spacy'
                           ) -> pl.DataFrame:

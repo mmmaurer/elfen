@@ -26,6 +26,7 @@ from .features import (
 )
 from .surface import (
     get_num_tokens,
+    get_num_sentences
 )
 from .schemas import (
     VAD_SCHEMA_NRC,
@@ -356,7 +357,6 @@ def get_n_high_arousal(data: pl.DataFrame,
 
 def get_n_low_dominance(data: pl.DataFrame,
                         vad_lexicon: pl.DataFrame,
-                        backbone: str = "spacy",
                         threshold: float = 0.33,
                         nan_value: float = 0.0
                         ) -> pl.DataFrame:
@@ -392,7 +392,6 @@ def get_n_low_dominance(data: pl.DataFrame,
 
 def get_n_high_dominance(data: pl.DataFrame,
                          vad_lexicon: pl.DataFrame,
-                         backbone: str = "spacy",
                          threshold: float = 0.66,
                          nan_value: float = 0.0
                          ) -> pl.DataFrame:
@@ -651,6 +650,240 @@ def get_low_dominance_ratio(data: pl.DataFrame,
         (pl.col("n_low_dominance") / pl.col("n_tokens")
             ).fill_nan(nan_value).fill_null(nan_value). \
                 alias("low_dominance_ratio"),
+    )
+
+    return data
+
+def high_valence_per_sentence(data: pl.DataFrame,
+                                vad_lexicon: pl.DataFrame,
+                                backbone: str = "spacy",
+                                threshold: float = 0.66,
+                                nan_value: float = 0.0
+                                ) -> pl.DataFrame:
+        """
+        Calculates the average number of words with valence higher than the
+        threshold per sentence in the text data.
+    
+        Args:
+        - data (pl.DataFrame): The preprocessed input data. Contains the
+                             "nlp" column produced by the NLP backbone.
+        - vad_lexicon (pl.DataFrame): The VAD lexicon.
+        - backbone (str): The NLP backbone to use.
+        - threshold (float): The threshold for high valence.
+                             Defaults to 0.66.
+        - nan_value (float): The value to use for NaNs.
+                             Defaults to 0.0.
+    
+        Returns:
+        - data (pl.DataFrame): The input data with the high
+                             valence per sentence columns
+        """
+        if 'n_sentences' not in data.columns:
+            data = get_num_sentences(data, backbone=backbone)
+        if 'n_high_valence' not in data.columns:
+            data = get_n_high_valence(data, vad_lexicon,
+                                    threshold=threshold,
+                                    backbone=backbone)
+        
+        data = data.with_columns(
+            (pl.col("n_high_valence") / pl.col("n_sentences")
+                ).fill_nan(nan_value).fill_null(nan_value). \
+                    alias("high_valence_per_sentence"),
+        )
+    
+        return data
+
+def low_valence_per_sentence(data: pl.DataFrame,
+                            vad_lexicon: pl.DataFrame,
+                            backbone: str = "spacy",
+                            threshold: float = 0.33,
+                            nan_value: float = 0.0
+                            ) -> pl.DataFrame:
+    """
+    Calculates the average number of words with valence lower than the
+    threshold per sentence in the text data.
+
+    Args:
+    - data (pl.DataFrame): The preprocessed input data. Contains the
+                           "nlp" column produced by the NLP backbone.
+    - vad_lexicon (pl.DataFrame): The VAD lexicon.
+    - backbone (str): The NLP backbone to use.
+    - threshold (float): The threshold for low valence.
+                         Defaults to 0.33.
+    - nan_value (float): The value to use for NaNs.
+                         Defaults to 0.0.
+
+    Returns:
+    - data (pl.DataFrame): The input data with the low
+                           valence per sentence columns
+    """
+    if 'n_sentences' not in data.columns:
+        data = get_num_sentences(data, backbone=backbone)
+    if 'n_low_valence' not in data.columns:
+        data = get_n_low_valence(data, vad_lexicon,
+                                threshold=threshold,
+                                backbone=backbone)
+    
+    data = data.with_columns(
+        (pl.col("n_low_valence") / pl.col("n_sentences")
+            ).fill_nan(nan_value).fill_null(nan_value). \
+                alias("low_valence_per_sentence"),
+    )
+    
+    return data
+
+def high_arousal_per_sentence(data: pl.DataFrame,
+                              vad_lexicon: pl.DataFrame,
+                              backbone: str = "spacy",
+                              threshold: float = 0.66,
+                              nan_value: float = 0.0
+                              ) -> pl.DataFrame:
+    """
+    Calculates the average number of words with arousal higher than the
+    threshold per sentence in the text data.
+
+    Args:
+    - data (pl.DataFrame): The preprocessed input data. Contains the
+                           "nlp" column produced by the NLP backbone.
+    - vad_lexicon (pl.DataFrame): The VAD lexicon.
+    - backbone (str): The NLP backbone to use.
+    - threshold (float): The threshold for high arousal.
+                         Defaults to 0.66.
+    - nan_value (float): The value to use for NaNs.
+                         Defaults to 0.0.
+
+    Returns:
+    - data (pl.DataFrame): The input data with the high
+                           arousal per sentence columns
+    """
+    if 'n_sentences' not in data.columns:
+        data = get_num_sentences(data, backbone=backbone)
+    if 'n_high_arousal' not in data.columns:
+        data = get_n_high_arousal(data, vad_lexicon,
+                                threshold=threshold,
+                                backbone=backbone)
+    
+    data = data.with_columns(
+        (pl.col("n_high_arousal") / pl.col("n_sentences")
+            ).fill_nan(nan_value).fill_null(nan_value). \
+                alias("high_arousal_per_sentence"),
+    )
+    
+    return data
+
+def low_arousal_per_sentence(data: pl.DataFrame,
+                            vad_lexicon: pl.DataFrame,
+                            backbone: str = "spacy",
+                            threshold: float = 0.33,
+                            nan_value: float = 0.0
+                            ) -> pl.DataFrame:
+    """
+    Calculates the average number of words with arousal lower than the
+    threshold per sentence in the text data.
+
+    Args:
+    - data (pl.DataFrame): The preprocessed input data. Contains the
+                           "nlp" column produced by the NLP backbone.
+    - vad_lexicon (pl.DataFrame): The VAD lexicon.
+    - backbone (str): The NLP backbone to use.
+    - threshold (float): The threshold for low arousal.
+                         Defaults to 0.33.
+    - nan_value (float): The value to use for NaNs.
+                         Defaults to 0.0.
+
+    Returns:
+    - data (pl.DataFrame): The input data with the low
+                           arousal per sentence columns
+    """
+    if 'n_sentences' not in data.columns:
+        data = get_num_sentences(data, backbone=backbone)
+    if 'n_low_arousal' not in data.columns:
+        data = get_n_low_arousal(data, vad_lexicon,
+                                threshold=threshold,
+                                backbone=backbone)
+    
+    data = data.with_columns(
+        (pl.col("n_low_arousal") / pl.col("n_sentences")
+            ).fill_nan(nan_value).fill_null(nan_value). \
+                alias("low_arousal_per_sentence"),
+    )
+    
+    return data
+
+def high_dominance_per_sentence(data: pl.DataFrame,
+                                vad_lexicon: pl.DataFrame,
+                                backbone: str = "spacy",
+                                threshold: float = 0.66,
+                                nan_value: float = 0.0
+                                ) -> pl.DataFrame:
+    """
+    Calculates the average number of words with dominance higher than the
+    threshold per sentence in the text data.
+
+    Args:
+    - data (pl.DataFrame): The preprocessed input data. Contains the
+                           "nlp" column produced by the NLP backbone.
+    - vad_lexicon (pl.DataFrame): The VAD lexicon.
+    - backbone (str): The NLP backbone to use.
+    - threshold (float): The threshold for high dominance.
+                         Defaults to 0.66.
+    - nan_value (float): The value to use for NaNs.
+                         Defaults to 0.0.
+
+    Returns:
+    - data (pl.DataFrame): The input data with the high
+                           dominance per sentence columns
+    """
+    if 'n_sentences' not in data.columns:
+        data = get_num_sentences(data, backbone=backbone)
+    if 'n_high_dominance' not in data.columns:
+        data = get_n_high_dominance(data, vad_lexicon,
+                                    threshold=threshold,
+                                    backbone=backbone)
+    
+    data = data.with_columns(
+        (pl.col("n_high_dominance") / pl.col("n_sentences")
+            ).fill_nan(nan_value).fill_null(nan_value). \
+                alias("high_dominance_per_sentence"),
+    )
+    
+    return data
+
+def low_dominance_per_sentence(data: pl.DataFrame,
+                                vad_lexicon: pl.DataFrame,
+                                backbone: str = "spacy",
+                                threshold: float = 0.33,
+                                nan_value: float = 0.0
+                                ) -> pl.DataFrame:
+    """
+    Calculates the average number of words with dominance lower than the
+    threshold per sentence in the text data.
+
+    Args:
+    - data (pl.DataFrame): The preprocessed input data. Contains the
+                           "nlp" column produced by the NLP backbone.
+    - vad_lexicon (pl.DataFrame): The VAD lexicon.
+    - backbone (str): The NLP backbone to use.
+    - threshold (float): The threshold for low dominance.
+                         Defaults to 0.33.
+    - nan_value (float): The value to use for NaNs.
+                            Defaults to 0.0.
+
+    Returns:
+    - data (pl.DataFrame): The input data with the low
+                           dominance per sentence columns
+    """
+    if 'n_sentences' not in data.columns:
+        data = get_num_sentences(data, backbone=backbone)
+    if 'n_low_dominance' not in data.columns:
+        data = get_n_low_dominance(data, vad_lexicon,
+                                    threshold=threshold,
+                                    backbone=backbone)
+        
+    data = data.with_columns(
+        (pl.col("n_low_dominance") / pl.col("n_sentences")
+            ).fill_nan(nan_value).fill_null(nan_value). \
+                alias("low_dominance_per_sentence"),
     )
 
     return data

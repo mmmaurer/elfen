@@ -291,66 +291,6 @@ def get_n_hapax_legomena(data: pl.DataFrame,
     
     return data
 
-def get_hapax_legomena_ratio(data: pl.DataFrame,
-                            backbone: str = 'spacy'
-                            ) -> pl.DataFrame:
-    """
-    Calculates the ratio of hapax legomena in a text:
-    N_hapax_legomena / N_tokens.
-
-    Args:
-    - data: A Polars DataFrame containing the text data.
-    - backbone: The NLP library used to process the text data.
-                Either 'spacy' or 'stanza'.
-
-    Returns:
-    - data: A Polars DataFrame containing the hapax legomena ratio of the
-            text data.
-            The hapax legomena ratio is stored in a new column named
-            'hapax_legomena_ratio'.
-    """
-    if 'n_tokens' not in data.columns:
-        data = get_num_tokens(data, backbone=backbone)
-    if 'n_hapax_legomena' not in data.columns:
-        data = get_n_hapax_legomena(data, backbone=backbone)
-    
-    data = data.with_columns(
-        (pl.col("n_hapax_legomena") / pl.col("n_tokens")
-         ).alias("hapax_legomena_ratio"),
-    )
-
-    return data
-
-def get_hapax_legomenat_type_ratio(data: pl.DataFrame,
-            backbone: str = 'spacy'
-            ) -> pl.DataFrame:
-    """
-    Calculates the hapax legomena/type ratio of a text:
-    N_hapax_legomena / N_types.
-
-    Args:
-    - data: A Polars DataFrame containing the text data.
-    - backbone: The NLP library used to process the text data.
-                Either 'spacy' or 'stanza'.
-
-    Returns:
-    - data: A Polars DataFrame containing the hapax legomena/type ratio of the
-            text data.
-            The hapax legomena/type ratio is stored in a new column named
-            'hapax_legomena_type_ratio'.
-    """
-    if 'n_types' not in data.columns:
-        data = get_num_types(data, backbone=backbone)
-    if 'n_hapax_legomena' not in data.columns:
-        data = get_n_hapax_legomena(data, backbone=backbone)
-    
-    data = data.with_columns(
-        (pl.col("n_hapax_legomena") / pl.col("n_types")
-         ).alias("hapax_legomena_type_ratio"),
-    )
-
-    return data
-
 def get_lexical_density(data: pl.DataFrame,
                         backbone: str = 'spacy'
                         ) -> pl.DataFrame:

@@ -205,7 +205,7 @@ def get_avg_num_synsets(data: pl.DataFrame,
 
     Returns:
     - data: Polars DataFrame with the average number of synsets.
-            The column is named 'avg_num_synsets'.
+            The column is named 'avg_n_synsets'.
     """
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
@@ -215,7 +215,7 @@ def get_avg_num_synsets(data: pl.DataFrame,
                            pos_tags=pos_tags)
     
     data = data.with_columns(
-        pl.col("synsets").list.mean().alias("avg_num_synsets")
+        pl.col("synsets").list.mean().alias("avg_n_synsets")
     )
     
     
@@ -242,6 +242,10 @@ def get_avg_num_synsets_per_pos(data: pl.DataFrame,
                 Defaults to lexical tokens.
     - nan_value: Value to fill NaNs with.
                     Defaults to 0.
+
+    Returns:
+    - data: Polars DataFrame with the average number of synsets per POS.
+            The columns are named 'avg_n_synsets_{pos}'.
     """
     if "synsets" not in data.columns:  # ensures all synsets are calculated
         data = get_synsets(data, backbone=backbone,
@@ -252,13 +256,13 @@ def get_avg_num_synsets_per_pos(data: pl.DataFrame,
             data = data.with_columns(
                 pl.col("synsets_" + pos_tag.lower()).list.mean(). \
                 fill_nan(nan_value).fill_null(nan_value). \
-                    alias(f"avg_num_synsets_{pos_tag.lower()}")
+                    alias(f"avg_n_synsets_{pos_tag.lower()}")
             )
         elif backbone == 'stanza':
             data = data.with_columns(
                 pl.col("synsets_" + pos_tag.lower()).list.mean(). \
                 fill_nan(nan_value).fill_null(nan_value). \
-                    alias(f"avg_num_synsets_{pos_tag.lower()}")
+                    alias(f"avg_n_synsets_{pos_tag.lower()}")
             )
 
     return data
@@ -429,5 +433,4 @@ def get_high_synsets_ratio(data: pl.DataFrame,
     )
 
     return data
-
 
