@@ -3,7 +3,7 @@ CONFIG_ALL = {
     "language": "en",
     "text_column": "text",
     "lexicons": {
-        "vad_warriner": {
+        "vad_nrc": {
             "area": "Emotion",
             "subarea": "VAD"
         },
@@ -54,69 +54,39 @@ CONFIG_ALL = {
             "n_positive_sentiment": {
                 "lexicon": "sentiment_nrc"
             },
-            "n_negative_sentiment_token_ratio": {
-                "lexicon": "sentiment_nrc"
-            },
-            "n_positive_sentiment_token_ratio": {
-                "lexicon": "sentiment_nrc"
-            }
         },
         "emotion": {
             "avg_valence": {
-                "lexicon": "vad_warriner"
+                "lexicon": "vad_nrc"
             },
             "n_low_valence": {
-                "lexicon": "vad_warriner",
+                "lexicon": "vad_nrc",
                 "threshold": 0.33
             },
             "n_high_valence": {
-                "lexicon": "vad_warriner",
-                "threshold": 0.66
-            },
-            "n_low_valence_token_ratio": {
-                "lexicon": "vad_warriner",
-                "threshold": 0.33
-            },
-            "n_high_valence_token_ratio": {
-                "lexicon": "vad_warriner",
+                "lexicon": "vad_nrc",
                 "threshold": 0.66
             },
             "avg_arousal": {
-                "lexicon": "vad_warriner"
+                "lexicon": "vad_nrc"
             },
             "n_low_arousal": {
-                "lexicon": "vad_warriner",
+                "lexicon": "vad_nrc",
                 "threshold": 0.33
             },
             "n_high_arousal": {
-                "lexicon": "vad_warriner",
-                "threshold": 0.66
-            },
-            "n_low_arousal_token_ratio": {
-                "lexicon": "vad_warriner",
-                "threshold": 0.33
-            },
-            "n_high_arousal_token_ratio": {
-                "lexicon": "vad_warriner",
+                "lexicon": "vad_nrc",
                 "threshold": 0.66
             },
             "avg_dominance": {
-                "lexicon": "vad_warriner"
+                "lexicon": "vad_nrc"
             },
             "n_low_dominance": {
-                "lexicon": "vad_warriner",
+                "lexicon": "vad_nrc",
                 "threshold": 0.33
             },
             "n_high_dominance": {
-                "lexicon": "vad_warriner",
-                "threshold": 0.66
-            },
-            "n_low_dominance_token_ratio": {
-                "lexicon": "vad_warriner",
-                "threshold": 0.33
-            },
-            "n_high_dominance_token_ratio": {
-                "lexicon": "vad_warriner",
+                "lexicon": "vad_nrc",
                 "threshold": 0.66
             },
             "avg_emotion_intensity": {
@@ -133,7 +103,7 @@ CONFIG_ALL = {
                 ],
                 "threshold": 0.5
             },
-            "n_low_emotion_intensity": {
+            "n_low_intensity": {
                 "lexicon": "intensity_nrc",
                 "emotions": [
                     "anger",
@@ -147,7 +117,7 @@ CONFIG_ALL = {
                 ],
                 "threshold": 0.33
             },
-            "n_high_emotion_intensity": {
+            "n_high_intensity": {
                 "lexicon": "intensity_nrc",
                 "emotions": [
                     "anger",
@@ -161,41 +131,13 @@ CONFIG_ALL = {
                 ],
                 "threshold": 0.66
             },
-            "n_low_emotion_intensity_token_ratio": {
-                "lexicon": "intensity_nrc",
-                "emotions": [
-                    "anger",
-                    "anticipation",
-                    "disgust",
-                    "fear",
-                    "joy",
-                    "sadness",
-                    "surprise",
-                    "trust"
-                ],
-                "threshold": 0.33
-            },
-            "n_high_emotion_intensity_token_ratio": {
-                "lexicon": "intensity_nrc",
-                "emotions": [
-                    "anger",
-                    "anticipation",
-                    "disgust",
-                    "fear",
-                    "joy",
-                    "sadness",
-                    "surprise",
-                    "trust"
-                ],
-                "threshold": 0.66
-            }
         },
         "information": {
             "compressibility": {},
             "entropy": {}
         },
         "lexical_richness": {
-            "lemma_token_token_ratio": {},
+            "lemma_token_ratio": {},
             "ttr": {},
             "rttr": {},
             "cttr": {},
@@ -204,8 +146,8 @@ CONFIG_ALL = {
             "dugast_u": {},
             "maas_index": {},
             "n_hapax_legomena": {},
-            "hapax_legomena_token_ratio": {},
-            "n_hapax_legomena_type_token_ratio": {},
+            "n_hapax_legomena_token_ratio": {},
+            "n_hapax_legomena_type_ratio": {},
             "lexical_density": {}
         },
         "pos": {
@@ -232,48 +174,6 @@ CONFIG_ALL = {
                     "X"
                 ]
             },
-            "n_pos_token_ratio": {
-                "pos": [
-                    "ADJ",
-                    "ADP",
-                    "ADV",
-                    "AUX",
-                    "CCONJ",
-                    "DET",
-                    "INTJ",
-                    "NOUN",
-                    "NUM",
-                    "PART",
-                    "PRON",
-                    "PROPN",
-                    "PUNCT",
-                    "SCONJ",
-                    "SYM",
-                    "VERB",
-                    "X"
-                ]
-            },
-            "n_pos_sentence_ratio": {
-                "pos": [
-                    "ADJ",
-                    "ADP",
-                    "ADV",
-                    "AUX",
-                    "CCONJ",
-                    "DET",
-                    "INTJ",
-                    "NOUN",
-                    "NUM",
-                    "PART",
-                    "PRON",
-                    "PROPN",
-                    "PUNCT",
-                    "SCONJ",
-                    "SYM",
-                    "VERB",
-                    "X"
-                ]
-            }
         },
         "psycholinguistic": {
             "avg_concreteness": {
@@ -287,30 +187,14 @@ CONFIG_ALL = {
                 "lexicon": "concreteness_brysbaert",
                 "threshold": 3.33
             },
-            "n_low_concreteness_token_ratio": {
-                "lexicon": "concreteness_brysbaert",
-                "threshold": 1.66
-            },
-            "n_high_concreteness_token_ratio": {
-                "lexicon": "concreteness_brysbaert",
-                "threshold": 3.33
-            },
-            "avg_age_of_acquisition": {
+            "avg_aoa": {
                 "lexicon": "aoa_brysbaert"
             },
-            "n_low_aoe": {
+            "n_low_aoa": {
                 "lexicon": "aoa_brysbaert",
                 "threshold": 10.0
             },
-            "n_high_aoe": {
-                "lexicon": "aoa_brysbaert",
-                "threshold": 10.0
-            },
-            "low_aoe_token_ratio": {
-                "lexicon": "aoa_brysbaert",
-                "threshold": 10.0
-            },
-            "high_aoe_token_ratio": {
+            "n_high_aoa": {
                 "lexicon": "aoa_brysbaert",
                 "threshold": 10.0
             },
@@ -325,14 +209,6 @@ CONFIG_ALL = {
                 "lexicon": "prevalence_brysbaert",
                 "threshold": 1.0
             },
-            "low_prevalence_token_ratio": {
-                "lexicon": "prevalence_brysbaert",
-                "threshold": 1.0
-            },
-            "high_prevalence_token_ratio": {
-                "lexicon": "prevalence_brysbaert",
-                "threshold": 1.0
-            }
         },
         "readability": {
             "flesch_reading_ease": {},
@@ -347,12 +223,6 @@ CONFIG_ALL = {
         "semantic": {
             "n_lemmas": {},
             "n_hedges": {
-                "lexicon": "hedges"
-            },
-            "n_hedge_token_ratio": {
-                "lexicon": "hedges"
-            },
-            "n_hedges_sentence_ratio": {
                 "lexicon": "hedges"
             },
             "avg_num_synsets": {},
@@ -370,18 +240,11 @@ CONFIG_ALL = {
             "n_high_synsets": {
                 "threshold": 5.0
             },
-            "n_low_synset_token_ratio": {
-                "threshold": 2.0
-            },
-            "n_high_synset_token_ratio": {
-                "threshold": 5.0
-            },
-            "n_synsets_sentence_ratio": {},
         },
         "entities": {
             "n_entities": {},
-            "entity_token_ratio": {},
-            "entities_sentence_ratio": {},
+            "n_entities_token_ratio": {},
+            "n_entities_sentence_ratio": {},
             "n_per_entity_type": {
                 "entity_types": [
                     "ORG",
@@ -404,56 +267,6 @@ CONFIG_ALL = {
                     "LANGUAGE"
                 ]
             },
-            "n_per_entity_type_token_ratio": {
-                "entity_types": [
-                    "PERSON",
-                    "NORP",
-                    "FAC",
-                    "ORG",
-                    "GPE",
-                    "LOC",
-                    "ORG",
-                    "CARDINAL",
-                    "DATE",
-                    "GPE",
-                    "PERSON",
-                    "MONEY",
-                    "PRODUCT",
-                    "TIME",
-                    "PERCENT",
-                    "WORK_OF_ART",
-                    "QUANTITY",
-                    "NORP",
-                    "LOC",
-                    "EVENT",
-                    "ORDINAL",
-                    "FAC",
-                    "LAW",
-                    "LANGUAGE"
-                ]
-            },
-            "n_per_entity_type_sentence": {
-                "entity_types": [
-                    "ORG",
-                    "CARDINAL",
-                    "DATE",
-                    "GPE",
-                    "PERSON",
-                    "MONEY",
-                    "PRODUCT",
-                    "TIME",
-                    "PERCENT",
-                    "WORK_OF_ART",
-                    "QUANTITY",
-                    "NORP",
-                    "LOC",
-                    "EVENT",
-                    "ORDINAL",
-                    "FAC",
-                    "LAW",
-                    "LANGUAGE"
-                ]
-            }
         }
     }
 }

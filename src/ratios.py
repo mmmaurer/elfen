@@ -1,6 +1,6 @@
 import polars as pl
 
-from surface import (
+from .surface import (
     get_num_tokens,
     get_num_sentences,
     get_num_types

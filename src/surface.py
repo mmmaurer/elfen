@@ -2,6 +2,8 @@
 This module contains functions to calculate various surface-level features
 from text data.
 """
+from collections import Counter
+
 import polars as pl
 
 def get_raw_sequence_length(data: pl.DataFrame,
@@ -150,12 +152,12 @@ def get_avg_word_length(data: pl.DataFrame,
     """
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
-    if 'raw_sequence_length' not in data.columns:
-        data = get_raw_sequence_length(data, text_column=text_column)
+    if 'n_characters' not in data.columns:
+        data = get_num_characters(data, text_column=text_column)
 
     data = data.with_columns(
         (
-            pl.col("raw_sequence_length") / pl.col("n_tokens")
+            pl.col("n_characters") / pl.col("n_tokens")
         ).alias("avg_word_length"),
     )
 

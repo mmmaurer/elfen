@@ -7,7 +7,8 @@ import polars as pl
 
 from .surface import (
     get_num_tokens,
-    get_num_types
+    get_num_types,
+    get_num_lemmas
 )
 from .pos import (
     get_num_lexical_tokens,
@@ -33,11 +34,11 @@ def get_lemma_token_ratio(data: pl.DataFrame,
     """
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
-    if 'n_lexical_tokens' not in data.columns:
+    if 'n_lemmas' not in data.columns:
         data = get_num_lexical_tokens(data, backbone=backbone)
     
     data = data.with_columns(
-        (pl.col("n_lexical_tokens") / pl.col("n_tokens")
+        (pl.col("n_lemmas") / pl.col("n_tokens")
          ).alias("lemma_token_ratio"),
     )
 
@@ -321,3 +322,103 @@ def get_lexical_density(data: pl.DataFrame,
 
     return data
 
+def get_giroud_index(data: pl.DataFrame,
+                    backbone: str = 'spacy'
+                    ) -> pl.DataFrame:
+    """
+    Calculates the Giroud's index of a text:
+    N_types / sqrt(N_tokens).
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+
+    Returns:
+    - data: A Polars DataFrame containing the Giroud's C of the text data.
+            The Giroud's C is stored in a new column named 'giroud_c'.
+    """
+    if 'n_tokens' not in data.columns:
+        data = get_num_tokens(data, backbone=backbone)
+    if 'n_types' not in data.columns:
+        data = get_num_types(data, backbone=backbone)
+    
+    data = data.with_columns(
+        (pl.col("n_types") / pl.col("n_tokens").sqrt()
+         ).alias("giroud_index"),
+    )
+
+    return data
+
+def get_mtld(data: pl.DataFrame,
+            threshold: int = 0.72
+            ) -> pl.DataFrame:
+    """
+    Calculates the Measure of Textual Lexical Diversity (MTLD) of a text.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - threshold: The threshold value for the MTLD.
+                 The default value is 0.72.
+
+    Returns:
+    - data: A Polars DataFrame containing the MTLD of the text data.
+            The MTLD is stored in a new column named 'mtld'.
+    """
+    pass
+    # TODO, for reference https://link.springer.com/article/10.3758/BRM.42.2.381
+
+
+def get_hdd(data: pl.DataFrame,
+            threshold: int = 0.72
+            ) -> pl.DataFrame:
+    """
+    Calculates the Hypergeometric Distribution D (HDD) of a text.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - threshold: The threshold value for the HDD.
+                 The default value is 0.72.
+
+    Returns:
+    - data: A Polars DataFrame containing the HDD of the text data.
+            The HDD is stored in a new column named 'hdd'.
+    """
+    pass
+    # TODO, for reference https://link.springer.com/article/10.3758/BRM.42.2.381
+
+def get_mattr(data: pl.DataFrame,
+            threshold: int = 0.72
+            ) -> pl.DataFrame:
+    """
+    Calculates the Moving-Average Type-Token Ratio (MATTR) of a text.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - threshold: The threshold value for the MATTR.
+                 The default value is 0.72.
+
+    Returns:
+    - data: A Polars DataFrame containing the MATTR of the text data.
+            The MATTR is stored in a new column named 'mattr'.
+    """
+    pass
+    # TODO
+
+def get_msttr(data: pl.DataFrame,
+            threshold: int = 0.72
+            ) -> pl.DataFrame:
+    """
+    Calculates the Mean Segmental Type-Token Ratio (MSTTR) of a text.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - threshold: The threshold value for the MSTTR.
+                 The default value is 0.72.
+
+    Returns:
+    - data: A Polars DataFrame containing the MSTTR of the text data.
+            The MSTTR is stored in a new column named 'msttr'.
+    """
+    pass
+    # TODO

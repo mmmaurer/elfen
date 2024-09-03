@@ -357,6 +357,7 @@ def get_n_high_arousal(data: pl.DataFrame,
 
 def get_n_low_dominance(data: pl.DataFrame,
                         vad_lexicon: pl.DataFrame,
+                        backbone: str = "spacy",
                         threshold: float = 0.33,
                         nan_value: float = 0.0
                         ) -> pl.DataFrame:
@@ -377,8 +378,10 @@ def get_n_low_dominance(data: pl.DataFrame,
     - data (pl.DataFrame): The input data with the low
                            dominance count column.
     """
+    if "lemmas" not in data.columns:
+        data = get_lemmas(data, backbone=backbone)
     data = data.with_columns(
-        pl.col("nlp").map_elements(
+        pl.col("lemmas").map_elements(
              lambda x: filter_lexicon(lexicon=vad_lexicon,
                                       words=x,
                                       word_column="word"). \
@@ -414,7 +417,7 @@ def get_n_high_dominance(data: pl.DataFrame,
                            dominance count column.
     """
     data = data.with_columns(
-        pl.col("nlp").map_elements(
+        pl.col("lemmas").map_elements(
              lambda x: filter_lexicon(lexicon=vad_lexicon,
                                       words=x,
                                       word_column="word"). \
@@ -700,16 +703,21 @@ def get_n_positive_sentiment(data: pl.DataFrame,
     """
     if "lemmas" not in data.columns:
         data = get_lemmas(data, backbone=backbone)
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_sentiment_nrc_lexicon(
-                sentiment_nrc, x, sentiment="positive").shape[0],
-            return_dtype=pl.UInt32
-        ).fill_nan(nan_value).fill_null(nan_value). \
-        # convention to fill NaNs with 0 as this maps to
-        # the absence of positive sentiment words
-            alias("n_positive_sentiment")
-    )
+
+    # ensure that the column is not already present;
+    # this may happen if sentiment_score is called before
+    # n_negative_sentiment or n_positive_sentiment
+    if "n_positive_sentiment" not in data.columns:
+        data = data.with_columns(
+            pl.col("lemmas").map_elements(
+                lambda x: filter_sentiment_nrc_lexicon(
+                    sentiment_nrc, x, sentiment="positive").shape[0],
+                return_dtype=pl.UInt32
+            ).fill_nan(nan_value).fill_null(nan_value). \
+            # convention to fill NaNs with 0 as this maps to
+            # the absence of positive sentiment words
+                alias("n_positive_sentiment")
+        )
 
     return data
 
@@ -735,16 +743,21 @@ def get_n_negative_sentiment(data: pl.DataFrame,
     """
     if "lemmas" not in data.columns:
         data = get_lemmas(data, backbone=backbone)
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_sentiment_nrc_lexicon(
-                sentiment_nrc, x, sentiment="negative").shape[0],
-            return_dtype=pl.UInt32
-        ).fill_nan(nan_value).fill_null(nan_value). \
-        # convention to fill NaNs with 0 as this maps to
-        # the absence of negative sentiment words
-            alias("n_negative_sentiment")
-    )
+    
+    # ensure that the column is not already present;
+    # this may happen if sentiment_score is called before
+    # n_negative_sentiment or n_positive_sentiment
+    if "n_negative_sentiment" not in data.columns:
+        data = data.with_columns(
+            pl.col("lemmas").map_elements(
+                lambda x: filter_sentiment_nrc_lexicon(
+                    sentiment_nrc, x, sentiment="negative").shape[0],
+                return_dtype=pl.UInt32
+            ).fill_nan(nan_value).fill_null(nan_value). \
+            # convention to fill NaNs with 0 as this maps to
+            # the absence of negative sentiment words
+                alias("n_negative_sentiment")
+        )
 
     return data
 
