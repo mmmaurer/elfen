@@ -8,13 +8,17 @@ import zipfile
 import os
 
 
+PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
 RESOURCE_MAP = {
     # Hedges, https://github.com/words/hedges
     "hedges": {
         "link": "https://raw.githubusercontent.com/words/hedges/main/data.txt",
         "area": "Semantics",
         "subarea": "Hedges",
-        "filename": "hedges.txt"
+        "filename": "hedges.txt",
+        "filepath": os.path.join(PROJECT_PATH, "resources", "Semantics",
+                                 "Hedges", "hedges.txt")
     },
     # Warriner, A. B., Kuperman, V., & Brysbaert, M. (2013).
     # Norms of valence, arousal, and dominance for 13,915 English lemmas.
@@ -25,7 +29,9 @@ RESOURCE_MAP = {
                 "13428_2012_314_MOESM1_ESM.zip",
         "area": "Emotion",
         "subarea": "VAD",
-        "filename": "BRM-emot-submit.xlsx"
+        "filename": "BRM-emot-submit.csv",
+        "filepath": os.path.join(PROJECT_PATH, "resources", "Emotion",
+                                 "VAD", "BRM-emot-submit.csv")
     },
     # Mohammad, S. M. (2018).
     # Obtaining reliable human ratings of valence, arousal, and dominance for 
@@ -37,7 +43,10 @@ RESOURCE_MAP = {
                 "NRC-VAD-Lexicon.zip",
         "area": "Emotion",
         "subarea": "VAD",
-        "filename": "NRC-VAD-Lexicon/NRC-VAD-Lexicon.txt"
+        "filename": "NRC-VAD-Lexicon/NRC-VAD-Lexicon.txt",
+        "filepath": os.path.join(PROJECT_PATH, "resources", "Emotion",
+                                 "VAD", "NRC-VAD-Lexicon", 
+                                 "NRC-VAD-Lexicon.txt")
     },
     # Mohammad, S. M. (2018)
     # Word affect intensity.
@@ -48,8 +57,11 @@ RESOURCE_MAP = {
                 "NRC-Emotion-Intensity-Lexicon.zip",
         "area": "Emotion",
         "subarea": "Intensity",
-        "filename": "NRC-Emotion-Intensity/"
-                    "NRC-Emotion-Intensity-Lexicon-v1.txt"
+        "filename": "NRC-Emotion-Intensity-Lexicon/"
+                    "NRC-Emotion-Intensity-Lexicon-v1.txt",
+        "filepath": os.path.join(PROJECT_PATH, "resources", "Emotion",
+                                 "Intensity", "NRC-Emotion-Intensity-Lexicon",
+                                 "NRC-Emotion-Intensity-Lexicon-v1.txt")
     },
     # Brysbaert, M., Warriner, A. B., & Kuperman, V. (2014).
     # Concreteness ratings for 40 thousand generally known English word lemmas.
@@ -60,7 +72,9 @@ RESOURCE_MAP = {
                 "13428_2013_403_MOESM1_ESM.xlsx",
         "area": "Psycholinguistics",
         "subarea": "Concreteness",
-        "filename": "13428_2013_403_MOESM1_ESM.xlsx"
+        "filename": "13428_2013_403_MOESM1_ESM.xlsx",
+        "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
+                                 "Concreteness", "13428_2013_403_MOESM1_ESM.xlsx")
     },
     # Brysbaert, M., Mandera, P., McCormick, S. F., & Keuleers, E. (2019).
     # Word prevalence norms for 62,000 English lemmas.
@@ -71,7 +85,9 @@ RESOURCE_MAP = {
                 "MediaObjects/13428_2018_1077_MOESM2_ESM.xlsx",
         "area": "Psycholinguistics",
         "subarea": "Prevalence",
-        "filename": "13428_2018_1077_MOESM2_ESM.xlsx"
+        "filename": "13428_2018_1077_MOESM2_ESM.xlsx",
+        "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
+                                 "Prevalence", "13428_2018_1077_MOESM2_ESM.xlsx")
     },
     # Kuperman, V., Stadthagen-Gonzalez, H., & Brysbaert, M. (2013).
     # Age-of-acquisition ratings for 30,000 English words.
@@ -82,7 +98,9 @@ RESOURCE_MAP = {
                 "MediaObjects/13428_2013_348_MOESM1_ESM.xlsx",
         "area": "Psycholinguistics",
         "subarea": "AgeOfAcquisition",
-        "filename": "13428_2013_348_MOESM1_ESM.xlsx"
+        "filename": "13428_2013_348_MOESM1_ESM.xlsx",
+        "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
+                                 "AgeOfAcquisition", "13428_2013_348_MOESM1_ESM.xlsx")
     },
     # Baccianella, S., Esuli, A., & Sebastiani, F. (2010).
     # SentiWordNet 3.0: An enhanced lexical resource for sentiment
@@ -93,7 +111,9 @@ RESOURCE_MAP = {
                 "master/data/SentiWordNet_3.0.0.txt",
         "area": "Emotion",
         "subarea": "Sentiment",
-        "filename": "SentiWordNet_3.0.0.txt"
+        "filename": "SentiWordNet_3.0.0.txt",
+        "filepath": os.path.join(PROJECT_PATH, "resources", "Emotion",
+                                 "Sentiment", "SentiWordNet_3.0.0.txt")
     },
     # Mohammad, S. M., & Turney, P. D. (2013).
     # Emotions evoked by common words and phrases:
@@ -105,7 +125,10 @@ RESOURCE_MAP = {
         "link": "https://saifmohammad.com/WebDocs/Lexicons/NRC-Emotion-Lexicon.zip",
         "area": "Emotion",
         "subarea": "Sentiment",
-        "filename": "NRC-Emotion-Lexicon/NRC-Emotion-Lexicon-Wordlevel-v0.92.txt"
+        "filename": "NRC-Emotion-Lexicon/NRC-Emotion-Lexicon-Wordlevel-v0.92.txt",
+        "filepath": os.path.join(PROJECT_PATH, "resources", "Emotion",
+                                 "Sentiment", "NRC-Emotion-Lexicon",
+                                 "NRC-Emotion-Lexicon-Wordlevel-v0.92.txt")
     },
 }
 
@@ -169,21 +192,19 @@ def get_resource(feature: str) -> None:
     """
     if feature not in RESOURCE_MAP:
         raise ValueError(f"Feature {feature} not found in RESOURCE_MAP.")
-    
-    project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
     # Making sure all the necessary directories exist
-    os.makedirs(os.path.join(project_path, "resources",
+    os.makedirs(os.path.join(PROJECT_PATH, "resources",
                               RESOURCE_MAP[feature]["area"],
                               RESOURCE_MAP[feature]["subarea"]),
                               exist_ok=True)
     # Downloading the lexicon if it does not exist
-    if not os.path.exists(os.path.join(project_path, "resources",
+    if not os.path.exists(os.path.join(PROJECT_PATH, "resources",
                                       RESOURCE_MAP[feature]["area"],
                                       RESOURCE_MAP[feature]["subarea"],
                                       RESOURCE_MAP[feature]["filename"])):
         download_lexicon(RESOURCE_MAP[feature]["link"],
-                        os.path.join(project_path, "resources",
+                        os.path.join(PROJECT_PATH, "resources",
                                     RESOURCE_MAP[feature]["area"],
                                     RESOURCE_MAP[feature]["subarea"]),
                                     RESOURCE_MAP[feature]["filename"])

@@ -1,9 +1,9 @@
-from features import (
+from .features import (
     get_lemmas,
     get_tokens,
     preprocess_data,
 )
-from emotion import (
+from .emotion import (
     # sentiment
     load_sentiment_nrc_lexicon,
     filter_sentiment_nrc_lexicon,
@@ -11,6 +11,7 @@ from emotion import (
     get_n_negative_sentiment,
     get_n_positive_sentiment,
     # emotion intensity
+    load_intensity_lexicon,
     get_avg_emotion_intensity,
     get_n_low_intensity,
     get_n_high_intensity,
@@ -27,15 +28,15 @@ from emotion import (
     get_n_low_dominance,
     get_n_high_dominance,
 )
-from entities import (
+from .entities import (
     get_num_entities,
     get_num_per_entity_type,
 )
-from information import (
+from .information import (
     get_compressibility,
     get_entropy,
 )
-from lexical_richness import (
+from .lexical_richness import (
     get_lemma_token_ratio,
     get_ttr,
     get_cttr,
@@ -47,35 +48,33 @@ from lexical_richness import (
     get_n_hapax_legomena,
     get_lexical_density,
 )
-from pos import (
+from .pos import (
     get_num_lexical_tokens,
     get_num_per_pos,
     get_pos_variability,
     get_num_per_pos,
 )
-from psycholinguistic import (
+from .psycholinguistic import (
     load_concreteness_norms,
     filter_concreteness_norms,
     get_avg_concreteness,
     get_n_high_concreteness,
     get_n_low_concreteness,
     load_aoa_norms,
-    filter_aoa_norms,
     get_avg_aoa,
     get_n_high_aoa,
     get_n_low_aoa,
     load_prevalence_norms,
-    filter_prevalence_norms,
     get_avg_prevalence,
     get_n_high_prevalence,
     get_n_low_prevalence,
 )
-from ratios import (
+from .ratios import (
     get_feature_token_ratio,
     get_feature_type_ratio,
     get_feature_sentence_ratio,
 )
-from readability import (
+from .readability import (
     get_flesch_reading_ease,
     get_flesch_kincaid_grade,
     get_smog,
@@ -88,7 +87,7 @@ from readability import (
     get_num_polysyllables,
     get_num_syllables,
 )
-from semantic import (
+from .semantic import (
     load_hedges,
     get_num_hedges,
     get_avg_num_synsets,
@@ -97,7 +96,7 @@ from semantic import (
     get_num_low_synsets,
     get_synsets,
 )
-from surface import (
+from .surface import (
     get_avg_word_length,
     get_num_lemmas,
     get_num_long_words,
@@ -106,6 +105,7 @@ from surface import (
     get_num_tokens_per_sentence,
     get_num_types,
     get_raw_sequence_length,
+    get_num_characters
 )
 
 FUNCTION_MAP = {
@@ -120,6 +120,7 @@ FUNCTION_MAP = {
     "avg_word_length": get_avg_word_length,
     "n_long_words": get_num_long_words,
     "n_tokens_per_sentence": get_num_tokens_per_sentence,
+    "n_characters": get_num_characters,
     # EMOTION FEATURES
     # Sentiment features
     "sentiment_score": get_sentiment_score,
@@ -146,7 +147,7 @@ FUNCTION_MAP = {
     "compressibility": get_compressibility,
     "entropy": get_entropy,
     # LEXICAL RICHNESS FEATURES
-    "lemma_token_ratio": get_feature_token_ratio,
+    "lemma_token_ratio": get_lemma_token_ratio,
     "ttr": get_ttr,
     "cttr": get_cttr,
     "rttr": get_rttr,
@@ -203,6 +204,14 @@ class Extractor:
             "token": [],
             "sentence": [],
         }
+        self.resources = {
+            "sentiment": None,
+            "vad": None,
+            "concreteness": None,
+            "aoa": None,
+            "prevalence": None,
+            "hedges": None,
+        }
 
         self.data = preprocess_data(self.data)
     
@@ -210,7 +219,6 @@ class Extractor:
         return self.config
     
     def extract_features(self):
-        # TODO: add support for non-
         features = self.config["features"]
         backbone = self.config["backbone"]
 
