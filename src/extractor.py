@@ -1,4 +1,10 @@
-from .features import (
+import re
+import os
+
+from .config import (
+    CONFIG_ALL,
+)
+from .preprocess import (
     get_lemmas,
     get_tokens,
     preprocess_data,
@@ -6,7 +12,6 @@ from .features import (
 from .emotion import (
     # sentiment
     load_sentiment_nrc_lexicon,
-    filter_sentiment_nrc_lexicon,
     get_sentiment_score,
     get_n_negative_sentiment,
     get_n_positive_sentiment,
@@ -68,6 +73,10 @@ from .psycholinguistic import (
     get_avg_prevalence,
     get_n_high_prevalence,
     get_n_low_prevalence,
+)
+from .resources import (
+    RESOURCE_MAP,
+    get_resource,
 )
 from .ratios import (
     get_feature_token_ratio,
@@ -195,7 +204,7 @@ FUNCTION_MAP = {
 }
 
 class Extractor:
-    def __init__(self, data, config):
+    def __init__(self, data, config=CONFIG_ALL):
         self.data = data
         self.config = config
         self.basic_features = []
@@ -218,30 +227,97 @@ class Extractor:
     def parse_config(self):
         return self.config
     
+    def __apply_function(self,
+                         feature,
+                         lexicon = None,
+                         threshold = None,
+                         function_map = FUNCTION_MAP):
+        backbone = self.config["backbone"]
+        text_column = self.config["text_column"]
+        if lexicon is not None:
+            if threshold is not None:
+                self.data = function_map[feature](data=self.data,
+                                             lexicon=lexicon,
+                                             threshold=threshold,
+                                             backbone=backbone,
+                                             text_column=text_column)
+            self.data = function_map[feature](data=self.data,
+                                            lexicon=lexicon,
+                                            backbone=backbone,
+                                            text_column=text_column)
+        elif threshold is not None:
+            self.data = function_map[feature](data=self.data,
+                                              threshold=threshold,
+                                              backbone=backbone,
+                                              text_column=text_column)
+        else:
+            self.data = function_map[feature](data=self.data,
+                                              backbone=backbone,
+                                              text_column=text_column)
+
     def extract_features(self):
         features = self.config["features"]
-        backbone = self.config["backbone"]
-
-        for feature in features:
-            if feature not in FUNCTION_MAP:
-                if feature.endswith("_token_ratio"):
-                    self.ratio_features["token"].append(feature)
-                elif feature.endswith("_type_ratio"):
-                    self.ratio_features["type"].append(feature)
-                elif feature.endswith("_sentence_ratio"):
-                    self.ratio_features["sentence"].append(feature)
+        ratio_features = {
+                "type": [],
+                "token": [],
+                "sentence": [],
+            }
+        for feature_area in features:
+            for feature in features[feature_area]:
+                if feature in FUNCTION_MAP:
+                    # Handle features that require lexicons
+                    if "lexicon" in features[feature_area][feature]:
+                        if features[feature_area][feature]["lexicon"] in \
+                              RESOURCE_MAP:
+                            filepath = RESOURCE_MAP[
+                                features[feature_area][feature]["lexicon"]
+                                ]["filepath"]
+                            if not os.path.exists(filepath):
+                                get_resource(
+                                    features[feature_area][feature]["lexicon"])
+                            # Then load it
+                            if "aoa" in feature:
+                                lexicon = load_aoa_norms(filepath)
+                            elif "concreteness" in feature:
+                                lexicon = load_concreteness_norms(filepath)
+                            elif "prevalence" in feature:
+                                lexicon = load_prevalence_norms(filepath)
+                            elif re.search(r"(valence|arousal|dominance)",
+                                           feature):
+                                lexicon = load_vad_lexicon(filepath)
+                            elif "sentiment" in feature:
+                                lexicon = load_sentiment_nrc_lexicon(filepath)
+                            elif "intensity" in feature:
+                                lexicon = load_intensity_lexicon(filepath)
+                            elif "hedges" in feature:
+                                lexicon = load_hedges(filepath)
+                            self.__apply_function(feature, lexicon=lexicon)
+                        else:
+                            print(f"Lexicon {features[feature_area][feature]['lexicon']}"
+                                  " not found. Skipping...")
+                    else:
+                        self.__apply_function(feature)
                 else:
-                    raise ValueError(f"Feature {feature} is not supported.")
-            else:
-                self.data = FUNCTION_MAP[feature](self.data, backbone=backbone)
-        
-        # Calculate ratio features; if feature list is empty,
-        # the function will return the data as is
-        self.data = get_feature_token_ratio(self.data,
-                                            self.ratio_features["token"])
-        self.data = get_feature_type_ratio(self.data,
-                                           self.ratio_features["type"])
-        self.data = get_feature_sentence_ratio(self.data,
-                                               self.ratio_features["sentence"])
+                    print(feature)
+                    if feature.endswith("_token_ratio"):
+                        ratio_features["token"].append(feature.replace("_token_ratio", ""))
+                    elif feature.endswith("_sentence_ratio"):
+                        ratio_features["sentence"].append(feature.replace("_sentence_ratio", ""))
+                    elif feature.endswith("_type_ratio"):
+                        ratio_features["type"].append(feature.replace("_type_ratio", ""))
+                    else:
+                        print(f"Feature {feature} not found. Check spelling. Skipping...")
+
+        print(ratio_features)
+        for ratio_feature in ratio_features["token"]:
+            print(ratio_feature)
+            self.data = get_feature_token_ratio(self.data, ratio_feature)
+        for ratio_feature in ratio_features["sentence"]:
+            self.data = get_feature_sentence_ratio(self.data, ratio_feature)
+            print(ratio_feature)
+        for ratio_feature in ratio_features["type"]:
+            self.data = get_feature_type_ratio(self.data, ratio_feature)
+            print(ratio_feature)
 
         return self.data
+
