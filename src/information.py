@@ -3,11 +3,13 @@ This module contains functions for calculating information-theoretic metrics.
 """
 import bz2
 
-import polars as pl
 import numpy as np
+import polars as pl
+from typing import Any, Tuple
 
 def get_compressibility(data: pl.DataFrame,
                         text_column: str = 'text',
+                        *_ : Tuple[Any, ...],
                         ) -> pl.DataFrame:
     """
     Calculates the compressibility of the texts in the text column.
@@ -35,6 +37,7 @@ def get_compressibility(data: pl.DataFrame,
 
 def get_entropy(data: pl.DataFrame,
                 text_column: str = 'text',
+                *_ : Tuple[Any, ...],
                 ) -> pl.DataFrame:
     """
     Calculates the Shannon entropy of the texts in the text column.
@@ -58,7 +61,9 @@ def get_entropy(data: pl.DataFrame,
 
     return data
 
-def entropy(string: str) -> float:
+def entropy(string: str,
+            *_ : Tuple[Any, ...],
+            ) -> float:
     """
     Calculate the Shannon entropy of a string.
     Helper function for get_entropy.

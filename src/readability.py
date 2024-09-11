@@ -3,6 +3,7 @@ This module contains functions to calculate readability scores
 from text data.
 """
 import polars as pl
+from typing import Any, Tuple
 
 from .surface import (
     get_num_tokens,
@@ -12,8 +13,9 @@ from .surface import (
 )
 
 def get_num_syllables(data: pl.DataFrame,
-                        backbone: str = 'spacy'
-                        ) -> pl.DataFrame:
+                      backbone: str = 'spacy',
+                      *_ : Tuple[Any, ...],
+                      ) -> pl.DataFrame:
         """
         Calculates the number of syllables in a text.
 
@@ -48,7 +50,8 @@ def get_num_syllables(data: pl.DataFrame,
         return data
 
 def get_num_monosyllables(data: pl.DataFrame,
-                          backbone: str = 'spacy'
+                          backbone: str = 'spacy',
+                          *_ : Tuple[Any, ...],
                           ) -> pl.DataFrame:
     """
     Calculates the number of monosyllables in a text.
@@ -87,7 +90,8 @@ def get_num_monosyllables(data: pl.DataFrame,
     return data
 
 def get_num_polysyllables(data: pl.DataFrame,
-                          backbone: str = 'spacy'
+                          backbone: str = 'spacy',
+                          *_ : Tuple[Any, ...],
                           ) -> pl.DataFrame:
     """
     Calculates the number of polysyllables in a text.
@@ -126,7 +130,8 @@ def get_num_polysyllables(data: pl.DataFrame,
     return data
 
 def get_flesch_reading_ease(data: pl.DataFrame,
-                            backbone: str = 'spacy'
+                            backbone: str = 'spacy',
+                            *_ : Tuple[Any, ...],
                             ) -> pl.DataFrame:
     """
     Calculates the Flesch Reading Ease score of a text.
@@ -158,7 +163,8 @@ def get_flesch_reading_ease(data: pl.DataFrame,
     return data
 
 def get_flesch_kincaid_grade(data: pl.DataFrame,
-                            backbone: str = 'spacy'
+                            backbone: str = 'spacy',
+                            *_ : Tuple[Any, ...],
                             ) -> pl.DataFrame:
     """
     Calculates the Flesch-Kincaid Grade Level of a text.
@@ -191,6 +197,7 @@ def get_flesch_kincaid_grade(data: pl.DataFrame,
 
 def get_ari(data: pl.DataFrame,
             backbone: str = 'spacy',
+            *_ : Tuple[Any, ...],
             ) -> pl.DataFrame:
     """
     Calculates the Automated Readability Index (ARI) of a text.
@@ -223,6 +230,7 @@ def get_ari(data: pl.DataFrame,
 
 def get_smog(data: pl.DataFrame,
             backbone: str = 'spacy',
+            *_ : Tuple[Any, ...],
             ) -> pl.DataFrame:
     """
     Calculates the Simple Measure of Gobbledygook (SMOG) of a text.
@@ -252,6 +260,7 @@ def get_smog(data: pl.DataFrame,
 
 def get_cli(data: pl.DataFrame,
             backbone: str = 'spacy',
+            *_ : Tuple[Any, ...],
             ) -> pl.DataFrame:
     """
     Calculates the Coleman-Liau Index (CLI) of a text.
@@ -284,6 +293,7 @@ def get_cli(data: pl.DataFrame,
 
 def get_gunning_fog(data: pl.DataFrame,
                     backbone: str = 'spacy',
+                    *_ : Tuple[Any, ...],
                     ) -> pl.DataFrame:
     """
     Calculates the Gunning Fog Index of a text.
@@ -316,6 +326,7 @@ def get_gunning_fog(data: pl.DataFrame,
 
 def get_lix(data: pl.DataFrame,
             backbone: str = 'spacy',
+            *_ : Tuple[Any, ...],
             ) -> pl.DataFrame:
     """
     Calculates the LIX of a text.
@@ -346,6 +357,7 @@ def get_lix(data: pl.DataFrame,
 
 def get_rix(data: pl.DataFrame,
             backbone: str = 'spacy',
+            *_ : Tuple[Any, ...],
             ) -> pl.DataFrame:
     """
     Calculates the RIX of a text.

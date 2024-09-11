@@ -1,4 +1,5 @@
 import polars as pl
+from typing import Any, Tuple
 
 from .surface import (
     get_num_tokens,
@@ -8,7 +9,8 @@ from .surface import (
 
 def get_feature_token_ratio(data: pl.DataFrame,
                             features: list[str],
-                            backbone: str = 'spacy'
+                            backbone: str = 'spacy',
+                            *_ : Tuple[Any, ...],
                             ) -> pl.DataFrame:
     """
     Gets the ratio of given features to the total number of tokens.
@@ -36,7 +38,8 @@ def get_feature_token_ratio(data: pl.DataFrame,
 
 def get_feature_type_ratio(data: pl.DataFrame,
                             features: list[str],
-                            backbone: str = 'spacy'
+                            backbone: str = 'spacy',
+                            *_ : Tuple[Any, ...],
                             ) -> pl.DataFrame:
     """
     Gets the ratio of given features to the total number of types.
@@ -64,7 +67,8 @@ def get_feature_type_ratio(data: pl.DataFrame,
 
 def get_feature_sentence_ratio(data: pl.DataFrame,
                                features: list[str],
-                               backbone: str = 'spacy'
+                               backbone: str = 'spacy',
+                               *_ : Tuple[Any, ...],
                                ) -> pl.DataFrame:
     """
     Gets the ratio of given features to the total number of sentences.

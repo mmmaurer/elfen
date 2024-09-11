@@ -8,6 +8,7 @@ If you are using the resources for research, please cite the original authors of
 Open Multilingual WordNet.
 """
 import polars as pl
+from typing import Any, Tuple
 import wn
 
 from .surface import (
@@ -43,7 +44,8 @@ def load_hedges(hedges_file: str) -> list[str]:
 
 def get_num_hedges(data: pl.DataFrame,
                    hedges: list[str],
-                   text_column: str = 'text'
+                   text_column: str = 'text',
+                   *_ : Tuple[Any, ...],
                    ) -> pl.DataFrame:
     """
     Calculates the number of hedges in a text.
@@ -78,7 +80,8 @@ def get_num_hedges(data: pl.DataFrame,
 def get_hedges_ratio(data: pl.DataFrame,
                      hedges: list[str],
                      text_column: str = 'text',
-                     backbone: str = 'spacy'
+                     backbone: str = 'spacy',
+                     *_ : Tuple[Any, ...],
                      ) -> pl.DataFrame:
     """
     Calculates the ratio of hedges in a text.
@@ -114,7 +117,8 @@ def get_synsets(data: pl.DataFrame,
                 language: str = 'en',
                 pos_tags: list[str] = [
                     'NOUN', 'VERB', 'ADJ', 'ADV'
-                    ]
+                    ],
+                *_ : Tuple[Any, ...],
                 ) -> pl.DataFrame:
     """
     Calculates the number of synsets in a text per token.
@@ -187,7 +191,8 @@ def get_avg_num_synsets(data: pl.DataFrame,
                         language: str = 'en',
                         pos_tags: list[str] = [
                             'NOUN', 'VERB', 'ADJ', 'ADV'
-                            ]
+                            ],
+                        *_ : Tuple[Any, ...],
                         ) -> pl.DataFrame:
     """
     Calculates the average number of synsets in a text.
@@ -227,7 +232,8 @@ def get_avg_num_synsets_per_pos(data: pl.DataFrame,
                                 pos_tags: list[str] = [
                                     'NOUN', 'VERB', 'ADJ', 'ADV'
                                     ],
-                                nan_value: float = 0
+                                nan_value: float = 0,
+                                *_ : Tuple[Any, ...],
                                 ) -> pl.DataFrame:
     """
     Calculates the average number of synsets per POS in a text.
@@ -273,7 +279,8 @@ def get_num_low_synsets(data: pl.DataFrame,
                         pos_tags: list[str] = [
                             'NOUN', 'VERB', 'ADJ', 'ADV'
                             ],
-                        threshold: int = 2
+                        threshold: int = 2,
+                        *_ : Tuple[Any, ...],
                         ) -> pl.DataFrame:
     """
     Calculates the number of words with a low number of synsets in a text.
@@ -316,7 +323,8 @@ def get_num_high_synsets(data: pl.DataFrame,
                          pos_tags: list[str] = [
                              'NOUN', 'VERB', 'ADJ', 'ADV'
                              ],
-                        threshold: int = 5
+                        threshold: int = 5,
+                        *_ : Tuple[Any, ...],
                         ) -> pl.DataFrame:
     """
     Calculates the number of words with a high number of synsets in a text.

@@ -2,6 +2,7 @@
 This module contains functions to extract named entity-related features
 from text data.
 """
+from typing import Any, Tuple
 import polars as pl
 
 
@@ -12,7 +13,8 @@ ENT_TYPES = [
 ]
 
 def get_num_entities(data: pl.DataFrame,
-                     backbone: str = 'spacy'
+                     backbone: str = 'spacy',
+                     *_ : Tuple[Any, ...],
                      ) -> pl.DataFrame:
     """
     Calculates the number of entities in the text data.
@@ -43,7 +45,8 @@ def get_num_entities(data: pl.DataFrame,
 
 def get_num_per_entity_type(data: pl.DataFrame,
                             backbone: str = 'spacy',
-                            ent_types: list = ENT_TYPES
+                            ent_types: list = ENT_TYPES,
+                            *_ : Tuple[Any, ...],
                             ) -> pl.DataFrame:
     """
     Calculates the number of entities per entity type in the text data.

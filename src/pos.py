@@ -3,6 +3,7 @@ This module contains functions to calculate various part-of-speech (POS) related
 features from text data.
 """
 import polars as pl
+from typing import Any, Tuple
 
 from .surface import (
     get_num_tokens,
@@ -15,8 +16,9 @@ UPOS_TAGS = [
 ]
 
 def get_num_lexical_tokens(data: pl.DataFrame,
-                            backbone: str = 'spacy'
-                            ) -> pl.DataFrame:
+                           backbone: str = 'spacy',
+                           *_ : Tuple[Any, ...],
+                           ) -> pl.DataFrame:
     """
     Calculates the number of lexical tokens in the text.
 
@@ -52,7 +54,8 @@ def get_num_lexical_tokens(data: pl.DataFrame,
     return data
 
 def get_pos_variability(data: pl.DataFrame,
-                        backbone: str = 'spacy'
+                        backbone: str = 'spacy',
+                        *_ : Tuple[Any, ...],
                         ) -> pl.DataFrame:
     """
     Calculates the variability of part-of-speech tags in the text data.
@@ -92,9 +95,10 @@ def get_pos_variability(data: pl.DataFrame,
     return data
 
 def get_num_per_pos(data: pl.DataFrame,
-                backbone: str = 'spacy',
-                pos_tags: list = UPOS_TAGS
-                ) -> pl.DataFrame:
+                    backbone: str = 'spacy',
+                    pos_tags: list = UPOS_TAGS,
+                    *_ : Tuple[Any, ...],
+                    ) -> pl.DataFrame:
     """
     Calculates the number of tokens per part-of-speech tag in the text data.
 

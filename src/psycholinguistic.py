@@ -23,8 +23,9 @@ The norms used in this module are:
   Behavior Research Methods, 51(2), 467-479.
 """
 import polars as pl
+from typing import Any, Tuple
 
-from .features import (
+from .preprocess import (
     get_lemmas,
 )
 from .surface import (
@@ -40,6 +41,7 @@ from .util import (
 # ---------------------------------------------------- #
 
 def load_concreteness_norms(path: str,
+                            *_ : Tuple[Any, ...],
                             ) -> pl.DataFrame:
     """
     Loads the concreteness norms dataset.
@@ -56,7 +58,8 @@ def load_concreteness_norms(path: str,
     return concreteness_norms
 
 def filter_concreteness_norms(concreness_norms: pl.DataFrame,
-                              words: list
+                              words: list,
+                              *_ : Tuple[Any, ...],
                               ) -> pl.DataFrame:
     """
     Filters the concreteness norms dataset by a list of words.
@@ -74,16 +77,17 @@ def filter_concreteness_norms(concreness_norms: pl.DataFrame,
     return filtered_concreteness_norms
 
 def get_avg_concreteness(data: pl.DataFrame,
-                         concreteness_norms: pl.DataFrame,
+                         lexicon: pl.DataFrame,
                          backbone: str = 'spacy',
-                         nan_value: float = 0.0
+                         nan_value: float = 0.0,
+                         *_ : Tuple[Any, ...],
                          ) -> pl.DataFrame:
     """
     Calculates the average concreteness score of a text.
 
     Args:
     - data: A Polars DataFrame containing the text data.
-    - concreteness_norms: A Polars DataFrame containing the concreteness norms.
+    - lexicon: A Polars DataFrame containing the concreteness norms.
     - backbone: The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
     - nan_value: The value to fill NaN and null values with.
@@ -99,7 +103,7 @@ def get_avg_concreteness(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
     data = data.with_columns(
         pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=concreteness_norms,
+            lambda x: filter_lexicon(lexicon=lexicon,
                                      words=x,
                                      word_column="Word"). \
                 select(pl.col("Conc.M")).mean().item(),
@@ -111,16 +115,17 @@ def get_avg_concreteness(data: pl.DataFrame,
     return data
 
 def get_n_low_concreteness(data: pl.DataFrame,
-                           concreteness_norms: pl.DataFrame,
+                           lexicon: pl.DataFrame,
                            threshold: float = 1.66,
-                           backbone: str = 'spacy'
+                           backbone: str = 'spacy',
+                           *_ : Tuple[Any, ...],
                            ) -> pl.DataFrame:
     """
     Calculates the number of low concreteness words in a text.
 
     Args:
     - data: A Polars DataFrame containing the text data.
-    - concreteness_norms: A Polars DataFrame containing the concreteness norms.
+    - lexicon: A Polars DataFrame containing the concreteness norms.
     - threshold: The threshold for the low concreteness words.
                     Defaults to 1.66.
     - backbone: The NLP library used to process the text data.
@@ -136,7 +141,7 @@ def get_n_low_concreteness(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
     data = data.with_columns(
         pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=concreteness_norms,
+            lambda x: filter_lexicon(lexicon=lexicon,
                                      words=x,
                                      word_column="Word"). \
                 select(pl.col("Conc.M")).filter(pl.col("Conc.M") < threshold). \
@@ -147,16 +152,17 @@ def get_n_low_concreteness(data: pl.DataFrame,
     return data
 
 def get_n_high_concreteness(data: pl.DataFrame,
-                            concreteness_norms: pl.DataFrame,
+                            lexicon: pl.DataFrame,
                             backbone: str = 'spacy',
                             threshold: float = 3.33,
+                            *_ : Tuple[Any, ...],
                             ) -> pl.DataFrame:
     """
     Calculates the number of high concreteness words in a text.
 
     Args:
     - data: A Polars DataFrame containing the text data.
-    - concreteness_norms: A Polars DataFrame containing the concreteness norms.
+    - lexicon: A Polars DataFrame containing the concreteness norms.
     - threshold: The threshold for the high concreteness words.
                     Defaults to 3.33.
     - backbone: The NLP library used to process the text data.
@@ -172,7 +178,7 @@ def get_n_high_concreteness(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
     data = data.with_columns(
         pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=concreteness_norms,
+            lambda x: filter_lexicon(lexicon=lexicon,
                                      words=x,
                                      word_column="Word"). \
                 select(pl.col("Conc.M")).filter(pl.col("Conc.M") > threshold). \
@@ -187,7 +193,8 @@ def get_n_high_concreteness(data: pl.DataFrame,
 # ---------------------------------------------------- #
 
 def load_aoa_norms(path: str,
-                     ) -> pl.DataFrame:
+                   *_ : Tuple[Any, ...],
+                   ) -> pl.DataFrame:
     """
     Loads the age of acquisition norms dataset.
 
@@ -203,16 +210,17 @@ def load_aoa_norms(path: str,
     return aoa_norms
 
 def get_avg_aoa(data: pl.DataFrame,
-                aoa_norms: pl.DataFrame,
+                lexicon: pl.DataFrame,
                 backbone: str = 'spacy',
-                nan_value: float = 0.0
+                nan_value: float = 0.0,
+                *_ : Tuple[Any, ...],
                 ) -> pl.DataFrame:
     """
     Calculates the average age of acquisition score of a text.
 
     Args:
     - data: A Polars DataFrame containing the text data.
-    - aoa_norms: A Polars DataFrame containing the age of acquisition norms.
+    - lexicon: A Polars DataFrame containing the age of acquisition norms.
     - backbone: The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
 
@@ -226,7 +234,7 @@ def get_avg_aoa(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
     data = data.with_columns(
         pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=aoa_norms,
+            lambda x: filter_lexicon(lexicon=lexicon,
                                      words=x,
                                      word_column="Word"). \
                 select(pl.col("Rating.Mean")).mean().item(),
@@ -238,10 +246,11 @@ def get_avg_aoa(data: pl.DataFrame,
     return data
 
 def get_n_low_aoa(data: pl.DataFrame,
-                    aoa_norms: pl.DataFrame,
-                    backbone: str = 'spacy',
-                    threshold: float = 10.0,
-                    ) -> pl.DataFrame:
+                  lexicon: pl.DataFrame,
+                  backbone: str = 'spacy',
+                  threshold: float = 10.0,
+                  *_ : Tuple[Any, ...],
+                  ) -> pl.DataFrame:
         """
         Calculates the number of low age of acquisition words in a text.
 
@@ -263,7 +272,7 @@ def get_n_low_aoa(data: pl.DataFrame,
             data = get_lemmas(data, backbone=backbone)
         data = data.with_columns(
             pl.col("lemmas").map_elements(
-                lambda x: filter_lexicon(lexicon=aoa_norms,
+                lambda x: filter_lexicon(lexicon=lexicon,
                                          words=x,
                                          word_column="Word"). \
                     select(pl.col("Rating.Mean")
@@ -275,16 +284,17 @@ def get_n_low_aoa(data: pl.DataFrame,
         return data
 
 def get_n_high_aoa(data: pl.DataFrame,
-                    aoa_norms: pl.DataFrame,
-                    threshold: float = 10.0,
-                    backbone: str = 'spacy'
-                    ) -> pl.DataFrame:
+                   lexicon: pl.DataFrame,
+                   threshold: float = 10.0,
+                   backbone: str = 'spacy',
+                   *_ : Tuple[Any, ...],
+                   ) -> pl.DataFrame:
         """
         Calculates the number of high age of acquisition words in a text.
 
         Args:
         - data: A Polars DataFrame containing the text data.
-        - aoa_norms: A Polars DataFrame containing the age of acquisition norms.
+        - lexicon: A Polars DataFrame containing the age of acquisition norms.
         - threshold: The threshold for the high age of acquisition words.
                     Defaults to 10.0.
 
@@ -298,7 +308,7 @@ def get_n_high_aoa(data: pl.DataFrame,
             data = get_lemmas(data, backbone=backbone)
         data = data.with_columns(
             pl.col("lemmas").map_elements(
-                lambda x: filter_lexicon(lexicon=aoa_norms,
+                lambda x: filter_lexicon(lexicon=lexicon,
                                          words=x,
                                          word_column="Word"). \
                     select(pl.col("Rating.Mean")).filter(
@@ -314,6 +324,7 @@ def get_n_high_aoa(data: pl.DataFrame,
 # ---------------------------------------------------- #
 
 def load_prevalence_norms(path: str,
+                          *_ : Tuple[Any, ...],
                           ) -> pl.DataFrame:
     """
     Loads the word prevalence norms dataset.
@@ -330,9 +341,10 @@ def load_prevalence_norms(path: str,
     return prevalence_norms
 
 def get_avg_prevalence(data: pl.DataFrame,
-                       prevalence_norms: pl.DataFrame,
+                       lexicon: pl.DataFrame,
                        backbone: str = 'spacy',
-                       nan_value: float = 0.0
+                       nan_value: float = 0.0,
+                       *_ : Tuple[Any, ...],
                        ) -> pl.DataFrame:
     """
     Calculates the average prevalence score of a text.
@@ -356,7 +368,7 @@ def get_avg_prevalence(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
     data = data.with_columns(
         pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=prevalence_norms,
+            lambda x: filter_lexicon(lexicon=lexicon,
                                      words=x,
                                      word_column="Word"). \
                 select(pl.col("Prevalence")).mean().item(),
@@ -368,17 +380,17 @@ def get_avg_prevalence(data: pl.DataFrame,
     return data
 
 def get_n_low_prevalence(data: pl.DataFrame,
-                         prevalence_norms: pl.DataFrame,
+                         lexicon: pl.DataFrame,
                          threshold: float = 1.0,
-                         backbone: str = 'spacy'
+                         backbone: str = 'spacy',
+                         *_ : Tuple[Any, ...],
                          ) -> pl.DataFrame:
     """
     Calculate the number of low prevalence words in a text.
 
     Args:
     - data: A Polars DataFrame containing the text data.
-    - prevalence_norms: A Polars DataFrame containing the word prevalence
-                        norms.
+    - lexicon: A Polars DataFrame containing the word prevalence norms.
 
     Returns:
     - data: A Polars DataFrame containing the number of low prevalence words
@@ -390,7 +402,7 @@ def get_n_low_prevalence(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
     data = data.with_columns(
         pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=prevalence_norms,
+            lambda x: filter_lexicon(lexicon=lexicon,
                                      words=x,
                                      word_column="Word"). \
                 select(pl.col("Prevalence")).filter(
@@ -402,17 +414,17 @@ def get_n_low_prevalence(data: pl.DataFrame,
     return data
 
 def get_n_high_prevalence(data: pl.DataFrame,
-                          prevalence_norms: pl.DataFrame,
+                          lexicon: pl.DataFrame,
                           backbone: str = 'spacy',
                           threshold: float = 1.0,
+                          *_ : Tuple[Any, ...],
                           ) -> pl.DataFrame:
     """
     Calculate the number of high prevalence words in a text.
 
     Args:
     - data: A Polars DataFrame containing the text data.
-    - prevalence_norms: A Polars DataFrame containing the word prevalence
-                        norms.
+    - lexicons: A Polars DataFrame containing the word prevalence norms.
     - backbone: The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
     - threshold: The threshold for the high prevalence words.
@@ -428,7 +440,7 @@ def get_n_high_prevalence(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
     data = data.with_columns(
         pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=prevalence_norms,
+            lambda x: filter_lexicon(lexicon=lexicon,
                                      words=x,
                                      word_column="Word"). \
                 select(pl.col("Prevalence")).filter(

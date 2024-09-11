@@ -3,11 +3,13 @@ This module contains functions to calculate various surface-level features
 from text data.
 """
 from collections import Counter
+from typing import Any, Tuple
 
 import polars as pl
 
 def get_raw_sequence_length(data: pl.DataFrame,
                             text_column: str = 'text',
+                            *_ : Tuple[Any, ...],
                             ) -> pl.DataFrame:
     """
     Calculates the raw text length (number of characters) of a text.
@@ -21,7 +23,8 @@ def get_raw_sequence_length(data: pl.DataFrame,
     return data
 
 def get_num_tokens(data: pl.DataFrame,
-                   backbone: str = 'spacy'
+                   backbone: str = 'spacy',
+                   *_ : Tuple[Any, ...],
                    ) -> pl.DataFrame:
     """
     Calculates the sequence length (number of tokens) of a text.
@@ -42,7 +45,8 @@ def get_num_tokens(data: pl.DataFrame,
     return data
 
 def get_num_sentences(data: pl.DataFrame,
-                      backbone: str = 'spacy'
+                      backbone: str = 'spacy',
+                      *_ : Tuple[Any, ...],
                       ) -> pl.DataFrame:
     """
     Calculates the number of sentences in a text.
@@ -63,7 +67,8 @@ def get_num_sentences(data: pl.DataFrame,
     return data
 
 def get_num_tokens_per_sentence(data: pl.DataFrame,
-                                backbone: str = 'spacy'
+                                backbone: str = 'spacy',
+                                *_ : Tuple[Any, ...],
                                 ) -> pl.DataFrame:
     """
     Calculates the average number of tokens per sentence in a text.
@@ -80,7 +85,8 @@ def get_num_tokens_per_sentence(data: pl.DataFrame,
     return data
 
 def get_num_characters(data: pl.DataFrame,
-                    backbone: str = 'spacy'
+                    backbone: str = 'spacy',
+                    *_ : Tuple[Any, ...],
                     ) -> pl.DataFrame:
         """
         Calculates the number of characters in a text.
@@ -105,7 +111,8 @@ def get_num_characters(data: pl.DataFrame,
         return data
 
 def get_chars_per_sentence(data: pl.DataFrame,
-                            backbone: str = 'spacy'
+                            backbone: str = 'spacy',
+                            *_ : Tuple[Any, ...],
                             ) -> pl.DataFrame:
     """
     Calculates the average number of characters per sentence in a text.
@@ -125,7 +132,8 @@ def get_chars_per_sentence(data: pl.DataFrame,
 
 def get_raw_length_per_sentence(data: pl.DataFrame,
                                 backbone: str = 'spacy',
-                                text_column: str = 'text'
+                                text_column: str = 'text',
+                                *_ : Tuple[Any, ...],
                                 ) -> pl.DataFrame:
     """
     Calculates the average number of characters per sentence in a text.
@@ -146,6 +154,7 @@ def get_raw_length_per_sentence(data: pl.DataFrame,
 def get_avg_word_length(data: pl.DataFrame,
                         backbone: str = 'spacy',
                         text_column: str = 'text'
+                        ,*_ : Tuple[Any, ...],
                         ) -> pl.DataFrame:
     """
     Calculates the average word length in a text.
@@ -164,7 +173,8 @@ def get_avg_word_length(data: pl.DataFrame,
     return data
 
 def get_num_types(data: pl.DataFrame,
-                  backbone: str = 'spacy'
+                  backbone: str = 'spacy',
+                  *_ : Tuple[Any, ...],
                  ) -> pl.DataFrame:
     """
     Calculates the number of types in a text.
@@ -190,8 +200,9 @@ def get_num_types(data: pl.DataFrame,
 
 def get_num_long_words(data: pl.DataFrame,
                        backbone: str = 'spacy',
-                       threshold: int = 6
-                      ) -> pl.DataFrame:
+                       threshold: int = 6,
+                       *_ : Tuple[Any, ...],
+                       ) -> pl.DataFrame:
     """
     Calculates the number of long words in a text.
     """
@@ -216,8 +227,9 @@ def get_num_long_words(data: pl.DataFrame,
     return data
 
 def get_num_lemmas(data: pl.DataFrame,
-                          backbone: str = 'spacy'
-                          ) -> pl.DataFrame:
+                   backbone: str = 'spacy',
+                   *_ : Tuple[Any, ...],
+                   ) -> pl.DataFrame:
     """
     Calculates the number of unique lemmas in the text.
 
