@@ -8,13 +8,12 @@ import polars as pl
 import spacy
 from spacy_syllables import SpacySyllables
 import stanza
-from typing import Any, Tuple
 
 def preprocess_data(data: pl.DataFrame,
                     text_column: str = 'text',
                     backbone: str = 'spacy',
                     model: str = 'en_core_web_sm',
-                    *_ : Tuple[Any, ...],
+                    **kwargs: dict[str, str],
                     ) -> pl.DataFrame:
     """
     Preprocesses the text data using the specified NLP library.
@@ -45,7 +44,7 @@ def preprocess_data(data: pl.DataFrame,
 
 def get_lemmas(data: pl.DataFrame,
                backbone: str = 'spacy',
-               *_ : Tuple[Any, ...],
+               **kwargs: dict[str, str],
                ) -> pl.DataFrame:
     """
     Gets the lemmas of the text data.
@@ -72,7 +71,7 @@ def get_lemmas(data: pl.DataFrame,
 
 def get_tokens(data: pl.DataFrame,
                backbone: str = 'spacy',
-               *_ : Tuple[Any, ...],
+               **kwargs: dict[str, str],
                ) -> pl.DataFrame:
     """
     Gets the tokens of the text data.

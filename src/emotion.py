@@ -20,7 +20,6 @@ The lexicons used in this module are:
     (LREC'06) (pp. 417-422).
 """
 import polars as pl
-from typing import Any, Tuple
 
 from .preprocess import (
     get_lemmas,
@@ -66,7 +65,7 @@ def load_vad_lexicon(path: str = VAD_NRC_PATH,
                      schema: dict = VAD_SCHEMA_NRC,
                      has_header: bool = False,
                      separator: str = "\t",
-                     *_ : Tuple[Any, ...],
+                     **kwargs: dict[str, str],
                      ) -> pl.DataFrame:
     """
     Loads the VAD lexicon as a polars DataFrame.
@@ -90,7 +89,7 @@ def get_avg_valence(data: pl.DataFrame,
                     lexicon: pl.DataFrame,
                     backbone: str = "spacy",
                     nan_value: float = 0.0,
-                    *_ : Tuple[Any, ...],
+                    **kwargs: dict[str, str],
                     ) -> pl.DataFrame:
     """
     Calculates the valence of the text.
@@ -130,7 +129,7 @@ def get_avg_arousal(data: pl.DataFrame,
                     lexicon: pl.DataFrame,
                     backbone: str = "spacy",
                     nan_value: float = 0.0,
-                    *_ : Tuple[Any, ...],
+                    **kwargs: dict[str, str],
                     ) -> pl.DataFrame:
     """
     Calculates the arousal of the text.
@@ -170,7 +169,7 @@ def get_avg_dominance(data: pl.DataFrame,
                       lexicon: pl.DataFrame,
                       backbone: str = "spacy",
                       nan_value: float = 0.0,
-                      *_ : Tuple[Any, ...],
+                      **kwargs: dict[str, str],
                       ) -> pl.DataFrame:
     """
     Calculates the dominance of the text.
@@ -211,7 +210,7 @@ def get_n_low_valence(data: pl.DataFrame,
                       backbone: str = "spacy",
                       threshold: float = 1.66,
                       nan_value: float = 0.0,
-                      *_ : Tuple[Any, ...],
+                      **kwargs: dict[str, str],
                       ) -> pl.DataFrame:
     """
     Calculates the number of words with valence lower than the threshold.
@@ -246,11 +245,11 @@ def get_n_low_valence(data: pl.DataFrame,
     return data
 
 def get_n_high_valence(data: pl.DataFrame,
-                       vad_lexicon: pl.DataFrame,
+                       lexicon: pl.DataFrame,
                        backbone: str = "spacy",
                        threshold: float = 0.66,
                        nan_value: float = 0.0,
-                       *_ : Tuple[Any, ...],
+                       **kwargs: dict[str, str],
                        ) -> pl.DataFrame:
     """
     Calculates the number of words with valence higher than the threshold.
@@ -273,7 +272,7 @@ def get_n_high_valence(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
     data = data.with_columns(
         pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=vad_lexicon,
+            lambda x: filter_lexicon(lexicon=lexicon,
                                       words=x,
                                       word_column="word"). \
                select("valence").filter(
@@ -285,11 +284,11 @@ def get_n_high_valence(data: pl.DataFrame,
     return data
 
 def get_n_low_arousal(data: pl.DataFrame,
-                      vad_lexicon: pl.DataFrame,
+                      lexicon: pl.DataFrame,
                       backbone: str = "spacy",
                       threshold: float = 0.33,
                       nan_value: float = 0.0,
-                      *_ : Tuple[Any, ...],
+                      **kwargs: dict[str, str],
                       ) -> pl.DataFrame:
     """
     Calculates the number of words with arousal lower than the threshold.
@@ -312,7 +311,7 @@ def get_n_low_arousal(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
     data = data.with_columns(
         pl.col("lemmas").map_elements(
-             lambda x: filter_lexicon(lexicon=vad_lexicon,
+             lambda x: filter_lexicon(lexicon=lexicon,
                                       words=x,
                                       word_column="word"). \
                select("arousal").filter(
@@ -324,11 +323,11 @@ def get_n_low_arousal(data: pl.DataFrame,
     return data
 
 def get_n_high_arousal(data: pl.DataFrame,
-                       vad_lexicon: pl.DataFrame,
+                       lexicon: pl.DataFrame,
                        backbone: str = "spacy",
                        threshold: float = 0.66,
                        nan_value: float = 0.0,
-                       *_ : Tuple[Any, ...],
+                       **kwargs: dict[str, str],
                        ) -> pl.DataFrame:
     """
     Calculates the number of words with arousal higher than the threshold.
@@ -351,7 +350,7 @@ def get_n_high_arousal(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
     data = data.with_columns(
         pl.col("lemmas").map_elements(
-             lambda x: filter_lexicon(lexicon=vad_lexicon,
+             lambda x: filter_lexicon(lexicon=lexicon,
                                       words=x,
                                       word_column="word"). \
                select("arousal").filter(
@@ -363,11 +362,11 @@ def get_n_high_arousal(data: pl.DataFrame,
     return data
 
 def get_n_low_dominance(data: pl.DataFrame,
-                        vad_lexicon: pl.DataFrame,
+                        lexicon: pl.DataFrame,
                         backbone: str = "spacy",
                         threshold: float = 0.33,
                         nan_value: float = 0.0,
-                        *_ : Tuple[Any, ...],
+                        **kwargs: dict[str, str],
                         ) -> pl.DataFrame:
     """
     Calculates the number of words with dominance lower than the threshold.
@@ -390,7 +389,7 @@ def get_n_low_dominance(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
     data = data.with_columns(
         pl.col("lemmas").map_elements(
-             lambda x: filter_lexicon(lexicon=vad_lexicon,
+             lambda x: filter_lexicon(lexicon=lexicon,
                                       words=x,
                                       word_column="word"). \
                select("dominance").filter(
@@ -402,10 +401,10 @@ def get_n_low_dominance(data: pl.DataFrame,
     return data
 
 def get_n_high_dominance(data: pl.DataFrame,
-                         vad_lexicon: pl.DataFrame,
+                         lexicon: pl.DataFrame,
                          threshold: float = 0.66,
                          nan_value: float = 0.0,
-                         *_ : Tuple[Any, ...],
+                         **kwargs: dict[str, str],
                          ) -> pl.DataFrame:
     """
     Calculates the number of words with dominance higher than the
@@ -427,7 +426,7 @@ def get_n_high_dominance(data: pl.DataFrame,
     """
     data = data.with_columns(
         pl.col("lemmas").map_elements(
-             lambda x: filter_lexicon(lexicon=vad_lexicon,
+             lambda x: filter_lexicon(lexicon=lexicon,
                                       words=x,
                                       word_column="word"). \
                select("dominance").filter(pl.col("dominance") > threshold),
@@ -445,7 +444,7 @@ def load_intensity_lexicon(path: str = INTENSITY_PATH,
                            schema: dict = INTENSITY_SCHEMA,
                            has_header: bool = False,
                            separator: str = "\t",
-                           *_ : Tuple[Any, ...],
+                           **kwargs: dict[str, str],
                            ) -> pl.DataFrame:
     """
     Loads the intensity lexicon as a polars DataFrame.
@@ -493,7 +492,7 @@ def get_avg_emotion_intensity(data: pl.DataFrame,
                               backbone: str = "spacy",
                               emotions: list = EMOTIONS,
                               nan_value: float = 0.0,
-                              *_ : Tuple[Any, ...],
+                              **kwargs: dict[str, str],
                               ) -> pl.DataFrame:
     """
     Calculates the average emotion intensity of the text.
@@ -536,7 +535,7 @@ def get_n_low_intensity(data: pl.DataFrame,
                         emotions: list = EMOTIONS,
                         threshold: float = 0.33,
                         nan_value: float = 0.0,
-                        *_ : Tuple[Any, ...],
+                        **kwargs: dict[str, str],
                         ) -> pl.DataFrame:
     """
     Calculates the number of words with emotion intensity lower than the threshold.
@@ -578,7 +577,7 @@ def get_n_high_intensity(data: pl.DataFrame,
                          emotions: list = EMOTIONS,
                          threshold: float = 0.66,
                          nan_value: float = 0.0,
-                         *_ : Tuple[Any, ...],
+                         **kwargs: dict[str, str],
                          ) -> pl.DataFrame:
     """
     Calculates the number of words with emotion intensity higher than the threshold.
@@ -624,7 +623,7 @@ def load_sentiwordnet(path: str = SENTIWORDNET_PATH,
                       schema: dict = SENTIWORDNET_SCHEMA,
                       has_header: bool = False,
                       separator: str = "\t",
-                      *_ : Tuple[Any, ...],
+                      **kwargs: dict[str, str],
                       ) -> pl.DataFrame:
     """
     Loads the SentiWordNet lexicon as a polars DataFrame.
@@ -653,7 +652,7 @@ def load_sentiment_nrc_lexicon(path: str = SENTIMENT_NRC_PATH,
                                schema: dict = SENTIMENT_NRC_SCHEMA,
                                has_header: bool = False,
                                separator: str = "\t",
-                               *_ : Tuple[Any, ...],
+                               **kwargs: dict[str, str],
                                ) -> pl.DataFrame:
     """
     Loads the sentiment NRC lexicon as a polars DataFrame.
@@ -677,7 +676,7 @@ def load_sentiment_nrc_lexicon(path: str = SENTIMENT_NRC_PATH,
 def filter_sentiment_lexicon(lexicon: pl.DataFrame,
                              words: list,
                              sentiment: str,
-                             *_ : Tuple[Any, ...],
+                             **kwargs: dict[str, str],
                              ) -> pl.DataFrame:
     """
     Filters the sentiment NRC lexicon for the given words and emotions.
@@ -702,7 +701,7 @@ def get_n_positive_sentiment(data: pl.DataFrame,
                             lexicon: pl.DataFrame,
                             backbone: str = "spacy",
                             nan_value: float = 0.0,
-                            *_ : Tuple[Any, ...],
+                            **kwargs: dict[str, str],
                             ) -> pl.DataFrame:
     """
     Calculates the number of words with positive sentiment.
@@ -742,7 +741,7 @@ def get_n_negative_sentiment(data: pl.DataFrame,
                             lexicon: pl.DataFrame,
                             backbone: str = "spacy",
                             nan_value: float = 0.0,
-                            *_ : Tuple[Any, ...],
+                            **kwargs: dict[str, str],
                             ) -> pl.DataFrame:
     """
     Calculates the number of words with negative sentiment.
@@ -783,7 +782,7 @@ def get_sentiment_score(data: pl.DataFrame,
                         lexicon: pl.DataFrame,
                         backbone: str = "spacy",
                         nan_value: float = 0.0,
-                        *_ : Tuple[Any, ...],
+                        **kwargs: dict[str, str],
                         ) -> pl.DataFrame:
     """
     Calculates the sentiment score of the text.

@@ -23,7 +23,6 @@ The norms used in this module are:
   Behavior Research Methods, 51(2), 467-479.
 """
 import polars as pl
-from typing import Any, Tuple
 
 from .preprocess import (
     get_lemmas,
@@ -41,7 +40,7 @@ from .util import (
 # ---------------------------------------------------- #
 
 def load_concreteness_norms(path: str,
-                            *_ : Tuple[Any, ...],
+                            **kwargs: dict[str, str],
                             ) -> pl.DataFrame:
     """
     Loads the concreteness norms dataset.
@@ -59,7 +58,7 @@ def load_concreteness_norms(path: str,
 
 def filter_concreteness_norms(concreness_norms: pl.DataFrame,
                               words: list,
-                              *_ : Tuple[Any, ...],
+                              **kwargs: dict[str, str],
                               ) -> pl.DataFrame:
     """
     Filters the concreteness norms dataset by a list of words.
@@ -80,7 +79,7 @@ def get_avg_concreteness(data: pl.DataFrame,
                          lexicon: pl.DataFrame,
                          backbone: str = 'spacy',
                          nan_value: float = 0.0,
-                         *_ : Tuple[Any, ...],
+                         **kwargs: dict[str, str],
                          ) -> pl.DataFrame:
     """
     Calculates the average concreteness score of a text.
@@ -118,7 +117,7 @@ def get_n_low_concreteness(data: pl.DataFrame,
                            lexicon: pl.DataFrame,
                            threshold: float = 1.66,
                            backbone: str = 'spacy',
-                           *_ : Tuple[Any, ...],
+                           **kwargs: dict[str, str],
                            ) -> pl.DataFrame:
     """
     Calculates the number of low concreteness words in a text.
@@ -155,7 +154,7 @@ def get_n_high_concreteness(data: pl.DataFrame,
                             lexicon: pl.DataFrame,
                             backbone: str = 'spacy',
                             threshold: float = 3.33,
-                            *_ : Tuple[Any, ...],
+                            **kwargs: dict[str, str],
                             ) -> pl.DataFrame:
     """
     Calculates the number of high concreteness words in a text.
@@ -193,7 +192,7 @@ def get_n_high_concreteness(data: pl.DataFrame,
 # ---------------------------------------------------- #
 
 def load_aoa_norms(path: str,
-                   *_ : Tuple[Any, ...],
+                   **kwargs: dict[str, str],
                    ) -> pl.DataFrame:
     """
     Loads the age of acquisition norms dataset.
@@ -213,7 +212,7 @@ def get_avg_aoa(data: pl.DataFrame,
                 lexicon: pl.DataFrame,
                 backbone: str = 'spacy',
                 nan_value: float = 0.0,
-                *_ : Tuple[Any, ...],
+                **kwargs: dict[str, str],
                 ) -> pl.DataFrame:
     """
     Calculates the average age of acquisition score of a text.
@@ -249,7 +248,7 @@ def get_n_low_aoa(data: pl.DataFrame,
                   lexicon: pl.DataFrame,
                   backbone: str = 'spacy',
                   threshold: float = 10.0,
-                  *_ : Tuple[Any, ...],
+                  **kwargs: dict[str, str],
                   ) -> pl.DataFrame:
         """
         Calculates the number of low age of acquisition words in a text.
@@ -287,7 +286,7 @@ def get_n_high_aoa(data: pl.DataFrame,
                    lexicon: pl.DataFrame,
                    threshold: float = 10.0,
                    backbone: str = 'spacy',
-                   *_ : Tuple[Any, ...],
+                   **kwargs: dict[str, str],
                    ) -> pl.DataFrame:
         """
         Calculates the number of high age of acquisition words in a text.
@@ -324,7 +323,7 @@ def get_n_high_aoa(data: pl.DataFrame,
 # ---------------------------------------------------- #
 
 def load_prevalence_norms(path: str,
-                          *_ : Tuple[Any, ...],
+                          **kwargs: dict[str, str],
                           ) -> pl.DataFrame:
     """
     Loads the word prevalence norms dataset.
@@ -344,7 +343,7 @@ def get_avg_prevalence(data: pl.DataFrame,
                        lexicon: pl.DataFrame,
                        backbone: str = 'spacy',
                        nan_value: float = 0.0,
-                       *_ : Tuple[Any, ...],
+                       **kwargs: dict[str, str],
                        ) -> pl.DataFrame:
     """
     Calculates the average prevalence score of a text.
@@ -383,7 +382,7 @@ def get_n_low_prevalence(data: pl.DataFrame,
                          lexicon: pl.DataFrame,
                          threshold: float = 1.0,
                          backbone: str = 'spacy',
-                         *_ : Tuple[Any, ...],
+                         **kwargs: dict[str, str],
                          ) -> pl.DataFrame:
     """
     Calculate the number of low prevalence words in a text.
@@ -417,7 +416,7 @@ def get_n_high_prevalence(data: pl.DataFrame,
                           lexicon: pl.DataFrame,
                           backbone: str = 'spacy',
                           threshold: float = 1.0,
-                          *_ : Tuple[Any, ...],
+                          **kwargs: dict[str, str],
                           ) -> pl.DataFrame:
     """
     Calculate the number of high prevalence words in a text.

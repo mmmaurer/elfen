@@ -19,7 +19,7 @@ CONFIG_ALL = {
             "area": "Psycholinguistics",
             "subarea": "Concreteness"
         },
-        "aoa_brysbaert": {
+        "aoa_kuperman": {
             "area": "Psycholinguistics",
             "subarea": "Age of Acquisition"
         },
@@ -143,7 +143,7 @@ CONFIG_ALL = {
             "cttr": {},
             "herdan_c": {},
             "summer_index": {},
-            "dugast_u": {},
+            "dougast_u": {},
             "maas_index": {},
             "n_hapax_legomena": {},
             "n_hapax_legomena_token_ratio": {},
@@ -188,14 +188,14 @@ CONFIG_ALL = {
                 "threshold": 3.33
             },
             "avg_aoa": {
-                "lexicon": "aoa_brysbaert"
+                "lexicon": "aoa_kuperman"
             },
             "n_low_aoa": {
-                "lexicon": "aoa_brysbaert",
+                "lexicon": "aoa_kuperman",
                 "threshold": 10.0
             },
             "n_high_aoa": {
-                "lexicon": "aoa_brysbaert",
+                "lexicon": "aoa_kuperman",
                 "threshold": 10.0
             },
             "avg_prevalence": {
@@ -212,8 +212,8 @@ CONFIG_ALL = {
         },
         "readability": {
             "flesch_reading_ease": {},
-            "flesch_kincaid_grade_level": {},
-            "gunning_fog_index": {},
+            "flesch_kincaid_grade": {},
+            "gunning_fog": {},
             "ari": {},
             "smog": {},
             "cli": {},

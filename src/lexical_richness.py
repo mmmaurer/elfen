@@ -4,7 +4,6 @@ metrics from text data.
 """
 import numpy as np
 import polars as pl
-from typing import Any, Tuple
 
 from .surface import (
     get_num_tokens,
@@ -17,7 +16,7 @@ from .pos import (
 
 def get_lemma_token_ratio(data: pl.DataFrame,
                           backbone: str = 'spacy',
-                          *_ : Tuple[Any, ...],
+                          **kwargs: dict[str, str],
                           ) -> pl.DataFrame:
     """
     Calculates the lemma/token ratio of a text:
@@ -48,7 +47,7 @@ def get_lemma_token_ratio(data: pl.DataFrame,
 
 def get_ttr(data: pl.DataFrame,
             backbone: str = 'spacy',
-            *_ : Tuple[Any, ...],
+            **kwargs: dict[str, str],
             ) -> pl.DataFrame:
     """
     Calculates the type-token ratio (TTR) of a text:
@@ -77,7 +76,7 @@ def get_ttr(data: pl.DataFrame,
 
 def get_rttr(data: pl.DataFrame,
              backbone: str = 'spacy',
-             *_ : Tuple[Any, ...],
+             **kwargs: dict[str, str],
              ) -> pl.DataFrame:
     """
     Calculates the root type-token ratio (RTTR) of a text:
@@ -107,7 +106,7 @@ def get_rttr(data: pl.DataFrame,
 
 def get_cttr(data: pl.DataFrame,
              backbone: str = 'spacy',
-             *_ : Tuple[Any, ...],
+             **kwargs: dict[str, str],
              ) -> pl.DataFrame:
     """
     Calculates the corrected type-token ratio (CTTR) of a text:
@@ -137,7 +136,7 @@ def get_cttr(data: pl.DataFrame,
 
 def get_herdan_c(data: pl.DataFrame,
                  backbone: str = 'spacy',
-                 *_ : Tuple[Any, ...],
+                 **kwargs: dict[str, str],
                  ) -> pl.DataFrame:
     """
     Calculates the Herdan's C of a text:
@@ -169,7 +168,7 @@ def get_herdan_c(data: pl.DataFrame,
 
 def get_summer_index(data: pl.DataFrame,
                     backbone: str = 'spacy',
-                    *_ : Tuple[Any, ...],
+                    **kwargs: dict[str, str],
                     ) -> pl.DataFrame:
     """
     Calculates the Summer's TTR of a text:
@@ -200,7 +199,7 @@ def get_summer_index(data: pl.DataFrame,
 
 def get_dougast_u(data: pl.DataFrame,
                   backbone: str = 'spacy',
-                  *_ : Tuple[Any, ...],
+                  **kwargs: dict[str, str],
                   ) -> pl.DataFrame:
     """
     Calculates the Dougast's Uber index of a text:
@@ -233,7 +232,7 @@ def get_dougast_u(data: pl.DataFrame,
 
 def get_maas_index(data: pl.DataFrame,
                    backbone: str = 'spacy',
-                   *_ : Tuple[Any, ...],
+                   **kwargs: dict[str, str],
                    ) -> pl.DataFrame:
     """
     Calculates the Maas' TTR of a text:
@@ -264,7 +263,7 @@ def get_maas_index(data: pl.DataFrame,
 
 def get_n_hapax_legomena(data: pl.DataFrame,
                          backbone: str = 'spacy',
-                         *_ : Tuple[Any, ...],
+                         **kwargs: dict[str, str],
                          ) -> pl.DataFrame:
     """
     Calculates the number of hapax legomena in a text: words that occur
@@ -304,7 +303,7 @@ def get_n_hapax_legomena(data: pl.DataFrame,
 
 def get_lexical_density(data: pl.DataFrame,
                         backbone: str = 'spacy',
-                        *_ : Tuple[Any, ...],
+                        **kwargs: dict[str, str],
                         ) -> pl.DataFrame:
     """
     Calculates the lexical density of a text:
@@ -335,7 +334,7 @@ def get_lexical_density(data: pl.DataFrame,
 
 def get_giroud_index(data: pl.DataFrame,
                      backbone: str = 'spacy',
-                     *_ : Tuple[Any, ...],
+                     **kwargs: dict[str, str],
                      ) -> pl.DataFrame:
     """
     Calculates the Giroud's index of a text:
@@ -364,7 +363,7 @@ def get_giroud_index(data: pl.DataFrame,
 
 def get_mtld(data: pl.DataFrame,
              threshold: int = 0.72,
-             *_ : Tuple[Any, ...],
+             **kwargs: dict[str, str],
              ) -> pl.DataFrame:
     """
     Calculates the Measure of Textual Lexical Diversity (MTLD) of a text.
@@ -384,7 +383,7 @@ def get_mtld(data: pl.DataFrame,
 
 def get_hdd(data: pl.DataFrame,
             threshold: int = 0.72,
-            *_ : Tuple[Any, ...],
+            **kwargs: dict[str, str],
             ) -> pl.DataFrame:
     """
     Calculates the Hypergeometric Distribution D (HDD) of a text.
@@ -403,7 +402,7 @@ def get_hdd(data: pl.DataFrame,
 
 def get_mattr(data: pl.DataFrame,
             threshold: int = 0.72,
-            *_ : Tuple[Any, ...],
+            **kwargs: dict[str, str],
             ) -> pl.DataFrame:
     """
     Calculates the Moving-Average Type-Token Ratio (MATTR) of a text.
@@ -422,7 +421,7 @@ def get_mattr(data: pl.DataFrame,
 
 def get_msttr(data: pl.DataFrame,
             threshold: int = 0.72,
-            *_ : Tuple[Any, ...],
+            **kwargs: dict[str, str],
             ) -> pl.DataFrame:
     """
     Calculates the Mean Segmental Type-Token Ratio (MSTTR) of a text.

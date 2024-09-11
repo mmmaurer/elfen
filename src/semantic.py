@@ -8,7 +8,6 @@ If you are using the resources for research, please cite the original authors of
 Open Multilingual WordNet.
 """
 import polars as pl
-from typing import Any, Tuple
 import wn
 
 from .surface import (
@@ -43,16 +42,16 @@ def load_hedges(hedges_file: str) -> list[str]:
     return hedges
 
 def get_num_hedges(data: pl.DataFrame,
-                   hedges: list[str],
+                   lexicon: list[str],
                    text_column: str = 'text',
-                   *_ : Tuple[Any, ...],
+                   **kwargs: dict[str, str],
                    ) -> pl.DataFrame:
     """
     Calculates the number of hedges in a text.
 
     Args:
     - data: Polars DataFrame.
-    - hedges: List of hedges.
+    - lexicon: List of hedges.
     - text_column: Name of the column containing the text.
 
     Returns:
@@ -70,7 +69,7 @@ def get_num_hedges(data: pl.DataFrame,
     
     data = data.with_columns(
         pl.col(text_column).map_elements(lambda x: 
-                                         n_matches(x, hedges),
+                                         n_matches(x, lexicon),
             return_dtype=pl.UInt16
             ).alias("n_hedges"),
     )
@@ -78,10 +77,10 @@ def get_num_hedges(data: pl.DataFrame,
     return data
 
 def get_hedges_ratio(data: pl.DataFrame,
-                     hedges: list[str],
+                     lexicon: list[str],
                      text_column: str = 'text',
                      backbone: str = 'spacy',
-                     *_ : Tuple[Any, ...],
+                     **kwargs: dict[str, str],
                      ) -> pl.DataFrame:
     """
     Calculates the ratio of hedges in a text.
@@ -99,7 +98,7 @@ def get_hedges_ratio(data: pl.DataFrame,
         data = get_num_tokens(data, backbone=backbone)
     
     if 'n_hedges' not in data.columns:
-        data = get_num_hedges(data, hedges, text_column)
+        data = get_num_hedges(data, lexicon, text_column)
     
     data = data.with_columns(
         (pl.col("n_hedges") / pl.col("n_tokens")
@@ -118,7 +117,7 @@ def get_synsets(data: pl.DataFrame,
                 pos_tags: list[str] = [
                     'NOUN', 'VERB', 'ADJ', 'ADV'
                     ],
-                *_ : Tuple[Any, ...],
+                **kwargs: dict[str, str],
                 ) -> pl.DataFrame:
     """
     Calculates the number of synsets in a text per token.
@@ -192,7 +191,7 @@ def get_avg_num_synsets(data: pl.DataFrame,
                         pos_tags: list[str] = [
                             'NOUN', 'VERB', 'ADJ', 'ADV'
                             ],
-                        *_ : Tuple[Any, ...],
+                        **kwargs: dict[str, str],
                         ) -> pl.DataFrame:
     """
     Calculates the average number of synsets in a text.
@@ -233,7 +232,7 @@ def get_avg_num_synsets_per_pos(data: pl.DataFrame,
                                     'NOUN', 'VERB', 'ADJ', 'ADV'
                                     ],
                                 nan_value: float = 0,
-                                *_ : Tuple[Any, ...],
+                                **kwargs: dict[str, str],
                                 ) -> pl.DataFrame:
     """
     Calculates the average number of synsets per POS in a text.
@@ -280,7 +279,7 @@ def get_num_low_synsets(data: pl.DataFrame,
                             'NOUN', 'VERB', 'ADJ', 'ADV'
                             ],
                         threshold: int = 2,
-                        *_ : Tuple[Any, ...],
+                        **kwargs: dict[str, str],
                         ) -> pl.DataFrame:
     """
     Calculates the number of words with a low number of synsets in a text.
@@ -324,7 +323,7 @@ def get_num_high_synsets(data: pl.DataFrame,
                              'NOUN', 'VERB', 'ADJ', 'ADV'
                              ],
                         threshold: int = 5,
-                        *_ : Tuple[Any, ...],
+                        **kwargs: dict[str, str],
                         ) -> pl.DataFrame:
     """
     Calculates the number of words with a high number of synsets in a text.
