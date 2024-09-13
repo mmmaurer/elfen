@@ -16,7 +16,7 @@ The lexicons used in this module are:
     Computational Linguistics (Volume 1: Long Papers) (pp. 174-184).
 - SentiWordNet: Esuli, A., & Sebastiani, F. (2006).
     SentiWordNet: A publicly available lexical resource for opinion mining.
-    In Proceedings of the 5th Conference on languageuage Resources and Evaluation
+    In Proceedings of the 5th Conference on language Resources and Evaluation
     (LREC'06) (pp. 417-422).
 """
 import polars as pl
@@ -26,7 +26,7 @@ from .preprocess import (
 )
 from .resources import (
     RESOURCE_MAP,
-    languageUAGES_NRC,
+    LANGUAGES_NRC,
 )
 from .schemas import (
     VAD_SCHEMA_NRC,
@@ -121,7 +121,7 @@ def get_avg_valence(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
 
     if language != "en":
-        word_column = languageUAGES_NRC[language]
+        word_column = LANGUAGES_NRC[language]
     else:
         word_column = "word"
     
@@ -168,7 +168,7 @@ def get_avg_arousal(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
 
     if language != "en":
-        word_column = languageUAGES_NRC[language]
+        word_column = LANGUAGES_NRC[language]
     else:
         word_column = "word"
     
@@ -215,7 +215,7 @@ def get_avg_dominance(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
 
     if language != "en":
-        word_column = languageUAGES_NRC[language]
+        word_column = LANGUAGES_NRC[language]
     else:
         word_column = "word"
     
@@ -262,7 +262,7 @@ def get_n_low_valence(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
 
     if language != "en":
-        word_column = languageUAGES_NRC[language]
+        word_column = LANGUAGES_NRC[language]
     else:
         word_column = "word"
     
@@ -308,7 +308,7 @@ def get_n_high_valence(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
 
     if language != "en":
-        word_column = languageUAGES_NRC[language]
+        word_column = LANGUAGES_NRC[language]
     else:
         word_column = "word"
     
@@ -354,7 +354,7 @@ def get_n_low_arousal(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
         
     if language != "en":
-        word_column = languageUAGES_NRC[language]
+        word_column = LANGUAGES_NRC[language]
     else:
         word_column = "word"
     
@@ -400,7 +400,7 @@ def get_n_high_arousal(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
         
     if language != "en":
-        word_column = languageUAGES_NRC[language]
+        word_column = LANGUAGES_NRC[language]
     else:
         word_column = "word"
     
@@ -446,7 +446,7 @@ def get_n_low_dominance(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
         
     if language != "en":
-        word_column = languageUAGES_NRC[language]
+        word_column = LANGUAGES_NRC[language]
     else:
         word_column = "word"
     
@@ -493,7 +493,7 @@ def get_n_high_dominance(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
     
     if language != "en":
-        word_column = languageUAGES_NRC[language]
+        word_column = LANGUAGES_NRC[language]
     else:
         word_column = "word"
     
@@ -594,7 +594,7 @@ def get_avg_emotion_intensity(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
         
     if language != "en":
-        word_column = languageUAGES_NRC[language]
+        word_column = LANGUAGES_NRC[language]
     else:
         word_column = "word"
     
@@ -642,7 +642,7 @@ def get_n_low_intensity(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
         
     if language != "en":
-        word_column = languageUAGES_NRC[language]
+        word_column = LANGUAGES_NRC[language]
     else:
         word_column = "word"
     
@@ -691,7 +691,7 @@ def get_n_high_intensity(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
     
     if language != "en":
-        word_column = languageUAGES_NRC[language]
+        word_column = LANGUAGES_NRC[language]
     else:
         word_column = "word"
     
@@ -819,7 +819,7 @@ def get_n_positive_sentiment(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
 
     if language != "en":
-        word_column = languageUAGES_NRC[language]
+        word_column = LANGUAGES_NRC[language]
     else:
         word_column = "word"
     
@@ -867,7 +867,7 @@ def get_n_negative_sentiment(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
     
     if language != "en":
-        word_column = languageUAGES_NRC[language]
+        word_column = LANGUAGES_NRC[language]
     else:
         word_column = "word"
     
