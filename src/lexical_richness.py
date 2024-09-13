@@ -2,16 +2,22 @@
 This module contains functions to calculate various lexical richness
 metrics from text data.
 """
+from collections import Counter
+
 import numpy as np
 import polars as pl
+from scipy.stats import hypergeom
 
 from .surface import (
     get_num_tokens,
     get_num_types,
-    get_num_lemmas
 )
 from .pos import (
     get_num_lexical_tokens,
+)
+from .preprocess import (
+    get_lemmas,
+    get_tokens,
 )
 
 def get_lemma_token_ratio(data: pl.DataFrame,
@@ -301,6 +307,75 @@ def get_n_hapax_legomena(data: pl.DataFrame,
     
     return data
 
+def get_n_hapax_dislegomena(data: pl.DataFrame,
+                            backbone: str = 'spacy',
+                            **kwargs: dict[str, str],
+                            ) -> pl.DataFrame:
+    """
+    Calculates the number of hapax dislegomena in a text: words that occur
+    only once or twice.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+
+    Returns:
+    - data: A Polars DataFrame containing the number of hapax dislegomena in
+            the text data.
+            The number of hapax dislegomena is stored in a new column named
+            'n_hapax_dislegomena'.
+    """
+    if backbone == 'spacy':
+        data = data.with_columns(
+             pl.col("nlp").map_elements(lambda x: np.sum(
+                  np.unique(np.array([token.text for token in x]),
+                            return_counts=True)[1] <= 2),
+                            return_dtype=pl.UInt32).alias("n_hapax_dislegomena")
+        )
+
+    elif backbone == 'stanza':
+        data = data.with_columns(
+            pl.col("nlp").map_elements(lambda x: np.sum(
+                np.unique(np.array([token.text 
+                                    for sent 
+                                    in x.sentences 
+                                    for token in sent.tokens]),
+                          return_counts=True)[1] <= 2),
+                          return_dtype=pl.UInt32).alias("n_hapax_dislegomena")
+        )
+    
+    return data
+
+def get_sichel_s(data: pl.DataFrame,
+                 backbone: str = 'spacy',
+                 **kwargs: dict[str, str],
+                 ) -> pl.DataFrame:
+    """
+    Calculates the Sichel's S of a text:
+    N_hapax_dislegomena / N_types.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+    
+    Returns:
+    - data: A Polars DataFrame containing the Sichel's S of the text data.
+            The Sichel's S is stored in a new column named 'sichel_s'.
+    """
+    if 'n_types' not in data.columns:
+        data = get_num_types(data, backbone=backbone)
+    if 'n_hapax_dislegomena' not in data.columns:
+        data = get_n_hapax_dislegomena(data, backbone=backbone)
+
+    data = data.with_columns(
+        (pl.col("n_hapax_dislegomena") / pl.col("n_types")
+         ).alias("sichel_s"),
+    )
+
+    return data
+
 def get_lexical_density(data: pl.DataFrame,
                         backbone: str = 'spacy',
                         **kwargs: dict[str, str],
@@ -362,7 +437,8 @@ def get_giroud_index(data: pl.DataFrame,
     return data
 
 def get_mtld(data: pl.DataFrame,
-             threshold: int = 0.72,
+             threshold: float = 0.72,
+             backbone: str = 'spacy',
              **kwargs: dict[str, str],
              ) -> pl.DataFrame:
     """
@@ -377,64 +453,241 @@ def get_mtld(data: pl.DataFrame,
     - data: A Polars DataFrame containing the MTLD of the text data.
             The MTLD is stored in a new column named 'mtld'.
     """
-    pass
-    # TODO, for reference https://link.springer.com/article/10.3758/BRM.42.2.381
+    def sub_mtld(tokens: list[str],
+                 forward: bool = True,
+                 threshold: float = 0.72
+                 ) -> float:
+        """
+        Calculate the MTLD of a text using a forward or backward approach.
+        For reference https://link.springer.com/article/10.3758/BRM.42.2.381 
+        """
+        if not forward:
+            tokens = tokens[::-1]
+        
+        unique_tokens = set()
+        current_ttr = 1.0
+        factors = 0.0
+        token_count = 0
+
+        for i, token in enumerate(tokens):
+            token_count += 1
+            unique_tokens.add(token)
+            current_ttr = len(unique_tokens) / token_count
+
+            if i == len(tokens) - 1 and current_ttr >= threshold:
+                factors += (current_ttr - 1) / (threshold - 1)
+            elif current_ttr < threshold:
+                factors += 1
+                # Reset
+                unique_tokens = set()
+                current_ttr = 1.0
+                token_count = 0
+
+        return len(tokens) / factors if factors != 0 else len(tokens)
+            
+    if 'tokens' not in data.columns:
+        data = get_tokens(data, backbone=backbone)
+    
+    data = data.with_columns(
+        pl.col("tokens").map_elements(lambda x: (
+            sub_mtld(x, threshold=threshold) + \
+                sub_mtld(x, forward=False, threshold=threshold)
+            ) / 2.0, return_dtype=pl.Float32).alias("mtld")
+    )
+
+    return data
 
 
 def get_hdd(data: pl.DataFrame,
-            threshold: int = 0.72,
+            backbone: str = 'spacy',
+            draws: int = 42,
             **kwargs: dict[str, str],
             ) -> pl.DataFrame:
     """
-    Calculates the Hypergeometric Distribution D (HDD) of a text.
+    Calculates the Hypergeometric Distribution Diversity (HD-D) of a text.
+    The default number of draws is 42. We note, however, that this value
+    should be smaller than the number of tokens in the text and thus will
+    need to be adjusted for most short texts. A number of draws that is
+    too large will result in NaN values.
 
     Args:
     - data: A Polars DataFrame containing the text data.
-    - threshold: The threshold value for the HDD.
-                 The default value is 0.72.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+    - draws: The number of draws for the HDD. The default value is 42.
 
     Returns:
-    - data: A Polars DataFrame containing the HDD of the text data.
-            The HDD is stored in a new column named 'hdd'.
+    - data: A Polars DataFrame containing the HD-D of the text data.
+            The HD-D is stored in a new column named 'hdd'.
     """
-    pass
-    # TODO, for reference https://link.springer.com/article/10.3758/BRM.42.2.381
+    def hdd(tokens: list[str],
+            draws: int = 42,
+            ) -> float:
+        """
+        Calculate the HDD of a text.
+        """
+        freqs = Counter(tokens)
+        n_types = len(freqs)
+        n_tokens = len(tokens)
+        hdd = 0.0
+
+        for freq in freqs.values():
+            hdd += hypergeom.pmf(freq, n_tokens, n_types, draws)
+        
+        return hdd
+    
+    if 'tokens' not in data.columns:
+        data = get_tokens(data, backbone=backbone)
+    
+    data = data.with_columns(
+        pl.col("tokens").map_elements(lambda x: hdd(x, draws=draws),
+                                      return_dtype=pl.Float32).alias("hdd")
+    )
+
+    return data
 
 def get_mattr(data: pl.DataFrame,
-            threshold: int = 0.72,
-            **kwargs: dict[str, str],
-            ) -> pl.DataFrame:
+              backbone: str = 'spacy',
+              window_size: int = 5,
+              **kwargs: dict[str, str],
+              ) -> pl.DataFrame:
     """
     Calculates the Moving-Average Type-Token Ratio (MATTR) of a text.
 
     Args:
     - data: A Polars DataFrame containing the text data.
-    - threshold: The threshold value for the MATTR.
-                 The default value is 0.72.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
 
     Returns:
     - data: A Polars DataFrame containing the MATTR of the text data.
             The MATTR is stored in a new column named 'mattr'.
     """
-    pass
-    # TODO
+    def mattr(tokens: list[str],
+              window_size: int = 5,
+              ) -> float:
+        """
+        Calculate the MATTR of a text.
+        """
+        n_types = []
+        n_tokens = []
+        for i in range(0, len(tokens)):
+            window = tokens[i:i+window_size]
+            n_types.append(len(set(window)))
+            n_tokens.append(len(window))
+        
+        return np.mean(n_types) / np.mean(n_tokens)
+    
+    if 'tokens' not in data.columns:
+        data = get_tokens(data, backbone=backbone)
+    
+    data = data.with_columns(
+        pl.col("tokens").map_elements(lambda x: mattr(x,
+                                                      window_size=window_size),
+                                      return_dtype=pl.Float32).alias("mattr")
+    )
+
+    return data
 
 def get_msttr(data: pl.DataFrame,
-            threshold: int = 0.72,
-            **kwargs: dict[str, str],
-            ) -> pl.DataFrame:
+              backbone: str = 'spacy',
+              window_size: int = 5,
+              discard: bool = True,
+              **kwargs: dict[str, str],
+              ) -> pl.DataFrame:
     """
     Calculates the Mean Segmental Type-Token Ratio (MSTTR) of a text.
 
     Args:
     - data: A Polars DataFrame containing the text data.
-    - threshold: The threshold value for the MSTTR.
-                 The default value is 0.72.
 
     Returns:
     - data: A Polars DataFrame containing the MSTTR of the text data.
             The MSTTR is stored in a new column named 'msttr'.
     """
+    def msttr(tokens: list[str],
+              window_size: int = 5,
+              discard: bool = True,
+              ) -> float:
+        """
+        Calculate the MSTTR of a text.
+        """
+        scores = []
+
+        for i in range(0, len(tokens), window_size):
+            window = tokens[i:i+window_size]
+            n_types = len(set(window))
+            n_tokens = len(window)
+            scores.append(n_types / n_tokens)
+        
+        # Discard the last window if it is not complete
+        if discard and len(tokens) % window_size != 0:
+            scores = scores[:-1]
+
+        return np.mean(scores)
+    if 'tokens' not in data.columns:
+        data = get_tokens(data, backbone=backbone)
+    
+    data = data.with_columns(
+        pl.col("tokens").map_elements(lambda x: msttr(x,
+                                                      window_size=window_size,
+                                                      discard=discard),
+                                      return_dtype=pl.Float32).alias("msttr")
+    )
+
+    return data
+
+def get_yule_k(data: pl.DataFrame,
+               backbone: str = 'spacy',
+               **kwargs: dict[str, str],
+               ) -> pl.DataFrame:
+    """
+    Calculates the Yule's K of a text.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+
+    Returns:
+    - data: A Polars DataFrame containing the Yule's K of the text data.
+            The Yule's K is stored in a new column named 'yule_k'.
+    """
+    # TODO: Implement Yule's K
     pass
-    # TODO
+
+def get_simpsons_d(data: pl.DataFrame,
+                   backbone: str = 'spacy',
+                   **kwargs: dict[str, str],
+                   ) -> pl.DataFrame:
+    """
+    Calculates the Simpson's D of a text.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+
+    Returns:
+    - data: A Polars DataFrame containing the Simpson's D of the text data.
+            The Simpson's D is stored in a new column named 'simpsons_d'.
+    """
+    # TODO: Implement Simpson's D
+    pass
+
+def get_herdan_v(data: pl.DataFrame,
+                 backbone: str = 'spacy',
+                 **kwargs: dict[str, str],
+                 ) -> pl.DataFrame:
+    """
+    Calculates the Herdan's Vm of a text:
+    log(N_types) / log(log(N_tokens)).
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+    
+    Returns:
+    - data: A Polars DataFrame containing the Herdan's V of the text data.
+            The Herdan's V is stored in a new column named 'herdan_v'.
+    """
+    # TODO: Implement Herdan's V
+    pass
 
