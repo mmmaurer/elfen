@@ -222,7 +222,11 @@ class Extractor:
             "hedges": None,
         }
 
-        self.data = preprocess_data(self.data)
+        self.data = preprocess_data(data=self.data,
+                                    text_column=self.config["text_column"],
+                                    backbone=self.config["backbone"],
+                                    lang=self.config["lang"],
+                                    model=self.config["model"],)
     
     def parse_config(self):
         return self.config
