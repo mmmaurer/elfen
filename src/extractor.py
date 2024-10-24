@@ -22,7 +22,6 @@ from .emotion import (
     get_n_high_intensity,
     # VAD
     load_vad_lexicon,
-    filter_lexicon,
     get_avg_valence,
     get_avg_arousal,
     get_avg_dominance,
@@ -61,7 +60,6 @@ from .pos import (
 )
 from .psycholinguistic import (
     load_concreteness_norms,
-    filter_concreteness_norms,
     get_avg_concreteness,
     get_n_high_concreteness,
     get_n_low_concreteness,
@@ -103,7 +101,6 @@ from .semantic import (
     get_avg_num_synsets_per_pos,
     get_num_high_synsets,
     get_num_low_synsets,
-    get_synsets,
 )
 from .surface import (
     get_avg_word_length,
@@ -227,7 +224,7 @@ class Extractor:
                                     backbone=self.config["backbone"],
                                     lang=self.config["lang"],
                                     model=self.config["model"],)
-    
+
     def parse_config(self):
         return self.config
     
@@ -236,6 +233,24 @@ class Extractor:
                          lexicon = None,
                          threshold = None,
                          function_map = FUNCTION_MAP):
+        """
+        Helper function to apply a feature extraction function to the data.
+        Handles features that require lexicons and thresholds.
+
+        Args:
+        - feature: str
+            The feature to extract.
+        - lexicon: str
+            The lexicon to use for the feature extraction.
+        - threshold: float
+            The threshold to use for the feature extraction.
+        - function_map: dict
+            A dictionary of feature extraction functions.
+        
+        Returns:
+        - pd.DataFrame
+            The input data with the extracted features.
+        """
         backbone = self.config["backbone"]
         text_column = self.config["text_column"]
         if lexicon is not None:
@@ -258,6 +273,93 @@ class Extractor:
             self.data = function_map[feature](data=self.data,
                                               backbone=backbone,
                                               text_column=text_column)
+            
+    def extract_feature_group(self, feature_group):
+        """
+        Extract all features in a feature group.
+        Available feature groups are:
+        - surface
+        - emotion
+        - entity
+        - information
+        - lexical_richness
+        - pos
+        - psycholinguistic
+        - readability
+        - semantic
+
+        Args:
+        - feature_group: str
+            The feature group to extract features from.
+
+        Returns:
+        - pd.DataFrame
+            The input data with the extracted features.
+        """
+        pass
+
+    def gather_resource(self,
+                        features,
+                        feature_area,
+                        feature,
+                        language="en"):
+        """
+        Hekper function to gather resources for feature extraction.
+
+        Args:
+        - features: dict
+            The features to extract.
+        - feature_area: str
+            The feature area to extract features from.
+        - feature: str
+            The feature to extract.
+        - language: str
+            The language to use for the lexicon.
+
+        Returns:
+        - lexicon: pd.DataFrame
+            The lexicon to use for feature extraction.
+        """
+        if features[feature_area][feature]["lexicon"] in \
+                              RESOURCE_MAP:
+            if language != "en" and "multilingual_filepath" in \
+                                  RESOURCE_MAP[
+                                      features[feature_area][feature]["lexicon"]
+                                  ]:
+                filepath = RESOURCE_MAP[
+                    features[feature_area][feature]["lexicon"]
+                    ]["multilingual_filepath"]
+            else:
+                filepath = RESOURCE_MAP[
+                    features[feature_area][feature]["lexicon"]
+                    ]["filepath"]
+
+            # First check if the resource exists
+            if not os.path.exists(filepath):
+                get_resource(
+                    features[feature_area][feature]["lexicon"])
+                
+            # Then load it
+            if "aoa" in feature:
+                lexicon = load_aoa_norms(filepath)
+            elif "concreteness" in feature:
+                lexicon = load_concreteness_norms(filepath)
+            elif "prevalence" in feature:
+                lexicon = load_prevalence_norms(filepath)
+            elif re.search(r"(valence|arousal|dominance)",
+                           feature):
+                lexicon = load_vad_lexicon(filepath)
+            elif "sentiment" in feature:
+                lexicon = load_sentiment_nrc_lexicon(filepath)
+            elif "intensity" in feature:
+                lexicon = load_intensity_lexicon(filepath)
+            elif "hedges" in feature:
+                lexicon = load_hedges(filepath)
+            return lexicon
+        else:
+            print(f"Resource {features[feature_area][feature]['lexicon']}"
+                  " not found. Skipping...")
+            return None
 
     def extract_features(self):
         features = self.config["features"]
@@ -271,34 +373,10 @@ class Extractor:
                 if feature in FUNCTION_MAP:
                     # Handle features that require lexicons
                     if "lexicon" in features[feature_area][feature]:
-                        if features[feature_area][feature]["lexicon"] in \
-                              RESOURCE_MAP:
-                            filepath = RESOURCE_MAP[
-                                features[feature_area][feature]["lexicon"]
-                                ]["filepath"]
-                            if not os.path.exists(filepath):
-                                get_resource(
-                                    features[feature_area][feature]["lexicon"])
-                            # Then load it
-                            if "aoa" in feature:
-                                lexicon = load_aoa_norms(filepath)
-                            elif "concreteness" in feature:
-                                lexicon = load_concreteness_norms(filepath)
-                            elif "prevalence" in feature:
-                                lexicon = load_prevalence_norms(filepath)
-                            elif re.search(r"(valence|arousal|dominance)",
-                                           feature):
-                                lexicon = load_vad_lexicon(filepath)
-                            elif "sentiment" in feature:
-                                lexicon = load_sentiment_nrc_lexicon(filepath)
-                            elif "intensity" in feature:
-                                lexicon = load_intensity_lexicon(filepath)
-                            elif "hedges" in feature:
-                                lexicon = load_hedges(filepath)
-                            self.__apply_function(feature, lexicon=lexicon)
-                        else:
-                            print(f"Lexicon {features[feature_area][feature]['lexicon']}"
-                                  " not found. Skipping...")
+                        lexicon = self.gather_resource(features,
+                                                       feature_area,
+                                                       feature)
+                        self.__apply_function(feature, lexicon=lexicon)
                     else:
                         self.__apply_function(feature)
                 else:

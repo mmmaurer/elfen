@@ -36,7 +36,6 @@ from .schemas import (
 )
 from .surface import (
     get_num_tokens,
-    get_num_sentences
 )
 from .util import (
     filter_lexicon,

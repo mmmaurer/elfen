@@ -144,6 +144,34 @@ RESOURCE_MAP = {
                                               "NRC-Emotion-Lexicon-"
                                               "ForVariousLanguages.txt")
     },
+    # Coso, B., Guasch, M., Buganovic, I., Ferre, P., & Hinojosa, J. A. (2022).
+    # CROWD-5e: A croatian psycholinguistic database for affective norms for
+    # five discrete emotions.
+    # Behavior Research Methods, 55(1), 4018-4034.
+    # TODO: Handle processing the data
+    "affect_crowd5e": {
+        "link": "https://figshare.com/ndownloader/files/36434421",
+        "area": "Emotion",
+        "subarea": "Affect",
+        "filename": "CROWD-5e.xlsx",
+        "filepath": os.path.join(PROJECT_PATH, "resources", "Emotion",
+                                 "Affect", "CROWD-5e.xlsx")
+    },
+    # Diveica, V, Pexman, P. M., & Binney, R. J. (2021).
+    # Quantifying Social Semantics: an Inclusive Definition
+    # of Socialness and Ratings for 8,388 English Words. PsyArXiv.
+    # TODO: Handle processing the data
+    "socialness": {
+        "link": "https://osf.io/download/29eyh/",
+        "area": "Psycholinguistics",
+        "subarea": "Socialness",
+        "filename": "Socialness.xlsx",
+        "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
+                                 "Socialness", "Socialness.xlsx")
+    },
+    # TODO: Add Lancaster sensorimotor norms
+    # TODO: Add bodo winters iconicity norms
+    # TODO: Find and add psycholinguistic norms for other languages?
 }
 
 LANGUAGES_NRC = {
