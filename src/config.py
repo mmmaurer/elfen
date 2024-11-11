@@ -1,6 +1,7 @@
 CONFIG_ALL = {
     "backbone": "spacy",
     "language": "en",
+    "model": "en_core_web_sm",
     "text_column": "text",
     "lexicons": {
         "vad_nrc": {
