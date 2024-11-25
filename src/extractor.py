@@ -209,6 +209,7 @@ class Extractor:
             }
         for feature_area in features:
             for feature in features[feature_area]:
+                print(f"Extracting {feature}...")
                 if feature in FUNCTION_MAP:
                     # Handle features that require lexicons
                     if "lexicon" in features[feature_area][feature]:

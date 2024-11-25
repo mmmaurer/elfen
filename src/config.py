@@ -149,7 +149,19 @@ CONFIG_ALL = {
             "n_hapax_legomena": {},
             "n_hapax_legomena_token_ratio": {},
             "n_hapax_legomena_type_ratio": {},
-            "lexical_density": {}
+            "lexical_density": {},
+            "n_hapax_dislegomena": {},
+            "n_hapax_dislegomena_token_ratio": {},
+            "n_hapax_dislegomena_type_ratio": {},
+            "sichel_s": {},
+            "giroud_index": {},
+            "mtld": {},
+            "hdd": {},
+            "mattr": {},
+            "msttr": {},
+            # "yule_k": {},
+            # "simpsons_d": {},
+            # "herdan_v": {},
         },
         "pos": {
             "n_lexical_tokens": {},
@@ -212,6 +224,9 @@ CONFIG_ALL = {
             },
         },
         "readability": {
+            "n_syllables": {},
+            "n_monosyllables": {},
+            "n_polysyllables": {},
             "flesch_reading_ease": {},
             "flesch_kincaid_grade": {},
             "gunning_fog": {},
@@ -219,7 +234,7 @@ CONFIG_ALL = {
             "smog": {},
             "cli": {},
             "lix": {},
-            "rix": {}
+            "rix": {},
         },
         "semantic": {
             "n_lemmas": {},
