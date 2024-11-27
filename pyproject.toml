@@ -8,11 +8,22 @@ version = "0.0.1"
 authors = [
   { name="Maximilian Maurer", email="mmmaurer@pm.me" },
 ]
+dependencies = [
+    "numpy==2.1.2",
+    "numpy==2.1.2",
+    "polars==1.10.0",
+    "Requests==2.32.3",
+    "scipy==1.14.1",
+    "spacy==3.7.5",
+    "spacy_syllables==3.0.2",
+    "stanza==1.8.2",
+    "wn==0.9.5",
+]
 description = "FLFE - Fast linguistic feature extraction for tabular text datasets"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 classifiers = [
-    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
