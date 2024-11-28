@@ -10,7 +10,6 @@ authors = [
 ]
 dependencies = [
     "numpy==2.1.2",
-    "numpy==2.1.2",
     "polars==1.10.0",
     "Requests==2.32.3",
     "scipy==1.14.1",

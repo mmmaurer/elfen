@@ -3,6 +3,8 @@ This module contains functions to calculate various surface-level features
 from text data.
 """
 
+from collections import Counter
+
 import polars as pl
 
 def get_raw_sequence_length(data: pl.DataFrame,
@@ -255,6 +257,41 @@ def get_num_lemmas(data: pl.DataFrame,
                  in sent.words])),
                 return_dtype=pl.UInt16
                 ).alias("n_lemmas"),
+        )
+    
+    return data
+
+def get_token_freqs(data: pl.DataFrame,
+                    backbone: str = 'spacy',
+                    **kwargs: dict[str, str],
+                    ) -> pl.DataFrame:
+    """
+    Calculates the frequency of each token in the text.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+    
+    Returns:
+    - data: A Polars DataFrame containing the frequency of each token in the
+            text data. The frequency of each token is stored in a new column
+            named 'token_freqs'.
+    """
+    if backbone == 'spacy':
+        data = data.with_columns(
+            pl.col("nlp").map_elements(lambda x: dict(
+                Counter([token.text for token in x])),
+                return_dtype=pl.Object
+                ).alias("token_freqs"),
+        )
+    elif backbone == 'stanza':
+        data = data.with_columns(
+            pl.col("nlp").map_elements(lambda x: dict(
+                Counter([token.text for sent in x.sentences for token
+                         in sent.tokens])),
+                return_dtype=pl.Object
+                ).alias("token_freqs"),
         )
     
     return data

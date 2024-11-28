@@ -11,6 +11,7 @@ from scipy.stats import hypergeom
 from .surface import (
     get_num_tokens,
     get_num_types,
+    get_token_freqs,
 )
 from .pos import (
     get_num_lexical_tokens,
@@ -649,16 +650,49 @@ def get_yule_k(data: pl.DataFrame,
                ) -> pl.DataFrame:
     """
     Calculates the Yule's K of a text.
+    Yule's K is a characteristic of the vocabulary richness of a text.
+    It is calculated as:
+    K = 10^4 * (Σ(V(i,N) * (i/n)^2) - n) / n^2
+      = 10^4 * ((Σ(V(i,N) * (i^2/n^4)) - (1/n))
 
     Args:
     - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
 
     Returns:
     - data: A Polars DataFrame containing the Yule's K of the text data.
             The Yule's K is stored in a new column named 'yule_k'.
     """
-    # TODO: Implement Yule's K
-    pass
+    def inner_sum(x: dict[str, int]) -> float:
+        """
+        Calculate the inner sum of the Yule's K formula, i.e.:
+        (Σ(V(i,N) * (i^2/n^4))
+        """
+        counts = Counter(x.values())
+        # gathering n from counts to streamline the calculation
+        n = sum(counts.values())
+        
+        # calculating the inner sum 
+        inner = sum([counts[i] * (i**2 / n**4) for i in counts.keys()])
+
+        return inner
+    
+    # get the number of tokens
+    if 'n_tokens' not in data.columns:
+        data = get_num_tokens(data, backbone=backbone)
+    # calculate frequency of each token per text
+    if 'token_freqs' not in data.columns:
+        data = get_token_freqs(data, backbone=backbone)
+
+    data = data.with_columns(
+        pl.lit(10**4) * \
+        pl.col("token_freqs").map_elements(lambda x: inner_sum(x),
+                                           return_dtype=pl.Float32) - \
+        (1 / pl.col("n_tokens")).alias("yule_k")
+    )
+
+    return data
+
 
 def get_simpsons_d(data: pl.DataFrame,
                    backbone: str = 'spacy',
@@ -669,6 +703,8 @@ def get_simpsons_d(data: pl.DataFrame,
 
     Args:
     - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
 
     Returns:
     - data: A Polars DataFrame containing the Simpson's D of the text data.
