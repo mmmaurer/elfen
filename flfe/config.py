@@ -159,9 +159,9 @@ CONFIG_ALL = {
             "hdd": {},
             "mattr": {},
             "msttr": {},
-            # "yule_k": {},
-            # "simpsons_d": {},
-            # "herdan_v": {},
+            "yule_k": {},
+            "simpsons_d": {},
+            "herdan_v": {},
         },
         "pos": {
             "n_lexical_tokens": {},
