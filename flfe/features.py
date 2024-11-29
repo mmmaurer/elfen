@@ -1,21 +1,17 @@
 from .preprocess import (
     get_lemmas,
     get_tokens,
-    preprocess_data,
 )
 from .emotion import (
     # sentiment
-    load_sentiment_nrc_lexicon,
     get_sentiment_score,
     get_n_negative_sentiment,
     get_n_positive_sentiment,
     # emotion intensity
-    load_intensity_lexicon,
     get_avg_emotion_intensity,
     get_n_low_intensity,
     get_n_high_intensity,
     # VAD
-    load_vad_lexicon,
     get_avg_valence,
     get_avg_arousal,
     get_avg_dominance,
@@ -52,35 +48,25 @@ from .lexical_richness import (
     get_mtld,
     get_mattr,
     get_msttr,
+    get_yule_k,
+    get_simpsons_d,
+    get_herdan_v,
 )
 from .pos import (
-    get_num_lexical_tokens,
     get_num_per_pos,
     get_pos_variability,
     get_num_per_pos,
 )
 from .psycholinguistic import (
-    load_concreteness_norms,
     get_avg_concreteness,
     get_n_high_concreteness,
     get_n_low_concreteness,
-    load_aoa_norms,
     get_avg_aoa,
     get_n_high_aoa,
     get_n_low_aoa,
-    load_prevalence_norms,
     get_avg_prevalence,
     get_n_high_prevalence,
     get_n_low_prevalence,
-)
-from .resources import (
-    RESOURCE_MAP,
-    get_resource,
-)
-from .ratios import (
-    get_feature_token_ratio,
-    get_feature_type_ratio,
-    get_feature_sentence_ratio,
 )
 from .readability import (
     get_flesch_reading_ease,
@@ -96,7 +82,6 @@ from .readability import (
     get_num_syllables,
 )
 from .semantic import (
-    load_hedges,
     get_num_hedges,
     get_avg_num_synsets,
     get_avg_num_synsets_per_pos,
@@ -171,6 +156,9 @@ FUNCTION_MAP = {
     "mtld": get_mtld,
     "mattr": get_mattr,
     "msttr": get_msttr,
+    "yule_k": get_yule_k,
+    "simpsons_d": get_simpsons_d,
+    "herdan_v": get_herdan_v,
     # POS FEATURES
     "n_lexical_tokens": get_num_per_pos,
     "pos_variability": get_pos_variability,
@@ -258,6 +246,16 @@ FEATURE_AREA_MAP = {
         "maas_index",
         "n_hapax_legomena",
         "lexical_density",
+        "n_hapax_dislegomena",
+        "hdd",
+        "sichel_s",
+        "giroud_index",
+        "mtld",
+        "mattr",
+        "msttr",
+        "yule_k",
+        "simpsons_d",
+        "herdan_v",
     ],
     "pos": [
         "n_lexical_tokens",

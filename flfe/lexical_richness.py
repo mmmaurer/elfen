@@ -453,6 +453,8 @@ def get_mtld(data: pl.DataFrame,
 
     Args:
     - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
     - threshold: The threshold value for the MTLD.
                  The default value is 0.72.
 
@@ -565,6 +567,7 @@ def get_mattr(data: pl.DataFrame,
     - data: A Polars DataFrame containing the text data.
     - backbone: The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
+    - window_size: The size of the window for the MATTR calculation.
 
     Returns:
     - data: A Polars DataFrame containing the MATTR of the text data.
@@ -607,6 +610,10 @@ def get_msttr(data: pl.DataFrame,
 
     Args:
     - data: A Polars DataFrame containing the text data.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+    - window_size: The size of the window for the MSTTR calculation.
+    - discard: Whether to discard the last window if it is not complete.
 
     Returns:
     - data: A Polars DataFrame containing the MSTTR of the text data.
@@ -671,9 +678,9 @@ def get_yule_k(data: pl.DataFrame,
         counts = Counter(x.values())
         # gathering n from counts to streamline the calculation
         n = sum(counts.values())
-        
-        # calculating the inner sum 
-        inner = sum([counts[i] * (i**2 / n**4) for i in counts.keys()])
+        n_power_4 = n ** 4  # Precompute to avoid redundant calculations
+
+        inner = sum(count * (i ** 2 / n_power_4) for i, count in counts.items())
 
         return inner
     
@@ -700,6 +707,7 @@ def get_simpsons_d(data: pl.DataFrame,
                    ) -> pl.DataFrame:
     """
     Calculates the Simpson's D of a text.
+    D = Σ(V(i,N) * (i/n) * ((i-1)/(n-1)))
 
     Args:
     - data: A Polars DataFrame containing the text data.
@@ -710,8 +718,28 @@ def get_simpsons_d(data: pl.DataFrame,
     - data: A Polars DataFrame containing the Simpson's D of the text data.
             The Simpson's D is stored in a new column named 'simpsons_d'.
     """
-    # TODO: Implement Simpson's D
-    pass
+    def simpsons_d(x: dict[str, int]) -> float:
+        """
+        Calculate the Simpson's D of a text.
+        """
+        counts = Counter(x.values())
+        n = sum(counts.values())
+        n_inv = 1 / n  # Precompute 1 / n
+        n_minus_1_inv = 1 / (n - 1)  # Precompute 1 / (n - 1)
+
+        d = sum(count * i * n_inv * (i - 1) * n_minus_1_inv for i, count in counts.items())
+
+        return d
+    if 'token_freqs' not in data.columns:
+        data = get_token_freqs(data, backbone=backbone)
+    
+    data = data.with_columns(
+        pl.col("token_freqs").map_elements(lambda x: simpsons_d(x),
+                                           return_dtype=pl.Float32).alias("simpsons_d")
+    )
+
+    return data
+    
 
 def get_herdan_v(data: pl.DataFrame,
                  backbone: str = 'spacy',
@@ -719,7 +747,8 @@ def get_herdan_v(data: pl.DataFrame,
                  ) -> pl.DataFrame:
     """
     Calculates the Herdan's Vm of a text:
-    log(N_types) / log(log(N_tokens)).
+    Vm^2 = K + (1/N) - (1/V(N))
+    Vm = sqrt(K + (1/N) - (1/V(N)))
 
     Args:
     - data: A Polars DataFrame containing the text data.
@@ -730,6 +759,17 @@ def get_herdan_v(data: pl.DataFrame,
     - data: A Polars DataFrame containing the Herdan's V of the text data.
             The Herdan's V is stored in a new column named 'herdan_v'.
     """
-    # TODO: Implement Herdan's V
-    pass
+    if not 'n_tokens' in data.columns:
+        data = get_num_tokens(data, backbone=backbone)
+    if not 'n_types' in data.columns:
+        data = get_num_types(data, backbone=backbone)
+    if not 'yule_k' in data.columns:
+        data = get_yule_k(data, backbone=backbone)
+
+    data = data.with_columns(
+        (pl.col("yule_k") + (1 / pl.col("n_tokens")) - (1 / pl.col("n_types")).sqrt()
+        ).alias("herdan_v")
+    )
+
+    return data
 
