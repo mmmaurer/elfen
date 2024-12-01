@@ -60,9 +60,6 @@ class Extractor:
                                     backbone=self.config["backbone"],
                                     lang=self.config["language"],
                                     model=self.config["model"],)
-
-    def parse_config(self):
-        return self.config
     
     def __apply_function(self,
                          feature,
@@ -135,6 +132,8 @@ class Extractor:
         - pd.DataFrame
             The input data with the extracted features.
         """
+        # TODO: Implement for feature groups to use instead of the
+        # full feature extraction via config
         pass
 
     def gather_resource(self,
@@ -236,5 +235,18 @@ class Extractor:
         for ratio_feature in ratio_features["type"]:
             self.data = get_feature_type_ratio(self.data, ratio_feature)
 
+        if self.config["remove_constant_cols"]:
+            self.__remove_constant_cols()
+
         return self.data
+    
+    def __remove_constant_cols(self):
+        """
+        Helper function to remove constant columns from the data.
+        """
+        self.data = self.data.drop(
+            self.data.columns[
+                self.data.n_unique() == 1
+            ]
+        )
 
