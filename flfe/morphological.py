@@ -3,10 +3,12 @@ This module contains functions to extract morphological features of text data.
 """
 import polars as pl
 
+from .config import MORPH_CONFIG
+
 def get_morph_feats(
         data: pl.DataFrame,
         backbone: str = 'spacy',
-        morph_config: dict = None,
+        morph_config: dict = MORPH_CONFIG,
         **kwargs: dict[str, str],
         ) -> pl.DataFrame:
     """

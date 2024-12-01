@@ -3,6 +3,7 @@ CONFIG_ALL = {
     "language": "en",
     "model": "en_core_web_sm",
     "text_column": "text",
+    "remove_constant_cols": True,
     "lexicons": {
         "vad_nrc": {
             "area": "Emotion",
@@ -297,46 +298,20 @@ ANIMACITY = ["Anim",
              "Inan",
              "Nhum"],
 
-# TODO: finalize FULL UD universal features
-MORPH_CONFIG = {
-    # full UD universal features, 
-    # check https://universaldependencies.org/u/feat/index.html
-    # You may want to use a subset of these features
-    # for your specific research question, dataset and language
-    "VERB": {
-        "VerbForm": ["Conf",
-                     "Fin",
-                     "Gdv",
-                     "Ger",
-                     "Inf",
-                     "Part",
-                     "Sup",
-                     "Vnoun"],
-        "Mood": ["Adm",
-                 "Cnd",
-                 "Des",
-                 "Imp",
-                 "Ind",
-                 "Irr",
-                 "Jus",
-                 "Nec",
-                 "Opt",
-                 "Pot",
-                 "Prp",
-                 "Qot",
-                 "Sub"],
-        "Tense": ["Fut",
-                  "Imp",
-                  "Past",
-                  "Pres",
-                  "Pqp"],
-        "Aspect": ["Hab",
+TENSE = ["Fut",
+         "Imp",
+         "Past",
+         "Pres",
+         "Pqp"],
+
+ASPECT = ["Hab",
                    "Imp",
                    "Iter",
                    "Perf",
                    "Prog",
-                   "Prosp"],
-        "Voice": ["Act",
+                   "Prosp"]
+
+VOICE = ["Act",
                   "Antip",
                   "Bfoc",
                   "Cau",
@@ -345,30 +320,13 @@ MORPH_CONFIG = {
                   "Lfoc",
                   "Mid",
                   "Pass",
-                  "Rcp"],
-        "Evident": ["Fh",
-                    "Nfh"],
-        "Polarity": ["Neg",
-                     "Pos"],
-        "Person": ["0",
-                   "1",
-                   "2",
-                   "3",
-                   "4"],
-        "Polite": ["Elev",
-                   "Form",
-                   "Humb",
-                   "Infm"],
-        "Clusivity": ["Ex",
-                      "In"],
-    },
-    "NOUN": {
-        "Gender": GENDER,
-        "Animacy": ANIMACITY,
-        # "NounClass": [], # only applicable to Wolof and Bantu languages;
-        # not included here (yet). If you work with these languages, you
-        # may want to include this feature.
-        "Number": ["Coll",
+                  "Rcp"]
+
+POLARITY = ["Neg", "Pos"]
+
+CLUSIVITY = ["Ex", "In"]
+
+NUMBER = ["Coll",
                    "Count",
                    "Dual",
                    "Grpa",
@@ -378,8 +336,9 @@ MORPH_CONFIG = {
                    "Plur",
                    "Ptan",
                    "Sing",
-                   "Tri"],
-        "Case": [ # Core
+                   "Tri"]
+
+CASE = [ # Core
                  "Abs",
                  "Acc",
                  "Erg",
@@ -415,24 +374,17 @@ MORPH_CONFIG = {
                  "Sbe",
                  "Sub",
                  "Sup",
-                 "Ter",],
-        "Definite": ["Com",
-                     "Cons",
-                     "Def",
-                     "Ind",
-                     "Spec"],
-        "Deixis": ["Abv",
-                   "Bel",
-                   "Even",
-                   "Med",
-                   "Nvis",
-                   "Prox",
-                   "Remt",],
-        "DeixisRef": ["0",
-                      "1"],
-    },
-    "PRON": {
-        "PronType": ["Art",
+                 "Ter",]
+
+DEGREE = ["Abs",
+          "Aug",
+          "Cmp",
+          "Dim",
+          "Equ",
+          "Pos",
+          "Sup"]
+
+PRON_TYPE = ["Art",
                      "Dem",
                      "Emp",
                      "Exc",
@@ -442,10 +394,240 @@ MORPH_CONFIG = {
                      "Prs",
                      "Rcp",
                      "Rel",
-                     "Tot"],
+                     "Tot"]
+
+DEIXIS_REF = ["0", "1"]
+
+DEIXIS = ["Abv",
+                   "Bel",
+                   "Even",
+                   "Med",
+                   "Nvis",
+                   "Prox",
+                   "Remt",]
+
+ABBR = ["Yes"]
+
+FOREIGN = ["Yes"]
+
+DEFINITIVE = ["Com",
+                     "Cons",
+                     "Def",
+                     "Ind",
+                     "Spec"]
+
+PERSON = ["0",
+                   "1",
+                   "2",
+                   "3",
+                   "4"]
+
+MOOD = ["Adm",
+                 "Cnd",
+                 "Des",
+                 "Imp",
+                 "Ind",
+                 "Irr",
+                 "Jus",
+                 "Nec",
+                 "Opt",
+                 "Pot",
+                 "Prp",
+                 "Qot",
+                 "Sub"]
+
+POLITE = ["Elev",
+                   "Form",
+                   "Humb",
+                   "Infm"]
+
+EVIDENT = ["Fh", "Nfh"]
+
+MORPH_CONFIG = {
+    # full UD universal features, 
+    # check https://universaldependencies.org/u/feat/index.html
+    # You may want to use a subset of these features
+    # for your specific research question, dataset and language
+    "VERB": {
+        "VerbForm": ["Conf",
+                     "Fin",
+                     "Gdv",
+                     "Ger",
+                     "Inf",
+                     "Part",
+                     "Sup",
+                     "Vnoun"],
+        "Mood": MOOD,
+        "Tense": TENSE,
+        "Aspect": ASPECT,
+        "Voice": VOICE,
+        "Evident": EVIDENT,
+        "Polarity": POLARITY,
+        "Person": PERSON,
+        "Polite": POLITE, 
+        "Clusivity": CLUSIVITY,
+        "Gender": GENDER,
+        "Animacy": ANIMACITY,
+        "Number": NUMBER,
+        "Case": CASE,
+        "Abbr": ABBR,
+        "Foreign": FOREIGN,
+    },
+    "NOUN": {
+        "Gender": GENDER,
+        "Animacy": ANIMACITY,
+        # "NounClass": [], # only applicable to Wolof and Bantu languages;
+        # not included here (yet). If you work with these languages, you
+        # may want to include this feature.
+        "Number": NUMBER,
+        "Case": CASE,
+        "Definite": DEFINITIVE,
+        "Abbr": ABBR,
+        "Degree": DEGREE,
+        "Tense": TENSE,
+        "Aspect": ASPECT,
+        "Voice": VOICE,
+        "Polarity": POLARITY,
+        "Foreign": FOREIGN,
+    },
+    "PRON": {
+        "PronType": PRON_TYPE,
         "Poss": ["Yes"],
         "Reflex": ["Yes"],
         "Gender": GENDER,
         "Animacy": ANIMACITY,
+        "Aspect": ASPECT,
+        "Tense": TENSE,
+        "Voice": VOICE,
+        "Polarity": POLARITY,
+        "Number": NUMBER,
+        "Case": CASE,
+        "Deixis": DEIXIS,
+        "DeixisRef": DEIXIS_REF,
+        "Person": PERSON,
+        "Clusivity": CLUSIVITY,
+        "Abbr": ABBR,
+        "Foreign": FOREIGN,
+    },
+    "ADJ": {
+        "Gender": GENDER,
+        "Animacy": ANIMACITY,
+        "Number": NUMBER,
+        "Case": CASE,
+        "Definite": DEFINITIVE,
+        "Degree": DEGREE,
+        "Ten": TENSE,
+        "Aspect": ASPECT,
+        "Voice": VOICE,
+        "Polarity": POLARITY,
+        "Abbr": ABBR,
+        "Foreign": FOREIGN,
+    },
+    "DET": {
+        "Gender": GENDER,
+        "Animacy": ANIMACITY,
+        "Number": NUMBER,
+        "Case": CASE,
+        "Definite": DEFINITIVE,
+        "Deixis": DEIXIS,
+        "DeixisRef": DEIXIS_REF,
+        "Person": PERSON,
+        "Abbr": ABBR,
+        "Foreign": FOREIGN,
+    },
+    "NUM": {
+        "NumType": ["Card",
+                    "Dist",
+                    "Frac",
+                    "Mult",
+                    "Ord",
+                    "Range",
+                    "Sets",],
+        "NumForm": ["Digit",
+                    "Combi",
+                    "Word",
+                    "Roman"],
+        "Gender": GENDER,
+        "Animacy": ANIMACITY,
+        "Number": NUMBER,
+        "Case": CASE,
+        "Abbr": ABBR,
+        "Foreign": FOREIGN,
+    },
+    "ADV": {
+        "Polarity": POLARITY,
+        "Degree": DEGREE,
+        "Abbr": ABBR,
+        "Foreign": FOREIGN,
+        "Deixis": DEIXIS,
+        "DeixisRef": DEIXIS_REF,
+        "Tense": TENSE,
+        "Aspect": ASPECT,
+        "Voice": VOICE,
+    },
+    "PROPN": {
+        "Gender": GENDER,
+        "Animacy": ANIMACITY,
+        "Number": NUMBER,
+        "Case": CASE,
+        "Definite": DEFINITIVE,
+        "Degree": DEGREE,
+        "Tense": TENSE,
+        "Aspect": ASPECT,
+        "Voice": VOICE,
+        "Polarity": POLARITY,
+        "Abbr": ABBR,
+        "Foreign": FOREIGN,
+    },
+    "Aux": {
+        "VerbForm": ["Fin",
+                     "Inf",
+                     "Part"],
+        "Tense": TENSE,
+        "Aspect": ASPECT,
+        "Voice": VOICE,
+        "Evident": EVIDENT,
+        "Polarity": POLARITY,
+        "Person": PERSON,
+        "Clusivity": CLUSIVITY,
+        "Mood": MOOD,
+        "Polite": POLITE,
+        "Gender": GENDER,
+        "Animacy": ANIMACITY,
+        "Number": NUMBER,
+        "Case": CASE,
+        "Abbr": ABBR,
+        "Foreign": FOREIGN,
+    },
+    "PUNCT": {
+        "PunctType": ["Brck",
+                      "Comm",
+                      "Dash",
+                      "Excl",
+                      "Peri",
+                      "Qest",
+                      "Quot",
+                      "Semi",
+                      "Symb",],
+        "PunctSide": ["Fin",
+                      "Ini"],
+    },
+    "CONJ": {
+        "ConjType": ["Cmp",
+                     "Oper"],
+    },
+    "CCONJ": {
+        "ConjType": ["Cmp",
+                     "Oper"],
+    },
+    "SCONJ": {
+        "ConjType": ["Cmp",
+                     "Oper"],
+    },
+    "ADP": {
+        "AdpType": ["Prep",
+                    "Post",
+                    "Circ",
+                    "Voc"],
     }
 }
