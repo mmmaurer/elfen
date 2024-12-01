@@ -692,10 +692,10 @@ def get_yule_k(data: pl.DataFrame,
         data = get_token_freqs(data, backbone=backbone)
 
     data = data.with_columns(
-        pl.lit(10**4) * \
+        (pl.lit(10**4) * \
         pl.col("token_freqs").map_elements(lambda x: inner_sum(x),
                                            return_dtype=pl.Float32) - \
-        (1 / pl.col("n_tokens")).alias("yule_k")
+        (1 / pl.col("n_tokens"))).alias("yule_k")
     )
 
     return data
