@@ -39,7 +39,6 @@ def get_morph_feats(
         print("No morphological features to extract. Returning the input data.")
         return data
     
-    # TODO: optimize this function
     if backbone == 'spacy':
         for pos, feats in morph_config.items():
             for feat, values in feats.items():
@@ -51,7 +50,6 @@ def get_morph_feats(
                             return_dtype=pl.UInt16
                             ).alias(f"n_{pos}_{feat}_{val}"),
                     )
-    # TODO: implement for Stanza
     elif backbone == 'stanza':
         for pos, feats in morph_config.items():
             for feat, values in feats.items():
@@ -69,3 +67,4 @@ def get_morph_feats(
                     )
 
     return data
+

@@ -157,20 +157,41 @@ RESOURCE_MAP = {
         "filepath": os.path.join(PROJECT_PATH, "resources", "Emotion",
                                  "Affect", "CROWD-5e.xlsx")
     },
-    # Diveica, V, Pexman, P. M., & Binney, R. J. (2021).
-    # Quantifying Social Semantics: an Inclusive Definition
-    # of Socialness and Ratings for 8,388 English Words. PsyArXiv.
-    # TODO: Handle processing the data
+    # Diveica, V, Pexman, P. M., & Binney, R. J. (2023).
+    # Quantifying Social Semantics: An Inclusive Definition
+    # of Socialness and Ratings for 8,388 English Words.
+    # Behavior Research Methods, 55, 461-473.
     "socialness": {
         "link": "https://osf.io/download/29eyh/",
         "area": "Psycholinguistics",
         "subarea": "Socialness",
-        "filename": "Socialness.xlsx",
+        "filename": "Socialness.csv",
         "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
-                                 "Socialness", "Socialness.xlsx")
+                                 "Socialness", "Socialness.csv")
     },
-    # TODO: Add Lancaster sensorimotor norms
-    # TODO: Add bodo winters iconicity norms
+    # Lynott, D., Connell, L., Brysbaert, M., Brand, J., & Carney, J. (2020).
+    # The Lancaster Sensorimotor Norms: Multidimensional measures of
+    # perceptual and action strength for 40,000 English words.
+    # Behavior Research Methods, 52, 1271-1291.
+    "sensorimotor_lancaster": {
+        "link": "https://osf.io/download/pu85v/",
+        "area": "Psycholinguistics",
+        "subarea": "Sensorimotor",
+        "filename": "LancasterSensorimotorNorms.xlsx",
+        "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
+                                 "Sensorimotor", "LancasterSensorimotorNorms.xlsx")
+    },
+    # Winter, B., Lupyan, G., Perry, L. K., Dingemanse, M., & Perlman, M. (2021).
+    # Iconicity ratings for 14,000 English words.
+    # Behavior Research Methods, 56, 1640-1655.
+    "iconicity_winter": {
+        "link": "https://osf.io/download/ex37k/",
+        "area": "Psycholinguistics",
+        "subarea": "Iconicity",
+        "filename": "WinterIconicityNorms.csv",
+        "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
+                                 "Iconicity", "WinterIconicityNorms.csv")
+    },
     # TODO: Find and add psycholinguistic norms for other languages?
 }
 
@@ -332,6 +353,9 @@ def download_lexicon(link: str,
     elif link.endswith(".txt"):
         with open(os.path.join(path, filename), "wb") as f:
             f.write(response.content)
+    else:
+        with open(os.path.join(path, filename), "wb") as f:
+            f.write(response.content)
     
 def get_resource(feature: str) -> None:
     """
@@ -348,19 +372,16 @@ def get_resource(feature: str) -> None:
 
     # Making sure all the necessary directories exist
     os.makedirs(os.path.join(PROJECT_PATH, "resources",
-                              RESOURCE_MAP[feature]["area"],
-                              RESOURCE_MAP[feature]["subarea"]),
-                              exist_ok=True)
+                             RESOURCE_MAP[feature]["area"],
+                             RESOURCE_MAP[feature]["subarea"]),
+                             exist_ok=True)
     # Downloading the lexicon if it does not exist
-    if not os.path.exists(os.path.join(PROJECT_PATH, "resources",
-                                      RESOURCE_MAP[feature]["area"],
-                                      RESOURCE_MAP[feature]["subarea"],
-                                      RESOURCE_MAP[feature]["filename"])):
+    if not os.path.exists(RESOURCE_MAP[feature]["filepath"]):
         download_lexicon(RESOURCE_MAP[feature]["link"],
-                        os.path.join(PROJECT_PATH, "resources",
-                                    RESOURCE_MAP[feature]["area"],
-                                    RESOURCE_MAP[feature]["subarea"]),
-                                    RESOURCE_MAP[feature]["filename"])
+                         os.path.join(PROJECT_PATH, "resources",
+                                      RESOURCE_MAP[feature]["area"],
+                                      RESOURCE_MAP[feature]["subarea"]),
+                                      RESOURCE_MAP[feature]["filename"])
 
 def list_external_resources() -> None:
     """

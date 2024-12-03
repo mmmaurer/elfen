@@ -450,3 +450,274 @@ def get_n_high_prevalence(data: pl.DataFrame,
 
     return data
 
+# ---------------------------------------------------- #
+#                Socialness Norms                      #
+# ---------------------------------------------------- #
+
+def load_socialness_norms(path: str,
+                          **kwargs: dict[str, str],
+                          ) -> pl.DataFrame:
+    """
+    Loads the socialness norms dataset.
+
+    Args:
+    - path: The path to the socialness norms dataset.
+
+    Returns:
+    - socialness_norms: A Polars DataFrame containing the socialness norms
+                        dataset.
+    """
+    socialness_norms = pl.read_csv(path)
+
+    return socialness_norms
+
+def get_avg_socialness(data: pl.DataFrame,
+                       lexicon: pl.DataFrame,
+                       backbone: str = 'spacy',
+                       nan_value: float = 0.0,
+                       **kwargs: dict[str, str],
+                       ) -> pl.DataFrame:
+    """
+    Calculates the average socialness score of a text.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - lexicon: A Polars DataFrame containing the socialness norms.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+    - nan_value: The value to fill NaN and null values with.
+                    Defaults to 0.0.
+
+    Returns:
+    - data: A Polars DataFrame containing the average socialness score
+            of the text data.
+            The average socialness score is stored in a new column named
+            'avg_socialness'.
+    """
+    if "lemmas" not in data.columns:
+        data = get_lemmas(data, backbone=backbone)
+    data = data.with_columns(
+        pl.col("lemmas").map_elements(
+            lambda x: filter_lexicon(lexicon=lexicon,
+                                     words=x,
+                                     word_column="Word"). \
+                select(pl.col("Mean")).mean().item(),
+                return_dtype=pl.Float64
+                ).fill_nan(nan_value).fill_null(nan_value). \
+                    alias("avg_socialness")
+    )
+
+    return data
+
+def get_n_low_socialness(data: pl.DataFrame,
+                         lexicon: pl.DataFrame,
+                         threshold: float = 2.33,
+                         backbone: str = 'spacy',
+                         **kwargs: dict[str, str],
+                         ) -> pl.DataFrame:
+    """
+    Calculates the number of low socialness words in a text.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - lexicon: A Polars DataFrame containing the socialness norms.
+    - threshold: The threshold for the low socialness words.
+                    Defaults to 1.66.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+
+    Returns:
+    - data: A Polars DataFrame containing the number of low socialness words
+            in the text data.
+            The number of low socialness words is stored in a new column named
+            'n_low_socialness'.
+    """
+    if "lemmas" not in data.columns:
+        data = get_lemmas(data, backbone=backbone)
+    data = data.with_columns(
+        pl.col("lemmas").map_elements(
+            lambda x: filter_lexicon(lexicon=lexicon,
+                                     words=x,
+                                     word_column="Word"). \
+                select(pl.col("Mean")).filter(pl.col("Mean") < threshold). \
+                    count().item(),
+                return_dtype=pl.Int64).alias("n_low_socialness")
+    )
+
+    return data
+
+def get_n_high_socialness(data: pl.DataFrame,
+                          lexicon: pl.DataFrame,
+                          backbone: str = 'spacy',
+                          threshold: float = 3.66,
+                          **kwargs: dict[str, str],
+                          ) -> pl.DataFrame:
+    """
+    Calculates the number of high socialness words in a text.
+
+    Args:
+    - data: A Polars DataFrame containing the text data.
+    - lexicon: A Polars DataFrame containing the socialness norms.
+    - threshold: The threshold for the high socialness words.
+                    Defaults to 3.66.
+    - backbone: The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+    
+    Returns:
+    - data: A Polars DataFrame containing the number of high socialness words
+            in the text data.
+            The number of high socialness words is stored in a new column named
+            'n_high_socialness'.
+    """
+    if "lemmas" not in data.columns:
+        data = get_lemmas(data, backbone=backbone)
+    data = data.with_columns(
+        pl.col("lemmas").map_elements(
+            lambda x: filter_lexicon(lexicon=lexicon,
+                                     words=x,
+                                     word_column="Word"). \
+                select(pl.col("Mean")).filter(pl.col("Mean") > threshold). \
+                    count().item(),
+                return_dtype=pl.Int64).alias("n_high_socialness")
+    )
+
+    return data
+
+# ---------------------------------------------------- #
+#                      Iconicity                       #
+# ---------------------------------------------------- #
+
+def load_iconicity_norms(path: str,
+                         **kwargs: dict[str, str],
+                         ) -> pl.DataFrame:
+        """
+        Loads the iconicity norms dataset.
+    
+        Args:
+        - path: The path to the iconicity norms dataset.
+
+        Returns:
+        - iconicity_norms: A Polars DataFrame containing the iconicity norms
+                           dataset.
+        """
+        iconicity_norms = pl.read_csv(path)
+
+        return iconicity_norms
+
+def get_avg_iconicity(data: pl.DataFrame,
+                        lexicon: pl.DataFrame,
+                        backbone: str = 'spacy',
+                        nan_value: float = 0.0,
+                        **kwargs: dict[str, str],
+                        ) -> pl.DataFrame:
+        """
+        Calculates the average iconicity score of a text.
+    
+        Args:
+        - data: A Polars DataFrame containing the text data.
+        - lexicon: A Polars DataFrame containing the iconicity norms.
+        - backbone: The NLP library used to process the text data.
+                    Either 'spacy' or 'stanza'.
+        - nan_value: The value to fill NaN and null values with.
+                        Defaults to 0.0.
+    
+        Returns:
+        - data: A Polars DataFrame containing the average iconicity score
+                of the text data.
+                The average iconicity score is stored in a new column named
+                'avg_iconicity'.
+        """
+        if "lemmas" not in data.columns:
+            data = get_lemmas(data, backbone=backbone)
+        data = data.with_columns(
+            pl.col("lemmas").map_elements(
+                lambda x: filter_lexicon(lexicon=lexicon,
+                                         words=x,
+                                         word_column="word"). \
+                    select(pl.col("rating")).mean().item(),
+                    return_dtype=pl.Float64
+                    ).fill_nan(nan_value).fill_null(nan_value). \
+                        alias("avg_iconicity")
+        )
+    
+        return data
+
+def get_n_low_iconicity(data: pl.DataFrame,
+                        lexicon: pl.DataFrame,
+                        threshold: float = 2.33,
+                        backbone: str = 'spacy',
+                        **kwargs: dict[str, str],
+                        ) -> pl.DataFrame:
+        """
+        Calculates the number of low iconicity words in a text.
+    
+        Args:
+        - data: A Polars DataFrame containing the text data.
+        - lexicon: A Polars DataFrame containing the iconicity norms.
+        - threshold: The threshold for the low iconicity words.
+                        Defaults to 2.33.
+        - backbone: The NLP library used to process the text data.
+                    Either 'spacy' or 'stanza'.
+    
+        Returns:
+        - data: A Polars DataFrame containing the number of low iconicity words
+                in the text data.
+                The number of low iconicity words is stored in a new column named
+                'n_low_iconicity'.
+        """
+        if "lemmas" not in data.columns:
+            data = get_lemmas(data, backbone=backbone)
+        data = data.with_columns(
+            pl.col("lemmas").map_elements(
+                lambda x: filter_lexicon(lexicon=lexicon,
+                                         words=x,
+                                         word_column="word"). \
+                    select(pl.col("rating")).filter(pl.col("rating") < threshold). \
+                        count().item(),
+                    return_dtype=pl.Int64).alias("n_low_iconicity")
+        )
+    
+        return data
+
+def get_n_high_iconicity(data: pl.DataFrame,
+                         lexicon: pl.DataFrame,
+                         backbone: str = 'spacy',
+                         threshold: float = 3.66,
+                         **kwargs: dict[str, str],
+                         ) -> pl.DataFrame:
+        """
+        Calculates the number of high iconicity words in a text.
+    
+        Args:
+        - data: A Polars DataFrame containing the text data.
+        - lexicon: A Polars DataFrame containing the iconicity norms.
+        - threshold: The threshold for the high iconicity words.
+                        Defaults to 3.66.
+        - backbone: The NLP library used to process the text data.
+                    Either 'spacy' or 'stanza'.
+    
+        Returns:
+        - data: A Polars DataFrame containing the number of high iconicity words
+                in the text data.
+                The number of high iconicity words is stored in a new column named
+                'n_high_iconicity'.
+        """
+        if "lemmas" not in data.columns:
+            data = get_lemmas(data, backbone=backbone)
+        data = data.with_columns(
+            pl.col("lemmas").map_elements(
+                lambda x: filter_lexicon(lexicon=lexicon,
+                                         words=x,
+                                         word_column="word"). \
+                    select(pl.col("rating")).filter(pl.col("rating") > threshold). \
+                        count().item(),
+                    return_dtype=pl.Int64).alias("n_high_iconicity")
+        )
+    
+        return data
+
+# ---------------------------------------------------- #
+#                   Sensorimotor                       #
+# ---------------------------------------------------- #
+
+# TODO
