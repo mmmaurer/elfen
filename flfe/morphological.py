@@ -53,7 +53,16 @@ def get_morph_feats(
                     )
     # TODO: implement for Stanza
     elif backbone == 'stanza':
-        print("Morphological features extraction is not implemented yet for Stanza.")
-        pass
+        for pos, feats in morph_config.items():
+            for feat, values in feats.items():
+                for val in values:
+                    data = data.with_columns(
+                        pl.col("nlp").map_elements(lambda x: len(
+                            [token for sent in x.sentences for token in \
+                             sent.words if token.upos == pos and
+                            val in token.feats.get(feat)]),
+                            return_dtype=pl.UInt16
+                            ).alias(f"n_{pos}_{feat}_{val}"),
+                    )
 
     return data

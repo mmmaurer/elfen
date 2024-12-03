@@ -32,7 +32,7 @@ def preprocess_data(data: pl.DataFrame,
         nlp = spacy.load(model)
         nlp.add_pipe("syllables", after="tagger")
     elif backbone == 'stanza':
-        nlp = stanza.Pipeline(model=model)
+        nlp = stanza.Pipeline(model=model, processors='tokenize,pos,lemma')
     
     # Process the text data to retrieve nlp objects
     processed = pl.Series("nlp", [nlp(text) for text in data[text_column]])
