@@ -1066,7 +1066,7 @@ def load_sensorimotor_norms(path: str,
     - sensorimotor_norms: A Polars DataFrame containing the sensorimotor norms
                           dataset.
     """
-    sensorimotor_norms = pl.read_csv(path)
+    sensorimotor_norms = pl.read_excel(path)
 
     return sensorimotor_norms
 

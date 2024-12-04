@@ -32,7 +32,19 @@ CONFIG_ALL = {
         "hedges": {
             "area": "Semantics",
             "subarea": "Hedges"
-        }
+        },
+        "socialness": {
+            "area": "Psycholinguistics",
+            "subarea": "Socialness"
+        },
+        "sensorimotor_lancaster": {
+            "area": "Psycholinguistics",
+            "subarea": "Sensorimotor"
+        },
+        "iconicity_winter": {
+            "area": "Psycholinguistics",
+            "subarea": "Iconicity"
+        },
     },
     "features": {
         "surface": {
@@ -45,6 +57,9 @@ CONFIG_ALL = {
             "n_types": {},
             "n_long_words": {},
             "n_lemmas": {}
+        },
+        "morphology": {
+            "n_per_morph_feature": {}
         },
         "sentiment": {
             "sentiment_score": {
@@ -201,6 +216,13 @@ CONFIG_ALL = {
                 "lexicon": "concreteness_brysbaert",
                 "threshold": 3.33
             },
+            "avg_sd_concreteness": {
+                "lexicon": "concreteness_brysbaert"
+            },
+            "n_controversial_concreteness": {
+                "lexicon": "concreteness_brysbaert",
+                "threshold": 2.0
+            },
             "avg_aoa": {
                 "lexicon": "aoa_kuperman"
             },
@@ -209,6 +231,13 @@ CONFIG_ALL = {
                 "threshold": 10.0
             },
             "n_high_aoa": {
+                "lexicon": "aoa_kuperman",
+                "threshold": 10.0
+            },
+            "avg_sd_aoa": {
+                "lexicon": "aoa_kuperman"
+            },
+            "n_controversial_aoa": {
                 "lexicon": "aoa_kuperman",
                 "threshold": 10.0
             },
@@ -222,6 +251,60 @@ CONFIG_ALL = {
             "n_high_prevalence": {
                 "lexicon": "prevalence_brysbaert",
                 "threshold": 1.0
+            },
+            "avg_socialness": {
+                "lexicon": "socialness"
+            },
+            "n_low_socialness": {
+                "lexicon": "socialness",
+                "threshold": 2.33
+            },
+            "n_high_socialness": {
+                "lexicon": "socialness",
+                "threshold": 3.66
+            },
+            "avg_sd_socialness": {
+                "lexicon": "socialness"
+            },
+            "n_controversial_socialness": {
+                "lexicon": "socialness",
+                "threshold": 2.0
+            },
+            "avg_sensorimotor": {
+                "lexicon": "sensorimotor_lancaster"
+            },
+            "n_low_sensorimotor": {
+                "lexicon": "sensorimotor_lancaster",
+                "threshold": 2.33
+            },
+            "n_high_sensorimotor": {
+                "lexicon": "sensorimotor_lancaster",
+                "threshold": 3.66
+            },
+            "avg_sd_sensorimotor": {
+                "lexicon": "sensorimotor_lancaster"
+            },
+            "n_controversial_sensorimotor": {
+                "lexicon": "sensorimotor_lancaster",
+                "threshold": 2.0
+            },
+            "avg_iconicity": {
+                "lexicon": "iconicity_winter"
+            },
+            "n_low_iconicity": {
+                "lexicon": "iconicity_winter",
+                "threshold": 2.33
+            },
+            "n_high_iconicity": {
+                "lexicon": "iconicity_winter",
+                "threshold": 3.66
+            },
+            "avg_sd_iconicity": {
+                "lexicon": "iconicity_winter"
+            },
+            "n_controversial_iconicity": {
+                "lexicon": "iconicity_winter",
+                "threshold": 2.5
             },
         },
         "readability": {

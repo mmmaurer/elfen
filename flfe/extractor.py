@@ -1,7 +1,7 @@
 import re
 import os
 
-from time import time 
+import polars as pl
 
 from .config import (
     CONFIG_ALL,
@@ -22,6 +22,9 @@ from .psycholinguistic import (
     load_concreteness_norms,
     load_aoa_norms,
     load_prevalence_norms,
+    load_socialness_norms,
+    load_sensorimotor_norms,
+    load_iconicity_norms,
 )
 from .resources import (
     RESOURCE_MAP,
@@ -193,6 +196,12 @@ class Extractor:
                 lexicon = load_intensity_lexicon(filepath)
             elif "hedges" in feature:
                 lexicon = load_hedges(filepath)
+            elif "socialness" in feature:
+                lexicon = load_socialness_norms(filepath)
+            elif "sensorimotor" in feature:
+                lexicon = load_sensorimotor_norms(filepath)
+            elif "iconicity" in feature:
+                lexicon = load_iconicity_norms(filepath)
             return lexicon
         else:
             print(f"Resource {features[feature_area][feature]['lexicon']}"
@@ -244,9 +253,18 @@ class Extractor:
         """
         Helper function to remove constant columns from the data.
         """
-        self.data = self.data.drop(
-            self.data.columns[
-                self.data.n_unique() == 1
-            ]
-        )
+        # Remove constant feature columns
+        feature_cols = [col for col in self.data.select(
+            pl.selectors.by_dtype(pl.Int32,
+                                  pl.Int64,
+                                  pl.Float32,
+                                  pl.Float64,
+                                  pl.UInt16,
+                                  pl.UInt32,
+                                  pl.UInt64)
+                                ).columns]
+        cols_to_drop = [col for col in feature_cols if
+                        self.data[col].n_unique() == 1]
+        
+        self.data = self.data.drop(cols_to_drop)
 

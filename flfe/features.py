@@ -52,21 +52,49 @@ from .lexical_richness import (
     get_simpsons_d,
     get_herdan_v,
 )
+from .morphological import (
+    get_morph_feats,
+)
 from .pos import (
     get_num_per_pos,
     get_pos_variability,
     get_num_per_pos,
 )
 from .psycholinguistic import (
+    # Concreteness
     get_avg_concreteness,
     get_n_high_concreteness,
     get_n_low_concreteness,
+    get_avg_sd_concreteness,
+    get_n_controversial_concreteness,
+    # AoA
     get_avg_aoa,
     get_n_high_aoa,
     get_n_low_aoa,
+    get_avg_sd_aoa,
+    get_n_controversial_aoa,
+    # Prevalence
     get_avg_prevalence,
     get_n_high_prevalence,
     get_n_low_prevalence,
+    # Socialness
+    get_avg_socialness,
+    get_n_high_socialness,
+    get_n_low_socialness,
+    get_avg_sd_socialness,
+    get_n_controversial_socialness,
+    # Iconicity
+    get_avg_iconicity,
+    get_n_high_iconicity,
+    get_n_low_iconicity,
+    get_avg_sd_iconicity,
+    get_n_controversial_iconicity,
+    # Sensorimotor
+    get_avg_sensorimotor,
+    get_n_high_sensorimotor,
+    get_n_low_sensorimotor,
+    get_avg_sd_sensorimotor,
+    get_n_controversial_sensorimotor,
 )
 from .readability import (
     get_flesch_reading_ease,
@@ -113,6 +141,8 @@ FUNCTION_MAP = {
     "n_long_words": get_num_long_words,
     "n_tokens_per_sentence": get_num_tokens_per_sentence,
     "n_characters": get_num_characters,
+    # MORPHOLOGICAL FEATURES
+    "n_per_morph_feature": get_morph_feats,
     # EMOTION FEATURES
     # Sentiment features
     "sentiment_score": get_sentiment_score,
@@ -168,14 +198,36 @@ FUNCTION_MAP = {
     "avg_concreteness": get_avg_concreteness,
     "n_high_concreteness": get_n_high_concreteness,
     "n_low_concreteness": get_n_low_concreteness,
+    "avg_sd_concreteness": get_avg_sd_concreteness,
+    "n_controversial_concreteness": get_n_controversial_concreteness,
     # AoA
     "avg_aoa": get_avg_aoa,
     "n_high_aoa": get_n_high_aoa,
     "n_low_aoa": get_n_low_aoa,
+    "avg_sd_aoa": get_avg_sd_aoa,
+    "n_controversial_aoa": get_n_controversial_aoa,
     # Prevalence
     "avg_prevalence": get_avg_prevalence,
     "n_high_prevalence": get_n_high_prevalence,
     "n_low_prevalence": get_n_low_prevalence,
+    # Socialness
+    "avg_socialness": get_avg_socialness,
+    "n_high_socialness": get_n_high_socialness,
+    "n_low_socialness": get_n_low_socialness,
+    "avg_sd_socialness": get_avg_sd_socialness,
+    "n_controversial_socialness": get_n_controversial_socialness,
+    # Iconicity
+    "avg_iconicity": get_avg_iconicity,
+    "n_high_iconicity": get_n_high_iconicity,
+    "n_low_iconicity": get_n_low_iconicity,
+    "avg_sd_iconicity": get_avg_sd_iconicity,
+    "n_controversial_iconicity": get_n_controversial_iconicity,
+    # Sensorimotor
+    "avg_sensorimotor": get_avg_sensorimotor,
+    "n_high_sensorimotor": get_n_high_sensorimotor,
+    "n_low_sensorimotor": get_n_low_sensorimotor,
+    "avg_sd_sensorimotor": get_avg_sd_sensorimotor,
+    "n_controversial_sensorimotor": get_n_controversial_sensorimotor,
     # READABILITY FEATURES
     "flesch_reading_ease": get_flesch_reading_ease,
     "flesch_kincaid_grade": get_flesch_kincaid_grade,
@@ -266,12 +318,33 @@ FEATURE_AREA_MAP = {
         "avg_concreteness",
         "n_high_concreteness",
         "n_low_concreteness",
+        "avg_sd_concreteness",
+        "n_controversial_concreteness",
         "avg_aoa",
         "n_high_aoa",
         "n_low_aoa",
+        "avg_sd_aoa",
+        "n_controversial_aoa",
         "avg_prevalence",
         "n_high_prevalence",
         "n_low_prevalence",
+        "avg_sd_prevalence",
+        "n_controversial_prevalence",
+        "avg_socialness",
+        "n_high_socialness",
+        "n_low_socialness",
+        "avg_sd_socialness",
+        "n_controversial_socialness",
+        "avg_iconicity",
+        "n_high_iconicity",
+        "n_low_iconicity",
+        "avg_sd_iconicity",
+        "n_controversial_iconicity",
+        "avg_sensorimotor",
+        "n_high_sensorimotor",
+        "n_low_sensorimotor",
+        "avg_sd_sensorimotor",
+        "n_controversial_sensorimotor",
     ],
     "readability": [
         "flesch_reading_ease",
