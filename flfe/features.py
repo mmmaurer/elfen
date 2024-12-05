@@ -115,6 +115,8 @@ from .semantic import (
     get_avg_num_synsets_per_pos,
     get_num_high_synsets,
     get_num_low_synsets,
+    get_high_synsets_per_pos,
+    get_low_synsets_per_pos,
 )
 from .surface import (
     get_avg_word_length,
@@ -246,6 +248,8 @@ FUNCTION_MAP = {
     "avg_num_synsets_per_pos": get_avg_num_synsets_per_pos,
     "n_high_synsets": get_num_high_synsets,
     "n_low_synsets": get_num_low_synsets,
+    "high_synsets_per_pos": get_high_synsets_per_pos,
+    "low_synsets_per_pos": get_low_synsets_per_pos,
 }
 
 FEATURE_AREA_MAP = {

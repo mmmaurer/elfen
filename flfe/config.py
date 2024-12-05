@@ -340,6 +340,24 @@ CONFIG_ALL = {
             "n_high_synsets": {
                 "threshold": 5.0
             },
+            "n_high_synsets_per_pos": {
+                "pos": [
+                    "NOUN",
+                    "VERB",
+                    "ADJ",
+                    "ADV"
+                ],
+                "threshold": 5.0
+            },
+            "n_low_synsets_per_pos": {
+                "pos": [
+                    "NOUN",
+                    "VERB",
+                    "ADJ",
+                    "ADV"
+                ],
+                "threshold": 2.0
+            },
         },
         "entities": {
             "n_entities": {},
