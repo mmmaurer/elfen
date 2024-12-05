@@ -359,3 +359,89 @@ def get_num_high_synsets(data: pl.DataFrame,
 
     return data
 
+def get_low_synsets_per_pos(data: pl.DataFrame,
+                            backbone: str = 'spacy',
+                            language: str = 'en',
+                            pos_tags: list[str] = [
+                                'NOUN', 'VERB', 'ADJ', 'ADV'
+                                ],
+                            threshold: int = 2,
+                            **kwargs: dict[str, str],
+                            ) -> pl.DataFrame:
+    """
+    Calculates the number of words with a low number of synsets per POS in a text.
+
+    Args:
+    - data: Polars DataFrame.
+    - backbone: NLP library used.
+                'spacy' or 'stanza'.
+    - language: Language of the text.
+                Defaults to English ('en').
+    - pos_tags: List of POS tags to consider.
+                Defaults to lexical tokens.
+    - threshold: Threshold for the number of synsets.
+                 Defaults to 2.
+    
+    Returns:
+    - data: Polars DataFrame with the number of low synsets per POS.
+            The columns are named 'n_low_synsets_{pos}'.
+    """
+    for pos_tag in pos_tags:
+        if "synsets_" + pos_tag.lower() not in data.columns:
+            data = get_synsets(data, backbone=backbone,
+                               language=language,
+                               pos_tags=[pos_tag])
+        data = data.with_columns(
+            pl.col("synsets_" + pos_tag.lower()).map_elements(lambda x:
+                                                              [
+                                                                  1 for synset in x
+                                                                  if synset <= threshold
+                                                              ],
+            return_dtype=pl.List(pl.Int64)).list.len().alias(f"n_low_synsets_{pos_tag.lower()}")
+        )
+
+    return data
+
+def get_high_synsets_per_pos(data: pl.DataFrame,
+                             backbone: str = 'spacy',
+                             language: str = 'en',
+                             pos_tags: list[str] = [
+                                 'NOUN', 'VERB', 'ADJ', 'ADV'
+                                 ],
+                             threshold: int = 5,
+                             **kwargs: dict[str, str],
+                             ) -> pl.DataFrame:
+    """
+    Calculates the number of words with a high number of synsets per POS in a text.
+
+    Args:
+    - data: Polars DataFrame.
+    - backbone: NLP library used.
+                'spacy' or 'stanza'.
+    - language: Language of the text.
+                Defaults to English ('en').
+    - pos_tags: List of POS tags to consider.
+                Defaults to lexical tokens.
+    - threshold: Threshold for the number of synsets.
+                 Defaults to 5.
+    
+    Returns:
+    - data: Polars DataFrame with the number of high synsets per POS.
+            The columns are named 'n_high_synsets_{pos}'.
+    """
+    for pos_tag in pos_tags:
+        if "synsets_" + pos_tag.lower() not in data.columns:
+            data = get_synsets(data, backbone=backbone,
+                               language=language,
+                               pos_tags=[pos_tag])
+        data = data.with_columns(
+            pl.col("synsets_" + pos_tag.lower()).map_elements(lambda x:
+                                                              [
+                                                                  1 for synset in x
+                                                                  if synset >= threshold
+                                                              ],
+            return_dtype=pl.List(pl.Int64)).list.len().alias(f"n_high_synsets_{pos_tag.lower()}")
+        )
+
+    return data
+
