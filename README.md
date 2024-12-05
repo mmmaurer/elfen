@@ -19,6 +19,11 @@ Step 3: If you want to use the spacy backbone, download the respective model.
 python -m spacy download en_core_web_sm
 ```
 
+Step 4: To use wordnet features, download open multilingual wordnet using:
+```bash
+python -m wn download omw:1.4
+```
+
 ## Usage of third-party resources usable in this package
 Please refer to the original author's licenses and conditions for usage, and cite them if you use the resources through this package in your analyses.
 
