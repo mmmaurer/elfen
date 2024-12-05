@@ -6,3 +6,4 @@ spacy==3.7.5
 spacy_syllables==3.0.2
 stanza==1.8.2
 wn==0.9.5
+fastexcel==0.12.0

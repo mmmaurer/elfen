@@ -17,6 +17,7 @@ dependencies = [
     "spacy_syllables==3.0.2",
     "stanza==1.8.2",
     "wn==0.9.5",
+    "fastexcel==0.12.0"
 ]
 description = "FLFE - Fast linguistic feature extraction for tabular text datasets"
 readme = "README.md"
@@ -30,3 +31,6 @@ classifiers = [
 [project.urls]
 Homepage = "https://github.com/mmmaurer/flfe"
 Issues = "https://github.com/mmmaurer/flfe/issues"
+
+[tool.setuptools]
+py-modules = ["flfe"]
