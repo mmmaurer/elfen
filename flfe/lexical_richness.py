@@ -210,7 +210,7 @@ def get_dougast_u(data: pl.DataFrame,
                   ) -> pl.DataFrame:
     """
     Calculates the Dougast's Uber index of a text:
-    log(N_types)^2 / (N_tokens - N_types).
+    log(N_types)^2 / (log(N_tokens) - log(N_types)).
 
     Args:
     - data: A Polars DataFrame containing the text data.
@@ -229,7 +229,7 @@ def get_dougast_u(data: pl.DataFrame,
         data = get_num_types(data, backbone=backbone)
     
     data = data.with_columns(
-        (pl.col("n_types").log()**2 / (pl.col("n_tokens") - pl.col("n_types"))
+        (pl.col("n_types").log()**2 / (pl.col("n_tokens").log() - pl.col("n_types").log())
          ).fill_nan(1).alias("dougast_u")
          # convention to fill NaNs with 1 as log(1) = 0 and
          # division by 0 is not defined.
