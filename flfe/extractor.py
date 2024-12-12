@@ -58,11 +58,17 @@ class Extractor:
             "hedges": None,
         }
 
+        if "max_length" in self.config:
+            max_length = self.config["max_length"]
+        else:
+            max_length = 1000000
+
         self.data = preprocess_data(data=self.data,
                                     text_column=self.config["text_column"],
                                     backbone=self.config["backbone"],
                                     lang=self.config["language"],
-                                    model=self.config["model"],)
+                                    model=self.config["model"],
+                                    max_length=max_length)
     
     def __apply_function(self,
                          feature,

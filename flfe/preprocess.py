@@ -13,6 +13,7 @@ def preprocess_data(data: pl.DataFrame,
                     text_column: str = 'text',
                     backbone: str = 'spacy',
                     model: str = 'en_core_web_sm',
+                    max_length: int = 1000000,
                     **kwargs: dict[str, str],
                     ) -> pl.DataFrame:
     """
@@ -23,6 +24,8 @@ def preprocess_data(data: pl.DataFrame,
     - text_column: The name of the column containing the text data.
     - backbone: The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
+    - model: The name of the model used by the NLP library.
+    - max_length: The maximum number of characters to process.
 
     Returns:
     - data: A Polars DataFrame containing the processed text data.
@@ -30,9 +33,10 @@ def preprocess_data(data: pl.DataFrame,
     """
     if backbone == 'spacy':
         nlp = spacy.load(model)
+        nlp.max_length = max_length
         nlp.add_pipe("syllables", after="tagger")
     elif backbone == 'stanza':
-        nlp = stanza.Pipeline(model=model, processors='tokenize,pos,lemma')
+        nlp = stanza.Pipeline(model=model, processors='tokenize,pos,lemma,depparse')
     
     # Process the text data to retrieve nlp objects
     processed = pl.Series("nlp", [nlp(text) for text in data[text_column]])

@@ -3,6 +3,7 @@ CONFIG_ALL = {
     "language": "en",
     "model": "en_core_web_sm",
     "text_column": "text",
+    "max_length": 1000000,
     "remove_constant_cols": True,
     "lexicons": {
         "vad_nrc": {
