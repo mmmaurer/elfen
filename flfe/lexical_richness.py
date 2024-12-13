@@ -17,7 +17,6 @@ from .pos import (
     get_num_lexical_tokens,
 )
 from .preprocess import (
-    get_lemmas,
     get_tokens,
 )
 

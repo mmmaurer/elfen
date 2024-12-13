@@ -3,7 +3,7 @@ import os
 
 import polars as pl
 
-from .config import (
+from .configs.extractor_config import (
     CONFIG_ALL,
 )
 from .preprocess import (

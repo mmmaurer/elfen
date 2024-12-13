@@ -2,6 +2,17 @@ from .preprocess import (
     get_lemmas,
     get_tokens,
 )
+from .dependency import (
+    # tree features
+    get_tree_width,
+    get_tree_depth,
+    get_tree_branching,
+    get_ramification_factor,
+    # dependency features
+    get_n_noun_chunks,
+    get_n_per_dependency_type
+)
+
 from .emotion import (
     # sentiment
     get_sentiment_score,
@@ -250,6 +261,15 @@ FUNCTION_MAP = {
     "n_low_synsets": get_num_low_synsets,
     "high_synsets_per_pos": get_high_synsets_per_pos,
     "low_synsets_per_pos": get_low_synsets_per_pos,
+    # DEPENDENCY FEATURES
+    # tree features
+    "tree_width": get_tree_width,
+    "tree_depth": get_tree_depth,
+    "tree_branching": get_tree_branching,
+    "ramification_factor": get_ramification_factor,
+    # dependency features
+    "n_noun_chunks": get_n_noun_chunks,
+    "n_per_dependency_type": get_n_per_dependency_type,
 }
 
 FEATURE_AREA_MAP = {
@@ -265,6 +285,17 @@ FEATURE_AREA_MAP = {
         "n_long_words",
         "n_tokens_per_sentence",
         "n_characters",
+    ],
+    "morphological": [
+        "n_per_morph_feature",
+    ],
+    "dependency": [
+        "tree_width",
+        "tree_depth",
+        "tree_branching",
+        "ramification_factor",
+        "n_noun_chunks",
+        "n_per_dependency_type",
     ],
     "emotion": [
         "sentiment_score",

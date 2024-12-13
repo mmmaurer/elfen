@@ -3,7 +3,7 @@ This module contains functions to extract morphological features of text data.
 """
 import polars as pl
 
-from .config import MORPH_CONFIG
+from .configs.morphological_config import MORPH_CONFIG
 
 def get_morph_feats(
         data: pl.DataFrame,

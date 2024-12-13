@@ -6,7 +6,6 @@ import polars as pl
 
 from .surface import (
     get_num_tokens,
-    get_num_sentences,
 )
 
 UPOS_TAGS = [

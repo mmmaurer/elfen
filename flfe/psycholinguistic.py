@@ -40,9 +40,6 @@ import polars as pl
 from .preprocess import (
     get_lemmas,
 )
-from .surface import (
-    get_num_tokens,
-)
 from .util import (
     filter_lexicon,
 )
