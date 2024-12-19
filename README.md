@@ -1,4 +1,10 @@
-# FLFE - Fast Linguistic Feature Extraction for Text Datasets
+# ELFEN - Efficient Linguistic Feature Extraction for Natural Language Datasets
+
+This python package provides efficient linguistic feature extraction for text datasets (i.e. datasets with N text instances, in a tabular structure). 
+
+For a full overview of the features available, check the [overview table](features.md), for further details and tutorials check the
+[Documentation (TODO)]()
+
 
 ## Installation
 
@@ -14,7 +20,7 @@ Step 2: Move to the dir and install using pip
 cd flfe && pip install -e .
 ```
 
-Step 3: If you want to use the spacy backbone, download the respective model.
+Step 3: If you want to use the spacy backbone, download the respective model, e.g. "en_core_web_sm":
 ```bash
 python -m spacy download en_core_web_sm
 ```
@@ -29,7 +35,14 @@ Please refer to the original author's licenses and conditions for usage, and cit
 
 
 ## Citation
-If you use this package in your work, please cite
+If you use this package in your work, for now, please cite
 ```bibtex
-TODO
+@misc{maurer-2024-elfen,
+  author = {Maurer, Maximilian},
+  title = {ELFEN - Efficient Linguistic Feature Extraction for Natural Language Datasets},
+  year = {2024},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/mmmaurer/elfen}},
+}
 ```
