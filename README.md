@@ -12,12 +12,12 @@ For a full overview of the features available, check the [overview table](featur
 
 Step 1: Download this repo
 ```bash
-git clone git@github.com:mmmaurer/flfe.git
+git clone git@github.com:mmmaurer/elfen.git
 ```
 
 Step 2: Move to the dir and install using pip
 ```bash
-cd flfe && pip install -e .
+cd elfen && pip install -e .
 ```
 
 Step 3: If you want to use the spacy backbone, download the respective model, e.g. "en_core_web_sm":
