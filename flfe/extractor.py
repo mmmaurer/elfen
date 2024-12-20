@@ -250,7 +250,8 @@ class Extractor:
         for ratio_feature in ratio_features["type"]:
             self.data = get_feature_type_ratio(self.data, ratio_feature)
 
-        if self.config["remove_constant_cols"]:
+        # Remove constant columns if specified and if there is more than one row
+        if self.config["remove_constant_cols"] and len(self.data) > 1:
             self.__remove_constant_cols()
 
         return self.data
