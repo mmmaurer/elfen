@@ -1,3 +1,8 @@
+"""
+This module contains helper mappings to map feature names to the
+respective functions that calculate them. Additionally, it contains
+mappings to group features by their respective feature areas.
+"""
 from .preprocess import (
     get_lemmas,
     get_tokens,

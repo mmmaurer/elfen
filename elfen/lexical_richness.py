@@ -1,6 +1,52 @@
 """
 This module contains functions to calculate various lexical richness
 metrics from text data.
+
+The lexical richness metrics implemented in this module are:
+
+- Lemma/Token Ratio: 
+    The ratio of the number of lemmas to the number of tokens in the text.
+- Type/Token Ratio: 
+    The ratio of the number of types to the number of tokens in the text.
+- Root Type/Token Ratio: 
+    The ratio of the number of types to the square root of the number of
+    tokens in the text.
+- Corrected Type/Token Ratio: 
+    The ratio of the number of types to the square root of twice the 
+    number of tokens in the text.
+- Herdan's C: 
+    The logarithm of the number of types divided by the logarithm of the
+    number of tokens.
+- Summer's TTR:
+    The logarithm of the logarithm of the number of types divided by the
+    logarithm of the logarithm of the number of tokens.
+- Dougast's Uber Index:
+    The square of the logarithm of the number of types divided by the
+    logarithm of the number of tokens minus the logarithm of the number
+    of types.
+- Maas' TTR:
+    The number of tokens minus the number of types divided
+    by the square of the logarithm of the number of types.
+- Number of Hapax Legomena:
+    The number of words that occur only once in the text.
+- Number of Hapax Dislegomena:
+    The number of words that occur only once or twice in the text.
+- Sichel's S:
+    The number of hapax dislegomena divided by the number of types in the
+    text.
+- Lexical Density:
+    The ratio of the number of lexical tokens to the number of tokens in
+    the text.
+- Giroud's Index:
+    The number of types divided by the square root of the number of tokens
+    in the text.
+- Measure of Textual Lexical Diversity (MTLD)
+- Hypergeometric Distribution Diversity (HD-D)
+- Moving-Average Type-Token Ratio (MATTR)
+- Mean Segmental Type-Token Ratio (MSTTR)
+- Yule's K
+- Simpson's D
+- Herdan's Vm
 """
 from collections import Counter
 
@@ -26,18 +72,19 @@ def get_lemma_token_ratio(data: pl.DataFrame,
                           ) -> pl.DataFrame:
     """
     Calculates the lemma/token ratio of a text:
+
     N_lemmas / N_tokens.
 
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - backbone: The NLP library used to process the text data.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
 
     Returns:
-    - data: A Polars DataFrame containing the lemma/token ratio of the
-            text data.
-            The lemma/token ratio is stored in a new column named
-            'lemma_token_ratio'.
+        data (pl.DataFrame):
+            A Polars DataFrame containing the lemma/token ratio of the
+            text data. The lemma/token ratio is stored in a new column
+            named 'lemma_token_ratio'.
     """
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
@@ -57,17 +104,19 @@ def get_ttr(data: pl.DataFrame,
             ) -> pl.DataFrame:
     """
     Calculates the type-token ratio (TTR) of a text:
+
     N_types / N_tokens.
 
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - backbone: The NLP library used to process the text data.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
 
     Returns:
-    - data: A Polars DataFrame containing the type-token ratio of the
-            text data.
-            The type-token ratio is stored in a new column named 'ttr'.
+        data (pl.DataFrame):
+            A Polars DataFrame containing the type-token ratio of the text
+            data. The type-token ratio is stored in a new column named
+            'ttr'.
     """
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
@@ -86,16 +135,18 @@ def get_rttr(data: pl.DataFrame,
              ) -> pl.DataFrame:
     """
     Calculates the root type-token ratio (RTTR) of a text:
+
     N_types / sqrt(N_tokens).
+
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - backbone: The NLP library used to process the text data.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
     Returns:
-    - data: A Polars DataFrame containing the root type-token ratio
-            of the text data.
-            The root type-token ratio is stored in a new column named
-            'rttr'.
+        data (pl.DataFrame):
+            A Polars DataFrame containing the root type-token ratio of the
+            text data. The root type-token ratio is stored in a new column
+            named 'rttr'.
     """
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
@@ -116,16 +167,18 @@ def get_cttr(data: pl.DataFrame,
              ) -> pl.DataFrame:
     """
     Calculates the corrected type-token ratio (CTTR) of a text:
+
     N_types / sqrt(2*N_tokens).
+
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - backbone: The NLP library used to process the text data.
-                Either 'spacy' or 'stanza'.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
+                        Either 'spacy' or 'stanza'.
     Returns:
-    - data: A Polars DataFrame containing the corrected type-token ratio
-            of the text data.
-            The corrected type-token ratio is stored in a new column named
-            'cttr'.
+        data (pl.DataFrame):
+            A Polars DataFrame containing the corrected type-token ratio
+            of the text data. The corrected type-token ratio is stored in
+            a new column named 'cttr'.
     """
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
@@ -146,16 +199,18 @@ def get_herdan_c(data: pl.DataFrame,
                  ) -> pl.DataFrame:
     """
     Calculates the Herdan's C of a text:
+
     log(N_types) / log(N_tokens).
 
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - backbone: The NLP library used to process the text data.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
     
     Returns:
-    - data: A Polars DataFrame containing the Herdan's C of the text data.
-            The Herdan's C is stored in a new column named 'herdan_c'.
+        data (pl.DataFrame):
+            A Polars DataFrame containing Herdan's C of the text data.
+            Herdan's C is stored in a new column named 'herdan_c'.
     """
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
@@ -178,16 +233,19 @@ def get_summer_index(data: pl.DataFrame,
                     ) -> pl.DataFrame:
     """
     Calculates the Summer's TTR of a text:
+
     log(log(N_types)) / log(log(N_tokens)).
 
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - backbone: The NLP library used to process the text data.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
 
     Returns:
-    - data: A Polars DataFrame containing the Summer's TTR of the text data.
-            The Summer's TTR is stored in a new column named 'summer_index'.
+        data (pl.DataFrame):
+            A Polars DataFrame containing the Summer's TTR of the text
+            data. Summer's TTR is stored in a new column named
+            'summer_index'.
     """
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
@@ -212,15 +270,14 @@ def get_dougast_u(data: pl.DataFrame,
     log(N_types)^2 / (log(N_tokens) - log(N_types)).
 
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - backbone: The NLP library used to process the text data.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
 
     Returns:
-    - data: A Polars DataFrame containing the Dougast's Uber index of the
-            text data.
-            The Dougast's Uber index is stored in a new column named
-            'dougast_u'.
+        data (pl.DataFrame): A Polars DataFrame containing Dougast's Uber
+        index of the text data. Dougast's Uber index is stored in a new
+        column named 'dougast_u'.
     """
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
@@ -228,7 +285,8 @@ def get_dougast_u(data: pl.DataFrame,
         data = get_num_types(data, backbone=backbone)
     
     data = data.with_columns(
-        (pl.col("n_types").log()**2 / (pl.col("n_tokens").log() - pl.col("n_types").log())
+        (pl.col("n_types").log()**2 / (pl.col("n_tokens").log() - \
+                                       pl.col("n_types").log())
          ).fill_nan(1).alias("dougast_u")
          # convention to fill NaNs with 1 as log(1) = 0 and
          # division by 0 is not defined.
@@ -245,13 +303,14 @@ def get_maas_index(data: pl.DataFrame,
     (N_tokens - N_types) / log(N_types)^2.
 
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - backbone: The NLP library used to process the text data.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
 
     Returns:
-    - data: A Polars DataFrame containing the Maas' TTR of the text data.
-            The Maas' TTR is stored in a new column named 'maas_index'.
+        data (pl.DataFrame):
+            A Polars DataFrame containing Maas' TTR of the text data.
+            Maas' TTR is stored in a new column named 'maas_index'.
     """
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
@@ -259,7 +318,8 @@ def get_maas_index(data: pl.DataFrame,
         data = get_num_types(data, backbone=backbone)
     
     data = data.with_columns(
-        ((pl.col("n_tokens") - pl.col("n_types")) / pl.col("n_types").log()**2 
+        ((pl.col("n_tokens") - pl.col("n_types")) / \
+            pl.col("n_types").log()**2 
          ).fill_nan(1).alias("maas_index")
          # convention to fill NaNs with 1 as log(1) = 0 and
          # division by 0 is not defined.
@@ -278,15 +338,15 @@ def get_n_hapax_legomena(data: pl.DataFrame,
     TODO: Add global hapax legomena calculation.
 
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - backbone: The NLP library used to process the text data.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
 
     Returns:
-    - data: A Polars DataFrame containing the number of hapax legomena in the
-            text data.
-            The number of hapax legomena is stored in a new column named
-            'n_hapax_legomena'.
+        data (pl.DataFrame):
+            A Polars DataFrame containing the number of hapax legomena in
+            the text data. The number of hapax legomena is stored in a new
+            column named 'n_hapax_legomena'.
     """
     if backbone == 'spacy':
         data = data.with_columns(
@@ -320,22 +380,23 @@ def get_n_hapax_dislegomena(data: pl.DataFrame,
     TODO: Add global hapax dislegomena calculation.
 
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - backbone: The NLP library used to process the text data.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
 
     Returns:
-    - data: A Polars DataFrame containing the number of hapax dislegomena in
-            the text data.
-            The number of hapax dislegomena is stored in a new column named
-            'n_hapax_dislegomena'.
+        data (pl.DataFrame):
+            A Polars DataFrame containing the number of hapax dislegomena
+            in the text data. The number of hapax dislegomena is stored in
+            a new column named 'n_hapax_dislegomena'.
     """
     if backbone == 'spacy':
         data = data.with_columns(
              pl.col("nlp").map_elements(lambda x: np.sum(
                   np.unique(np.array([token.text for token in x]),
                             return_counts=True)[1] <= 2),
-                            return_dtype=pl.UInt32).alias("n_hapax_dislegomena")
+                            return_dtype=pl.UInt32). \
+                                alias("n_hapax_dislegomena")
         )
 
     elif backbone == 'stanza':
@@ -346,7 +407,8 @@ def get_n_hapax_dislegomena(data: pl.DataFrame,
                                     in x.sentences 
                                     for token in sent.tokens]),
                           return_counts=True)[1] <= 2),
-                          return_dtype=pl.UInt32).alias("n_hapax_dislegomena")
+                          return_dtype=pl.UInt32). \
+                            alias("n_hapax_dislegomena")
         )
     
     return data
@@ -362,13 +424,14 @@ def get_sichel_s(data: pl.DataFrame,
     TODO: Add global Sichel's S calculation.
 
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - backbone: The NLP library used to process the text data.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
     
     Returns:
-    - data: A Polars DataFrame containing the Sichel's S of the text data.
-            The Sichel's S is stored in a new column named 'sichel_s'.
+        data (pl.DataFrame):
+            A Polars DataFrame containing Sichel's S of the text data.
+            Sichel's S is stored in a new column named 'sichel_s'.
     """
     if 'n_types' not in data.columns:
         data = get_num_types(data, backbone=backbone)
@@ -388,17 +451,18 @@ def get_lexical_density(data: pl.DataFrame,
                         ) -> pl.DataFrame:
     """
     Calculates the lexical density of a text:
+
     N_lex / N_tokens.
 
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - backbone: The NLP library used to process the text data.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
 
     Returns:
-    - data: A Polars DataFrame containing the lexical density of the
-            text data.
-            The lexical density is stored in a new column named
+        data (pl.DataFrame):
+            A Polars DataFrame containing the lexical density of the text
+            data. The lexical density is stored in a new column named
             'lexical_density'.
     """
     if 'n_tokens' not in data.columns:
@@ -419,16 +483,18 @@ def get_giroud_index(data: pl.DataFrame,
                      ) -> pl.DataFrame:
     """
     Calculates the Giroud's index of a text:
+
     N_types / sqrt(N_tokens).
 
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - backbone: The NLP library used to process the text data.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
 
     Returns:
-    - data: A Polars DataFrame containing the Giroud's C of the text data.
-            The Giroud's C is stored in a new column named 'giroud_c'.
+        data (pl.DataFrame):
+            A Polars DataFrame containing Giroud's C of the text data.
+            Giroud's C is stored in a new column named 'giroud_c'.
     """
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
@@ -450,15 +516,18 @@ def get_mtld(data: pl.DataFrame,
     """
     Calculates the Measure of Textual Lexical Diversity (MTLD) of a text.
 
+    For reference https://link.springer.com/article/10.3758/BRM.42.2.381 
+
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - backbone: The NLP library used to process the text data.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
-    - threshold: The threshold value for the MTLD.
+        threshold: The threshold value for the MTLD.
                  The default value is 0.72.
 
     Returns:
-    - data: A Polars DataFrame containing the MTLD of the text data.
+        data (pl.DataFrame):
+            A Polars DataFrame containing the MTLD of the text data.
             The MTLD is stored in a new column named 'mtld'.
     """
     def sub_mtld(tokens: list[str],
@@ -513,19 +582,21 @@ def get_hdd(data: pl.DataFrame,
             ) -> pl.DataFrame:
     """
     Calculates the Hypergeometric Distribution Diversity (HD-D) of a text.
+
     The default number of draws is 42. We note, however, that this value
     should be smaller than the number of tokens in the text and thus will
     need to be adjusted for most short texts. A number of draws that is
     too large will result in NaN values.
 
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - backbone: The NLP library used to process the text data.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
-    - draws: The number of draws for the HDD. The default value is 42.
+        draws: The number of draws for the HDD. The default value is 42.
 
     Returns:
-    - data: A Polars DataFrame containing the HD-D of the text data.
+        data (pl.DataFrame):
+            A Polars DataFrame containing the HD-D of the text data. 
             The HD-D is stored in a new column named 'hdd'.
     """
     def hdd(tokens: list[str],
@@ -563,13 +634,15 @@ def get_mattr(data: pl.DataFrame,
     Calculates the Moving-Average Type-Token Ratio (MATTR) of a text.
 
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - backbone: The NLP library used to process the text data.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
-    - window_size: The size of the window for the MATTR calculation.
+        window_size (int):
+            The size of the window for the MATTR calculation.
 
     Returns:
-    - data: A Polars DataFrame containing the MATTR of the text data.
+        data (pl.DataFrame):
+            A Polars DataFrame containing the MATTR of the text data.
             The MATTR is stored in a new column named 'mattr'.
     """
     def mattr(tokens: list[str],
@@ -591,9 +664,10 @@ def get_mattr(data: pl.DataFrame,
         data = get_tokens(data, backbone=backbone)
     
     data = data.with_columns(
-        pl.col("tokens").map_elements(lambda x: mattr(x,
-                                                      window_size=window_size),
-                                      return_dtype=pl.Float32).alias("mattr")
+        pl.col("tokens").map_elements(
+            lambda x: mattr(x,
+                            window_size=window_size),
+                            return_dtype=pl.Float32).alias("mattr")
     )
 
     return data
@@ -608,14 +682,18 @@ def get_msttr(data: pl.DataFrame,
     Calculates the Mean Segmental Type-Token Ratio (MSTTR) of a text.
 
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - backbone: The NLP library used to process the text data.
-                Either 'spacy' or 'stanza'.
-    - window_size: The size of the window for the MSTTR calculation.
-    - discard: Whether to discard the last window if it is not complete.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str):
+            The NLP library used to process the text data. Either 'spacy'
+            or 'stanza'.
+        window_size (int):
+            The size of the window for the MSTTR calculation.
+        discard (bool):
+            Whether to discard the last window if it is not complete.
 
     Returns:
-    - data: A Polars DataFrame containing the MSTTR of the text data.
+        data (pl.DataFrame):
+            A Polars DataFrame containing the MSTTR of the text data.
             The MSTTR is stored in a new column named 'msttr'.
     """
     def msttr(tokens: list[str],
@@ -642,10 +720,12 @@ def get_msttr(data: pl.DataFrame,
         data = get_tokens(data, backbone=backbone)
     
     data = data.with_columns(
-        pl.col("tokens").map_elements(lambda x: msttr(x,
-                                                      window_size=window_size,
-                                                      discard=discard),
-                                      return_dtype=pl.Float32).alias("msttr")
+        pl.col("tokens"). \
+            map_elements(lambda x: msttr(x,
+                                         window_size=window_size,
+                                         discard=discard),
+                                         return_dtype=pl.Float32). \
+                                            alias("msttr")
     )
 
     return data
@@ -658,16 +738,18 @@ def get_yule_k(data: pl.DataFrame,
     Calculates the Yule's K of a text.
     Yule's K is a characteristic of the vocabulary richness of a text.
     It is calculated as:
+
     K = 10^4 * (Σ(V(i,N) * (i/n)^2) - n) / n^2
-      = 10^4 * ((Σ(V(i,N) * (i^2/n^4)) - (1/n))
+    = 10^4 * ((Σ(V(i,N) * (i^2/n^4)) - (1/n))
 
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - backbone: The NLP library used to process the text data.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
 
     Returns:
-    - data: A Polars DataFrame containing the Yule's K of the text data.
-            The Yule's K is stored in a new column named 'yule_k'.
+        data (pl.DataFrame):
+            A Polars DataFrame containing Yule's K of the text data.
+            Yule's K is stored in a new column named 'yule_k'.
     """
     def inner_sum(x: dict[str, int]) -> float:
         """
@@ -679,7 +761,8 @@ def get_yule_k(data: pl.DataFrame,
         n = sum(counts.values())
         n_power_4 = n ** 4  # Precompute to avoid redundant calculations
 
-        inner = sum(count * (i ** 2 / n_power_4) for i, count in counts.items())
+        inner = sum(count * (i ** 2 / n_power_4) for i, count in \
+                    counts.items())
 
         return inner
     
@@ -706,16 +789,18 @@ def get_simpsons_d(data: pl.DataFrame,
                    ) -> pl.DataFrame:
     """
     Calculates the Simpson's D of a text.
+    
     D = Σ(V(i,N) * (i/n) * ((i-1)/(n-1)))
 
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - backbone: The NLP library used to process the text data.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
 
     Returns:
-    - data: A Polars DataFrame containing the Simpson's D of the text data.
-            The Simpson's D is stored in a new column named 'simpsons_d'.
+        data (pl.DataFrame):
+            A Polars DataFrame containing Simpson's D of the text data.
+            Simpson's D is stored in a new column named 'simpsons_d'.
     """
     def simpsons_d(x: dict[str, int]) -> float:
         """
@@ -726,7 +811,8 @@ def get_simpsons_d(data: pl.DataFrame,
         n_inv = 1 / n  # Precompute 1 / n
         n_minus_1_inv = 1 / (n - 1)  # Precompute 1 / (n - 1)
 
-        d = sum(count * i * n_inv * (i - 1) * n_minus_1_inv for i, count in counts.items())
+        d = sum(count * i * n_inv * (i - 1) * n_minus_1_inv for \
+                i, count in counts.items())
 
         return d
     if 'token_freqs' not in data.columns:
@@ -734,7 +820,8 @@ def get_simpsons_d(data: pl.DataFrame,
     
     data = data.with_columns(
         pl.col("token_freqs").map_elements(lambda x: simpsons_d(x),
-                                           return_dtype=pl.Float32).alias("simpsons_d")
+                                           return_dtype=pl.Float32). \
+                                            alias("simpsons_d")
     )
 
     return data
@@ -746,17 +833,19 @@ def get_herdan_v(data: pl.DataFrame,
                  ) -> pl.DataFrame:
     """
     Calculates the Herdan's Vm of a text:
+
     Vm^2 = K + (1/N) - (1/V(N))
     Vm = sqrt(K + (1/N) - (1/V(N)))
 
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - backbone: The NLP library used to process the text data.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
     
     Returns:
-    - data: A Polars DataFrame containing the Herdan's V of the text data.
-            The Herdan's V is stored in a new column named 'herdan_v'.
+        data (pl.DataFrame):
+            A Polars DataFrame containing Herdan's V of the text data. 
+            Herdan's V is stored in a new column named 'herdan_v'.
     """
     if not 'n_tokens' in data.columns:
         data = get_num_tokens(data, backbone=backbone)
@@ -766,7 +855,8 @@ def get_herdan_v(data: pl.DataFrame,
         data = get_yule_k(data, backbone=backbone)
 
     data = data.with_columns(
-        (pl.col("yule_k") + (1 / pl.col("n_tokens")) - (1 / pl.col("n_types")).sqrt()
+        (pl.col("yule_k") + (1 / pl.col("n_tokens")) - \
+         (1 / pl.col("n_types")).sqrt()
         ).alias("herdan_v")
     )
 

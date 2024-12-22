@@ -15,13 +15,15 @@ def get_feature_token_ratio(data: pl.DataFrame,
     Gets the ratio of given features to the total number of tokens.
 
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - features: A list of features to calculate the ratio for.
-                Note that the features should be present in the data
-                as column names.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        features (list[str]):
+            A list of features to calculate the ratio for.
+            Note that the features should be present in the data
+            as column names.
 
     Returns:
-    - data: A Polars DataFrame containing the ratio of the given features
+        data (pl.DataFrame):
+            A Polars DataFrame containing the ratio of the given features
             to the total number of tokens. The ratios are stored in new
             columns with the feature names suffixed by '_token_ratio'. 
     """
@@ -44,13 +46,15 @@ def get_feature_type_ratio(data: pl.DataFrame,
     Gets the ratio of given features to the total number of types.
 
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - features: A list of features to calculate the ratio for.
-                Note that the features should be present in the data
-                as column names.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        features (list[str]):
+            A list of features to calculate the ratio for.
+            Note that the features should be present in the data
+            as column names.
 
     Returns:
-    - data: A Polars DataFrame containing the ratio of the given features
+        data (pl.DataFrame):
+            A Polars DataFrame containing the ratio of the given features
             to the total number of types. The ratios are stored in new
             columns with the feature names suffixed by '_type_ratio'.
     """
@@ -73,13 +77,15 @@ def get_feature_sentence_ratio(data: pl.DataFrame,
     Gets the ratio of given features to the total number of sentences.
 
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - features: A list of features to calculate the ratio for.
-                Note that the features should be present in the data
-                as column names.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        features (list[str]):
+            A list of features to calculate the ratio for.
+            Note that the features should be present in the data
+            as column names.
 
     Returns:
-    - data: A Polars DataFrame containing the ratio of the given features
+        data (pl.DataFrame):
+            A Polars DataFrame containing the ratio of the given features
             to the total number of sentences. The ratios are stored in new
             columns with the feature names suffixed by '_sentence_ratio'. 
     """

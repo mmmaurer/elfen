@@ -1,5 +1,14 @@
 """
-This module contains functions for calculating information-theoretic metrics.
+This module contains functions for calculating information-theoretic
+metrics.
+
+The information-theoretic metrics implemented in this module are:
+
+- Compressibility:
+    The ratio of the length of the compressed text to the length of the
+    original text.
+- Shannon Entropy:
+    The Shannon entropy of the text data.
 """
 import bz2
 
@@ -13,17 +22,19 @@ def get_compressibility(data: pl.DataFrame,
     """
     Calculates the compressibility of the texts in the text column.
 
-    The compressibility is the ratio of the length of the compressed text to
-    the length of the original text. This is used as a proxy for the
-    kolmogorov complexity of the text.
+    The compressibility is the ratio of the length of the compressed text
+    to the length of the original text. This is used as a proxy for the
+    Kolmogorov complexity of the text.
 
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - text_column: The name of the column containing the text data.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        text_column (str): The name of the column containing the text data.
 
     Returns:
-    - data: A Polars DataFrame containing the compressibility of the text data.
-            The compressibility is stored in a new column named 'compressibility'.
+        data (pl.DataFrame):
+            A Polars DataFrame containing the compressibility of the text
+            data. The compressibility is stored in a new column named
+            'compressibility'.
     """
     data = data.with_columns(
         pl.col(text_column).map_elements(
@@ -44,12 +55,14 @@ def get_entropy(data: pl.DataFrame,
     The Shannon entropy is a measure of the uncertainty in a random variable.
 
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - text_column: The name of the column containing the text data.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        text_column (str): The name of the column containing the text data.
 
     Returns:
-    - data: A Polars DataFrame containing the Shannon entropy of the text data.
-            The Shannon entropy is stored in a new column named 'entropy'.
+        data (pl.DataFrame):
+            A Polars DataFrame containing the Shannon entropy of the text
+            data. The Shannon entropy is stored in a new column named
+            'entropy'.
     """
     data = data.with_columns(
         pl.col(text_column).map_elements(
@@ -68,10 +81,10 @@ def entropy(string: str,
     Helper function for get_entropy.
 
     Args:
-    - string: The input string.
+        string( str): The input string.
 
     Returns:
-    - entropy: The Shannon entropy of the input string.
+        entropy (float): The Shannon entropy of the input string.
     """
     chars = np.array(list(string))
 

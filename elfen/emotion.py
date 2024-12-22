@@ -6,18 +6,84 @@ If you are using this functionality, please cite the original authors of
 the resources.
 
 The lexicons used in this module are:
-- NRC VAD Lexicon: Mohammad, S. M., & Turney, P. D. (2013).
+
+- NRC VAD Lexicon:
+    Mohammad, S. M., & Turney, P. D. (2013).
     Crowdsourcing a Word-Emotion Association Lexicon.
     Computational Intelligence, 29(3), 436-465.
-- NRC Emotion Intensity Lexicon: Mohammad, S. M. (2018).
-    Obtaining reliable human ratings of valence, arousal, and dominance for
-    20,000 English words.
+- NRC Emotion Intensity Lexicon:
+    Mohammad, S. M. (2018).
+    Obtaining reliable human ratings of valence, arousal, and dominance
+    for 20,000 English words.
     In Proceedings of the 56th Annual Meeting of the Association for
     Computational Linguistics (Volume 1: Long Papers) (pp. 174-184).
-- SentiWordNet: Esuli, A., & Sebastiani, F. (2006).
-    SentiWordNet: A publicly available lexical resource for opinion mining.
-    In Proceedings of the 5th Conference on language Resources and Evaluation
-    (LREC'06) (pp. 417-422).
+- NRC Sentiment Lexicon:
+    Mohammad, S.M. (2018).
+    Word Affect Intensities.
+    In Proceedings of the 11th Edition of the Language Resources and 
+    Evaluation Conference (LREC-2018), May 2018, Miyazaki, Japan.
+
+The VAD lexicon contains three dimensions: Valence, Arousal, and Dominance.
+
+The emotion intensity lexicon contains the intensity of eight Plutchik
+emotions: Anger, Anticipation, Disgust, Fear, Joy, Sadness, Surprise,
+and Trust.
+
+The sentiment lexicon contains the sentiment of words: Positive and
+Negative.
+
+The following functions are implemented in this module:
+
+- VAD Dimensions:
+
+    - load_vad_lexicon: 
+        Loads the VAD lexicon as a polars DataFrame.
+    - get_avg_valence:
+        Calculates the average valence of the text.
+    - get_avg_arousal:
+        Calculates the average arousal of the text.
+    - get_avg_dominance:
+        Calculates the average dominance of the text.
+    - get_n_low_valence
+        Calculates the number of words with valence lower than the
+        threshold.
+    - get_n_high_valence:
+        Calculates the number of words with valence higher than the
+        threshold.
+    - get_n_low_arousal:
+        Calculates the number of words with arousal lower than the
+        threshold.
+    - get_n_high_arousal:
+        Calculates the number of words with arousal higher than the
+        threshold.
+    - get_n_low_dominance:
+        Calculates the number of words with dominance lower than the
+        threshold.
+    - get_n_high_dominance:
+        Calculates the number of words with dominance higher than the
+        threshold.
+
+- Emotion Intensity:
+
+    - load_intensity_lexicon:
+        Loads the emotion intensity lexicon as a polars DataFrame.
+    - get_avg_emotion_intensity:
+        Calculates the average emotion intensity of the text.
+    - get_n_low_intensity:
+        Calculates the number of words with emotion intensity lower than
+        the threshold.
+    - get_n_high_intensity:
+        Calculates the number of words with emotion intensity higher than
+        the threshold.
+    
+- Sentiment Analysis:
+
+    - load_sentiment_nrc_lexicon:
+        Loads the sentiment NRC lexicon as a polars DataFrame.
+    - get_n_positive_sentiment:
+        Calculates the number of words with positive sentiment.
+    - get_n_negative_sentiment:
+        Calculates the number of words with negative sentiment.
 """
 import polars as pl
 
@@ -71,13 +137,14 @@ def load_vad_lexicon(path: str = VAD_NRC_PATH,
     Loads the VAD lexicon as a polars DataFrame.
 
     Args:
-    - path (str): The path to the VAD lexicon.
-    - schema (dict): The schema for the VAD lexicon.
-    - has_header (bool): Whether the lexicon has a header.
-    - separator (str): The separator used in the lexicon.
+        path (str): The path to the VAD lexicon.
+        schema (dict): The schema for the VAD lexicon.
+        has_header (bool): Whether the lexicon has a header.
+        separator (str): The separator used in the lexicon.
 
     Returns:
-    - vad_lexicon (pl.DataFrame): The VAD lexicon as a polars DataFrame.
+        vad_lexicon (pl.DataFrame):
+            The VAD lexicon as a polars DataFrame.
     """
     vad_lexicon = pl.read_csv(path,
                               has_header=has_header,
@@ -105,16 +172,17 @@ def get_avg_valence(data: pl.DataFrame,
     values of the words in the text.
 
     Args:
-    - data (pl.DataFrame): The preprocessed input data. Contains the
-                           "nlp" column produced by the NLP backbone.
-    - lexicon (pl.DataFrame): The VAD lexicon.
-    - backbone (str): The NLP backbone to use.
-    - nan_value (float): The value to use for NaNs.
-                            Defaults to 0.0.
+        data (pl.DataFrame):
+            The preprocessed input data. Contains the "nlp" column
+            produced by the NLP backbone.
+        lexicon (pl.DataFrame): The VAD lexicon.
+        backbone (str): The NLP backbone to use.
+        nan_value (float): The value to use for NaNs. Defaults to 0.0.
 
     Returns:
-    - data (pl.DataFrame): The input data with the average
-                           valence columns.
+        data (pl.DataFrame):
+            The input data with the average valence columns,
+            named "avg_valence".
     """
     if "lemmas" not in data.columns:
         data = get_lemmas(data, backbone=backbone)
@@ -147,21 +215,23 @@ def get_avg_arousal(data: pl.DataFrame,
                     ) -> pl.DataFrame:
     """
     Calculates the arousal of the text.
-
+    
     The arousal of the text is calculated as the mean of the arousal
     values of the words in the text.
 
     Args:
-    - data (pl.DataFrame): The preprocessed input data. Contains the
-                           "nlp" column produced by the NLP backbone.
-    - lexicon (pl.DataFrame): The VAD lexicon.
-    - backbone (str): The NLP backbone to use.
-    - nan_value (float): The value to use for NaNs.
+        data (pl.DataFrame):
+            The preprocessed input data. Contains the "nlp" column
+            produced by the NLP backbone.
+        lexicon (pl.DataFrame): The VAD lexicon.
+        backbone (str): The NLP backbone to use.
+        nan_value (float): The value to use for NaNs.
                          Defaults to 0.0.
     
     Returns:
-    - data (pl.DataFrame): The input data with the average
-                           arousal columns.
+        data (pl.DataFrame):
+            The input data with the average arousal columns,
+            named "avg_arousal".
     """
     if "lemmas" not in data.columns:
         data = get_lemmas(data, backbone=backbone)
@@ -199,16 +269,18 @@ def get_avg_dominance(data: pl.DataFrame,
     values of the words in the text.
 
     Args:
-    - data (pl.DataFrame): The preprocessed input data. Contains the
-                           "nlp" column produced by the NLP backbone.
-    - lexicon (pl.DataFrame): The VAD lexicon.
-    - backbone (str): The NLP backbone to use.
-    - nan_value (float): The value to use for NaNs.
+        data (pl.DataFrame):
+            The preprocessed input data. Contains the "nlp" column
+            produced by the NLP backbone.
+        lexicon (pl.DataFrame): The VAD lexicon.
+        backbone (str): The NLP backbone to use.
+        nan_value (float): The value to use for NaNs.
                          Defaults to 0.0.
 
     Returns:
-    - data (pl.DataFrame): The input data with the average
-                           dominance columns.
+        data (pl.DataFrame):
+            The input data with the average dominance columns,
+            named "avg_dominance".
     """
     if "lemmas" not in data.columns:
         data = get_lemmas(data, backbone=backbone)
@@ -244,18 +316,20 @@ def get_n_low_valence(data: pl.DataFrame,
     Calculates the number of words with valence lower than the threshold.
 
     Args:
-    - data (pl.DataFrame): The preprocessed input data. Contains the
-                           "nlp" column produced by the NLP backbone.
-    - lexicon (pl.DataFrame): The VAD lexicon.
-    - backbone (str): The NLP backbone to use.
-    - threshold (float): The threshold for low valence.
+        data (pl.DataFrame):
+            The preprocessed input data. Contains the
+            "nlp" column produced by the NLP backbone.
+        lexicon (pl.DataFrame): The VAD lexicon.
+        backbone (str): The NLP backbone to use.
+        threshold (float): The threshold for low valence.
                             Defaults to 0.33.
-    - nan_value (float): The value to use for NaNs.
+        nan_value (float): The value to use for NaNs.
                             Defaults to 0.0.
 
     Returns:
-    - data (pl.DataFrame): The input data with the low
-                           valence count column.
+        data (pl.DataFrame):
+            The input data with the low valence count column,
+            named "n_low_valence".
     """
     if "lemmas" not in data.columns:
         data = get_lemmas(data, backbone=backbone)
@@ -290,18 +364,20 @@ def get_n_high_valence(data: pl.DataFrame,
     Calculates the number of words with valence higher than the threshold.
 
     Args:
-    - data (pl.DataFrame): The preprocessed input data. Contains the
-                           "nlp" column produced by the NLP backbone.
-    - lexicon (pl.DataFrame): The VAD lexicon.
-    - backbone (str): The NLP backbone to use.
-    - threshold (float): The threshold for high valence.
+        data (pl.DataFrame):
+            The preprocessed input data. Contains the "nlp" column
+            produced by the NLP backbone.
+        lexicon (pl.DataFrame): The VAD lexicon.
+        backbone (str): The NLP backbone to use.
+        threshold (float): The threshold for high valence.
                          Defaults to 0.66.
-    - nan_value (float): The value to use for NaNs.
+        nan_value (float): The value to use for NaNs.
                          Defaults to 0.0.
 
     Returns:
-    - data (pl.DataFrame): The input data with the high
-                           valence count column.
+        data (pl.DataFrame):
+            The input data with the high valence count column,
+            named "n_high_valence".
     """
     if "lemmas" not in data.columns:
         data = get_lemmas(data, backbone=backbone)
@@ -336,18 +412,20 @@ def get_n_low_arousal(data: pl.DataFrame,
     Calculates the number of words with arousal lower than the threshold.
 
     Args:
-    - data (pl.DataFrame): The preprocessed input data. Contains the
-                           "nlp" column produced by the NLP backbone.
-    - lexicon (pl.DataFrame): The VAD lexicon.
-    - backbone (str): The NLP backbone to use.
-    - threshold (float): The threshold for low arousal.
+        data (pl.DataFrame): 
+            The preprocessed input data. Contains the
+            "nlp" column produced by the NLP backbone.
+        lexicon (pl.DataFrame): The VAD lexicon.
+        backbone (str): The NLP backbone to use.
+        threshold (float): The threshold for low arousal.
                          Defaults to 0.33.
-    - nan_value (float): The value to use for NaNs.
+        nan_value (float): The value to use for NaNs.
                          Defaults to 0.0.
 
     Returns:
-    - data (pl.DataFrame): The input data with the low
-                           arousal count column
+        data (pl.DataFrame):
+            The input data with the low arousal count column, named
+            "n_low_arousal".
     """
     if "lemmas" not in data.columns:
         data = get_lemmas(data, backbone=backbone)
@@ -382,18 +460,20 @@ def get_n_high_arousal(data: pl.DataFrame,
     Calculates the number of words with arousal higher than the threshold.
 
     Args:
-    - data (pl.DataFrame): The preprocessed input data. Contains the
-                           "nlp" column produced by the NLP backbone.
-    - lexicon (pl.DataFrame): The VAD lexicon.
-    - backbone (str): The NLP backbone to use.
-    - threshold (float): The threshold for high arousal.
+        data (pl.DataFrame):
+            The preprocessed input data. Contains the
+            "nlp" column produced by the NLP backbone.
+        lexicon (pl.DataFrame): The VAD lexicon.
+        backbone (str): The NLP backbone to use.
+        threshold (float): The threshold for high arousal.
                          Defaults to 0.66.
-    - nan_value (float): The value to use for NaNs.
+        nan_value (float): The value to use for NaNs.
                             Defaults to 0.0.
 
     Returns:
-    - data (pl.DataFrame): The input data with the high
-                           arousal count column.
+        data (pl.DataFrame):
+            The input data with the high arousal count column. The
+            column name is "n_high_arousal".
     """
     if "lemmas" not in data.columns:
         data = get_lemmas(data, backbone=backbone)
@@ -428,18 +508,20 @@ def get_n_low_dominance(data: pl.DataFrame,
     Calculates the number of words with dominance lower than the threshold.
 
     Args:
-    - data (pl.DataFrame): The preprocessed input data. Contains the
-                           "nlp" column produced by the NLP backbone.
-    - lexicon (pl.DataFrame): The VAD lexicon.
-    - backbone (str): The NLP backbone to use.
-    - threshold (float): The threshold for low dominance.
+        data (pl.DataFrame): 
+            The preprocessed input data. Contains the
+            "nlp" column produced by the NLP backbone.
+        lexicon (pl.DataFrame): The VAD lexicon.
+        backbone (str): The NLP backbone to use.
+        threshold (float): The threshold for low dominance.
                          Defaults to 0.33.
-    - nan_value (float): The value to use for NaNs.
+        nan_value (float): The value to use for NaNs.
                             Defaults to 0.0.
 
     Returns:
-    - data (pl.DataFrame): The input data with the low
-                           dominance count column.
+        data (pl.DataFrame):
+            The input data with the low dominance count column. The
+            column name is "n_low_dominance".
     """
     if "lemmas" not in data.columns:
         data = get_lemmas(data, backbone=backbone)
@@ -475,18 +557,20 @@ def get_n_high_dominance(data: pl.DataFrame,
     threshold.
 
     Args:
-    - data (pl.DataFrame): The preprocessed input data. Contains the
-                           "nlp" column produced by the NLP backbone.
-    - lexicon (pl.DataFrame): The VAD lexicon.
-    - backbone (str): The NLP backbone to use.
-    - threshold (float): The threshold for high dominance.
+        data (pl.DataFrame):
+            The preprocessed input data. Contains the
+            "nlp" column produced by the NLP backbone.
+        lexicon (pl.DataFrame): The VAD lexicon.
+        backbone (str): The NLP backbone to use.
+        threshold (float): The threshold for high dominance.
                             Defaults to 0.66.
-    - nan_value (float): The value to use for NaNs.
+        nan_value (float): The value to use for NaNs.
                             Defaults to 0.0.
 
     Returns:
-    - data (pl.DataFrame): The input data with the high
-                           dominance count column.
+        data (pl.DataFrame):
+            The input data with the high dominance count column. The
+            column name is "n_high_dominance".
     """
     if "lemmas" not in data.columns:
         data = get_lemmas(data, backbone=backbone)
@@ -522,13 +606,13 @@ def load_intensity_lexicon(path: str = INTENSITY_PATH,
     Loads the intensity lexicon as a polars DataFrame.
 
     Args:
-    - path (str): The path to the intensity lexicon.
-    - schema (dict): The schema for the intensity lexicon.
-    - has_header (bool): Whether the lexicon has a header.
+        path (str): The path to the intensity lexicon.
+        schema (dict): The schema for the intensity lexicon.
+        has_header (bool): Whether the lexicon has a header.
 
     Returns:
-    - intensity_lexicon (pl.DataFrame): The intensity lexicon as a polars
-                                        DataFrame.
+        intensity_lexicon (pl.DataFrame):
+            The intensity lexicon as a polars DataFrame.
     """
     intensity_lexicon = pl.read_csv(path,
                                     has_header=has_header,
@@ -546,13 +630,13 @@ def filter_intensity_lexicon(lexicon: pl.DataFrame,
     Filters the intensity lexicon for the given words and emotions.
 
     Args:
-    - lexicon (pl.DataFrame): The emotion intensity lexicon.
-    - words (list): The list of words to filter.
-    - emotion (str): The emotion to filter for.
+        lexicon (pl.DataFrame): The emotion intensity lexicon.
+        words (list): The list of words to filter.
+        emotion (str): The emotion to filter for.
 
     Returns:
-    - filtered_intensity_lexicon (pl.DataFrame): The filtered emotion
-                                                 intensity lexicon.
+        filtered_intensity_lexicon (pl.DataFrame):
+            The filtered emotion intensity lexicon.
     """
     filtered_intensity_lexicon = lexicon.filter(
         (pl.col(word_column).is_in(words)) &
@@ -576,18 +660,19 @@ def get_avg_emotion_intensity(data: pl.DataFrame,
     intensity values of the words in the text.
 
     Args:
-    - data (pl.DataFrame): The preprocessed input data. Contains the
-                           "nlp" column produced by the NLP backbone.
-    - lexicon (pl.DataFrame): The emotion intensity lexicon.
-    - backbone (str): The NLP backbone to use.
-    - emotions (list): The list of emotions to consider.
+        data (pl.DataFrame):
+            The preprocessed input data. Contains the
+            "nlp" column produced by the NLP backbone.
+        lexicon (pl.DataFrame): The emotion intensity lexicon.
+        backbone (str): The NLP backbone to use.
+        emotions (list): The list of emotions to consider.
                        Defaults to the Plutchik emotions.
-    - nan_value (float): The value to use for NaNs.
+        nan_value (float): The value to use for NaNs.
                             Defaults to 0.0.
 
     Returns:
-    - data (pl.DataFrame): The input data with the average
-                           emotion intensity columns
+        data (pl.DataFrame):
+            The input data with the average emotion intensity columns
     """
     if "lemmas" not in data.columns:
         data = get_lemmas(data, backbone=backbone)
@@ -620,22 +705,25 @@ def get_n_low_intensity(data: pl.DataFrame,
                         **kwargs: dict[str, str],
                         ) -> pl.DataFrame:
     """
-    Calculates the number of words with emotion intensity lower than the threshold.
+    Calculates the number of words with emotion intensity lower than the
+    threshold.
 
     Args:
-    - data (pl.DataFrame): The preprocessed input data. Contains the
+        data (pl.DataFrame): The preprocessed input data. Contains the
                            "nlp" column produced by the NLP backbone.
-    - lexicon (pl.DataFrame): The emotion intensity lexicon.
-    - backbone (str): The NLP backbone to use.
-    - emotions (list): The list of emotions to consider.
-    - threshold (float): The threshold for low intensity.
+        lexicon (pl.DataFrame): The emotion intensity lexicon.
+        backbone (str): The NLP backbone to use.
+        emotions (list): The list of emotions to consider.
+        threshold (float): The threshold for low intensity.
                          Defaults to 0.33.
-    - nan_value (float): The value to use for NaNs.
+        nan_value (float): The value to use for NaNs.
                          Defaults to 0.0.
 
     Returns:
-    - data (pl.DataFrame): The input data with the low
-                           intensity count columns
+        data (pl.DataFrame):
+            The input data with the low intensity count column for each
+            emotion. The column names are in the format
+            "n_low_intensity_{emotion}".
     """
     if "lemmas" not in data.columns:
         data = get_lemmas(data, backbone=backbone)
@@ -669,22 +757,26 @@ def get_n_high_intensity(data: pl.DataFrame,
                          **kwargs: dict[str, str],
                          ) -> pl.DataFrame:
     """
-    Calculates the number of words with emotion intensity higher than the threshold.
+    Calculates the number of words with emotion intensity higher than the
+    threshold.
 
     Args:
-    - data (pl.DataFrame): The preprocessed input data. Contains the
-                           "nlp" column produced by the NLP backbone.
-    - lexicon (pl.DataFrame): The emotion intensity lexicon.
-    - backbone (str): The NLP backbone to use.
-    - emotions (list): The list of emotions to consider.
-    - threshold (float): The threshold for high intensity.
+        data (pl.DataFrame):
+            The preprocessed input data. Contains the
+            "nlp" column produced by the NLP backbone.
+        lexicon (pl.DataFrame): The emotion intensity lexicon.
+        backbone (str): The NLP backbone to use.
+        emotions (list): The list of emotions to consider.
+        threshold (float): The threshold for high intensity.
                             Defaults to 0.66.
-    - nan_value (float): The value to use for NaNs.
+        nan_value (float): The value to use for NaNs.
                             Defaults to 0.0.
 
     Returns:
-    - data (pl.DataFrame): The input data with the high
-                           intensity count columns
+        data (pl.DataFrame):
+            The input data with the high intensity count column for each
+            emotion. The column names are in the format
+            "n_high_intensity_{emotion}".
     """
     if "lemmas" not in data.columns:
         data = get_lemmas(data, backbone=backbone)
@@ -713,33 +805,33 @@ def get_n_high_intensity(data: pl.DataFrame,
 # --------------------------------------------------------------------- #
 
 # ---------------------------- SentiWordNet --------------------------- #
+# NOTE: SentiWordNet is not used in the current implementation
 
-def load_sentiwordnet(path: str = SENTIWORDNET_PATH,
-                      schema: dict = SENTIWORDNET_SCHEMA,
-                      has_header: bool = False,
-                      separator: str = "\t",
-                      **kwargs: dict[str, str],
-                      ) -> pl.DataFrame:
-    """
-    Loads the SentiWordNet lexicon as a polars DataFrame.
+# def load_sentiwordnet(path: str = SENTIWORDNET_PATH,
+#                       schema: dict = SENTIWORDNET_SCHEMA,
+#                       has_header: bool = False,
+#                       separator: str = "\t",
+#                       **kwargs: dict[str, str],
+#                       ) -> pl.DataFrame:
+#     """
+#     Loads the SentiWordNet lexicon as a polars DataFrame.
 
-    Args:
-    - path (str): The path to the SentiWordNet lexicon.
-    - schema (dict): The schema for the SentiWordNet lexicon.
-    - has_header (bool): Whether the lexicon has a header.
-    - separator (str): The separator used in the lexicon.
+#     Args:
+#         path (str): The path to the SentiWordNet lexicon.
+#         schema (dict): The schema for the SentiWordNet lexicon.
+#         has_header (bool): Whether the lexicon has a header.
+#         separator (str): The separator used in the lexicon.
 
-    Returns:
-    - sentiwordnet (pl.DataFrame): The SentiWordNet lexicon as a polars
-                                   DataFrame.
-    """
-    sentiwordnet = pl.read_csv(path,
-                              has_header=has_header,
-                              schema=schema,
-                              separator=separator,
-                              # First 26 rows are comments/documentation
-                              skip_rows=27)
-    return sentiwordnet
+#     Returns:
+#         sentiwordnet (pl.DataFrame): The SentiWordNet lexicon as a polars DataFrame.
+#     """
+#     sentiwordnet = pl.read_csv(path,
+#                               has_header=has_header,
+#                               schema=schema,
+#                               separator=separator,
+#                               # First 26 rows are comments/documentation
+#                               skip_rows=27)
+#     return sentiwordnet
 
 # ---------------------------- Sentiment NRC --------------------------- #
 
@@ -753,14 +845,14 @@ def load_sentiment_nrc_lexicon(path: str = SENTIMENT_NRC_PATH,
     Loads the sentiment NRC lexicon as a polars DataFrame.
 
     Args:
-    - path (str): The path to the sentiment NRC lexicon.
-    - schema (dict): The schema for the sentiment NRC lexicon.
-    - has_header (bool): Whether the lexicon has a header.
-    - separator (str): The separator used in the lexicon.
+        path (str): The path to the sentiment NRC lexicon.
+        schema (dict): The schema for the sentiment NRC lexicon.
+        has_header (bool): Whether the lexicon has a header.
+        separator (str): The separator used in the lexicon.
 
     Returns:
-    - sentiment_nrc (pl.DataFrame): The sentiment NRC lexicon as a polars
-                                    DataFrame.
+        sentiment_nrc (pl.DataFrame):
+            The sentiment NRC lexicon as a polars DataFrame.
     """
     sentiment_nrc = pl.read_csv(path,
                                has_header=has_header,
@@ -778,12 +870,13 @@ def filter_sentiment_lexicon(lexicon: pl.DataFrame,
     Filters the sentiment NRC lexicon for the given words and emotions.
 
     Args:
-    - lexicon (pl.DataFrame): The sentiment lexicon.
-    - words (list): The list of words to filter.
-    - sentiment (str): The sentiment to filter for.
+        lexicon (pl.DataFrame): The sentiment lexicon.
+        words (list): The list of words to filter.
+        sentiment (str): The sentiment to filter for.
 
     Returns:
-    - filtered_sentiment_nrc (pl.DataFrame): The filtered sentiment NRC lexicon.
+        filtered_sentiment_nrc (pl.DataFrame):
+            The filtered sentiment NRC lexicon.
     """
     filtered_sentiment_nrc = lexicon.filter(
         (pl.col("emotion") == sentiment) &
@@ -802,17 +895,20 @@ def get_n_positive_sentiment(data: pl.DataFrame,
                             ) -> pl.DataFrame:
     """
     Calculates the number of words with positive sentiment.
+    
     Args:
-    - data (pl.DataFrame): The preprocessed input data. Contains the
-                           "nlp" column produced by the NLP backbone.
-    - lexicon (pl.DataFrame): The sentiment lexicon.
-    - backbone (str): The NLP backbone to use.
-    - nan_value (float): The value to use for NaNs.
+        data (pl.DataFrame): 
+            The preprocessed input data. Contains the
+            "nlp" column produced by the NLP backbone.
+        lexicon (pl.DataFrame): The sentiment lexicon.
+        backbone (str): The NLP backbone to use.
+        nan_value (float): The value to use for NaNs.
                          Defaults to 0.0.
     
     Returns:
-    - data (pl.DataFrame): The input data with the positive
-                           sentiment count column.
+        data (pl.DataFrame):
+            The input data with the positive sentiment count column.
+            The column name is "n_positive_sentiment".
     """
     if "lemmas" not in data.columns:
         data = get_lemmas(data, backbone=backbone)
@@ -851,16 +947,18 @@ def get_n_negative_sentiment(data: pl.DataFrame,
     Calculates the number of words with negative sentiment.
 
     Args:
-    - data (pl.DataFrame): The preprocessed input data. Contains the
-                           "nlp" column produced by the NLP backbone.
-    - lexicon (pl.DataFrame): The sentiment lexicon.
-    - backbone (str): The NLP backbone to use.
-    - nan_value (float): The value to use for NaNs.
+        data (pl.DataFrame):
+            The preprocessed input data. Contains the
+            "nlp" column produced by the NLP backbone.
+        lexicon (pl.DataFrame): The sentiment lexicon.
+        backbone (str): The NLP backbone to use.
+        nan_value (float): The value to use for NaNs.
                             Defaults to 0.0.
 
     Returns:
-    - data (pl.DataFrame): The input data with the negative
-                           sentiment count column.
+        data (pl.DataFrame):
+            The input data with the negative sentiment count column.
+            The column name is "n_negative_sentiment".
     """
     if "lemmas" not in data.columns:
         data = get_lemmas(data, backbone=backbone)
@@ -897,21 +995,25 @@ def get_sentiment_score(data: pl.DataFrame,
     """
     Calculates the sentiment score of the text.
 
-    The sentiment score is calculated as the difference between the number of
-    positive and negative sentiment words divided by the number of tokens.
-    The sentiment score is in the range [-1, 1], where -1 indicates negative
-    sentiment, 0 indicates neutral sentiment, and 1 indicates positive sentiment.
+    The sentiment score is calculated as the difference between the number
+    of positive and negative sentiment words divided by the number of
+    tokens. The sentiment score is in the range [-1, 1], where -1
+    indicates negative sentiment, 0 indicates neutral sentiment, and 1 
+    indicates positive sentiment.
 
     Args:
-    - data (pl.DataFrame): The preprocessed input data. Contains the
-                           "nlp" column produced by the NLP backbone.
-    - lexicon (pl.DataFrame): The sentiment lexicon.
-    - backbone (str): The NLP backbone to use.
-    - nan_value (float): The value to use for NaNs.
+        data (pl.DataFrame): 
+            The preprocessed input data. Contains the
+            "nlp" column produced by the NLP backbone.
+        lexicon (pl.DataFrame): The sentiment lexicon.
+        backbone (str): The NLP backbone to use.
+        nan_value (float): The value to use for NaNs.
                             Defaults to 0.0.
 
     Returns:
-    - data (pl.DataFrame): The input data with the sentiment score column.
+        data (pl.DataFrame): 
+            The input data with the sentiment score column. The column
+            name is "sentiment_score".
     """
     if "n_positive_sentiment" not in data.columns:
         data = get_n_positive_sentiment(data,

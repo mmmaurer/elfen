@@ -1,3 +1,7 @@
+"""
+This module contains the Extractor class. The Extractor class is the main
+class in the ELFEN package and is used to extract features from text data.
+"""
 import re
 import os
 
@@ -39,7 +43,10 @@ from .semantic import (
     load_hedges,
 )
 class Extractor:
-    def __init__(self, data, config=CONFIG_ALL):
+    def __init__(self, 
+                 data: pl.DataFrame,
+                 config: dict[str, str] = CONFIG_ALL,
+                 ) -> None:
         self.data = data
         self.config = config
         self.basic_features = []
@@ -80,18 +87,10 @@ class Extractor:
         Handles features that require lexicons and thresholds.
 
         Args:
-        - feature: str
-            The feature to extract.
-        - lexicon: str
-            The lexicon to use for the feature extraction.
-        - threshold: float
-            The threshold to use for the feature extraction.
-        - function_map: dict
-            A dictionary of feature extraction functions.
-        
-        Returns:
-        - pd.DataFrame
-            The input data with the extracted features.
+            feature: The feature to extract.
+            lexicon: The lexicon to use for the feature extraction.
+            threshold: The threshold to use for the feature extraction.
+            function_map: A dictionary of feature extraction functions.
         """
         backbone = self.config["backbone"]
         text_column = self.config["text_column"]
@@ -118,60 +117,52 @@ class Extractor:
                                               text_column=text_column)
 
     def extract_feature_group(self,
-                              feature_group,
-                              feature_area_map=FEATURE_AREA_MAP):
+                              feature_group: str,
+                              feature_area_map: dict[str, str] = \
+                                FEATURE_AREA_MAP
+                             ):
         """
         Extract all features in a feature group.
-        Available feature groups are:
-        - surface
-        - emotion
-        - entity
-        - information
-        - lexical_richness
-        - pos
-        - psycholinguistic
-        - readability
-        - semantic
+        Available feature groups are dependency, emotion, entities,
+        information, lexical_richness, morphological, pos,
+        psycholinguistic, readability, semantic, and surface.
 
         Args:
-        - feature_group: str
-            The feature group to extract features from.
-
-        Returns:
-        - pd.DataFrame
-            The input data with the extracted features.
+            feature_group (str): 
+                The feature group to extract features from.
+            feature_area_map (dict[str, str]):
+                A dictionary mapping features to feature areas.
         """
         # TODO: Implement for feature groups to use instead of the
         # full feature extraction via config
         pass
 
     def gather_resource(self,
-                        features,
-                        feature_area,
-                        feature,
-                        language="en"):
+                        features: dict[str, str],
+                        feature_area: str,
+                        feature: str,
+                        language: str = "en"
+                        ) -> pl.DataFrame:
         """
-        Hekper function to gather resources for feature extraction.
+        Helper function to gather resources for feature extraction.
 
         Args:
-        - features: dict
-            The features to extract.
-        - feature_area: str
-            The feature area to extract features from.
-        - feature: str
-            The feature to extract.
-        - language: str
-            The language to use for the lexicon.
+            features (dict[str, str]): The features to extract.
+            feature_area (str): The feature area of the feature.
+            feature (str): The feature to extract.
+            language (str): The language of the text data.
 
         Returns:
-        - lexicon: pd.DataFrame
-            The lexicon to use for feature extraction.
+            lexicon (pl.DataFrame):
+                The lexicon to use for feature extraction.
         """
         if features[feature_area][feature]["lexicon"] in \
                               RESOURCE_MAP:
             if language != "en" and "multilingual_filepath" in \
                                   RESOURCE_MAP[
-                                      features[feature_area][feature]["lexicon"]
+                                      features[
+                                          feature_area
+                                          ][feature]["lexicon"]
                                   ]:
                 filepath = RESOURCE_MAP[
                     features[feature_area][feature]["lexicon"]
@@ -215,6 +206,9 @@ class Extractor:
             return None
 
     def extract_features(self):
+        """
+        Extracts all features specified in the config.
+        """
         features = self.config["features"]
         ratio_features = {
                 "type": [],
@@ -235,13 +229,17 @@ class Extractor:
                         self.__apply_function(feature)
                 else:
                     if feature.endswith("_token_ratio"):
-                        ratio_features["token"].append(feature.replace("_token_ratio", ""))
+                        ratio_features["token"].append(
+                            feature.replace("_token_ratio", ""))
                     elif feature.endswith("_sentence_ratio"):
-                        ratio_features["sentence"].append(feature.replace("_sentence_ratio", ""))
+                        ratio_features["sentence"].append(
+                            feature.replace("_sentence_ratio", ""))
                     elif feature.endswith("_type_ratio"):
-                        ratio_features["type"].append(feature.replace("_type_ratio", ""))
+                        ratio_features["type"].append(
+                            feature.replace("_type_ratio", ""))
                     else:
-                        print(f"Feature {feature} not found. Check spelling. Skipping...")
+                        print(f"Feature {feature} not found. "
+                              "Check spelling. Skipping...")
 
         for ratio_feature in ratio_features["token"]:
             self.data = get_feature_token_ratio(self.data, ratio_feature)
@@ -259,6 +257,8 @@ class Extractor:
     def __remove_constant_cols(self):
         """
         Helper function to remove constant columns from the data.
+        Constant columns are columns with only one unique value.
+        Only removes columns for dataframes with more than one row.
         """
         # Remove constant feature columns
         feature_cols = [col for col in self.data.select(

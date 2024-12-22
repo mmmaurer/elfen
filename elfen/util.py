@@ -11,17 +11,20 @@ def rescale_column(df: pl.DataFrame,
     Rescales a column to a range of [0, 1].
 
     Args:
-    - df: A Polars DataFrame.
-    - column: The name of the column to rescale.
-    - minimum: The minimum value of the column.
-               If None, the minimum value of the
-                column is used.
-    - maximum: The maximum value of the column.
-                If None, the maximum value of the
-                column is used.
+        df (pl.DataFrame): A Polars DataFrame.
+        column (str): The name of the column to rescale.
+        minimum (float): 
+            The minimum value of the column.
+            If None, the minimum value of the
+            column is used.
+        maximum (float):
+            The maximum value of the column.
+            If None, the maximum value of the
+            column is used.
 
     Returns:
-    - rescaled_df: A Polars DataFrame with the column rescaled to [0, 1].
+        rescaled_df (pl.DataFrame):
+            A Polars DataFrame with the column rescaled to [0, 1].
     """
     if minimum is None:
         minimum = df[column].min()
@@ -40,11 +43,12 @@ def normalize_column(df: pl.DataFrame,
     Normalizes a column to have a mean of 0 and a standard deviation of 1.
 
     Args:
-    - df: A Polars DataFrame.
-    - column: The name of the column to normalize.
+        df (pl.DataFrame): A Polars DataFrame.
+        column (str): The name of the column to normalize.
     
     Returns:
-    - normalized_df: A Polars DataFrame with the column normalized
+        normalized_df (pl.DataFrame):
+            A Polars DataFrame with the column normalized
     """
     mean = df[column].mean()
     std = df[column].std()
@@ -63,12 +67,14 @@ def filter_lexicon(lexicon: pl.DataFrame,
     Filters a lexicon to only include the words in a list.
 
     Args:
-    - lexicon: A Polars DataFrame containing the lexicon.
-    - words: A Polars Series containing the words to include.
-    - word_column: The name of the column containing the words in the lexicon.
+        lexicon (pl.DataFrame): A Polars DataFrame containing the lexicon.
+        words (pl.Series): A Polars Series containing the words to include.
+        word_column (str):
+            The name of the column containing the words in the lexicon.
 
     Returns:
-    - filtered_lexicon: A Polars DataFrame containing only the words in the list.
+        filtered_lexicon (pl.DataFrame):
+            A Polars DataFrame containing only the words in the list.
     """
     return lexicon.filter(pl.col(word_column).is_in(words))
 
@@ -77,10 +83,10 @@ def upos_to_wn(upos_tag: str) -> str:
     Converts a Universal POS tag to a (Senti)WordNet POS tag.
 
     Args:
-    - upos_tag: A Universal POS tag.
+        upos_tag (str): A Universal POS tag.
 
     Returns:
-    - wn_tag: A (Senti)WordNet POS tag.
+        wn_tag (str): A WordNet POS tag.
     """
     if upos_tag in {"NOUN", "PROPN"}:
         return "n"

@@ -1,7 +1,8 @@
 """
 This module contains functions to download external resources.
 
-If you are using the resources for research, please cite the original authors.
+If you are using the resources for research, please cite the original
+authors.
 """
 import requests
 import zipfile
@@ -315,12 +316,12 @@ def download_lexicon(link: str,
     Download a lexicon from a link and save it to a path.
     
     Args:
-    - link: Link to the lexicon.
-    - path: Path to save the lexicon.
-    - filename: Name of the file to save the lexicon.
+        link (str): Link to the lexicon.
+        path (str): Path to save the lexicon.
+        filename (str): Name of the file to save the lexicon.
 
     Returns:
-    - None
+        None
     """
     # Headers to avoid 406 response
     headers = {
@@ -362,10 +363,10 @@ def get_resource(feature: str) -> None:
     Download a resource from the RESOURCE_MAP.
 
     Args:
-    - feature: Name of the feature to download.
+        feature (str): Name of the feature to download.
 
     Returns:
-    - None
+        None
     """
     if feature not in RESOURCE_MAP:
         raise ValueError(f"Feature {feature} not found in RESOURCE_MAP.")
@@ -388,10 +389,10 @@ def list_external_resources() -> None:
     List all the external resources available in the RESOURCE_MAP.
 
     Args:
-    - None
+        None
 
     Returns:
-    - None
+        None
     """
     for feature in RESOURCE_MAP:
         print(f"Feature: {feature}")

@@ -19,12 +19,13 @@ def get_num_entities(data: pl.DataFrame,
     Calculates the number of entities in the text data.
 
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - backbone: The NLP library used to process the text data.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
 
     Returns:
-    - data: A Polars DataFrame containing the number of entities in the
+        data (pl.DataFrame):
+            A Polars DataFrame containing the number of entities in the
             text data.
     """
     if backbone == 'spacy':
@@ -51,16 +52,17 @@ def get_num_per_entity_type(data: pl.DataFrame,
     Calculates the number of entities per entity type in the text data.
 
     Args:
-    - data: A Polars DataFrame containing the text data.
-    - backbone: The NLP library used to process the text data.
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
-    - ent_types: A list of entity types to calculate the number of entities for.
-                 Default is the list of entity types in the spaCy/stanza
-                 libraries.
+        ent_types: A list of entity types to calculate the number of
+                entities for. Default is the list of entity types in the
+                spaCy/stanza libraries.
     
     Returns:
-    - data: A Polars DataFrame containing the number of entities per entity type
-            in the text data.
+        data (pl.DataFrame): 
+            A Polars DataFrame containing the number of entities per 
+            entity type in the text data.
     """
     if backbone == 'spacy':
         for ent_type in ent_types:
