@@ -264,8 +264,8 @@ FUNCTION_MAP = {
     "avg_num_synsets_per_pos": get_avg_num_synsets_per_pos,
     "n_high_synsets": get_num_high_synsets,
     "n_low_synsets": get_num_low_synsets,
-    "high_synsets_per_pos": get_high_synsets_per_pos,
-    "low_synsets_per_pos": get_low_synsets_per_pos,
+    "n_high_synsets_per_pos": get_high_synsets_per_pos,
+    "n_low_synsets_per_pos": get_low_synsets_per_pos,
     # DEPENDENCY FEATURES
     # tree features
     "tree_width": get_tree_width,
@@ -403,6 +403,8 @@ FEATURE_AREA_MAP = {
         "avg_num_synsets_per_pos",
         "n_high_synsets",
         "n_low_synsets",
+        "high_synsets_per_pos",
+        "low_synsets_per_pos",
     ],
 }
 
