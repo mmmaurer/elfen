@@ -44,6 +44,13 @@ from .ratios import (
 from .semantic import (
     load_hedges,
 )
+
+from .util import (
+    rescale_column,
+    normalize_column,
+)
+
+
 class Extractor:
     """
     The Extractor class is the main class in the ELFEN package and is used
@@ -264,8 +271,81 @@ class Extractor:
                 self.data = ratio_fct(data=self.data,
                                       features=[features],
                                       backbone=self.config["backbone"])
-            
 
+    def normalize(self,
+                  features: Union[list[str], str] = "all",
+                  **kwargs,
+                  ) -> None:
+        """
+        Normalize the extracted features to have a mean of 0 and a
+        standard deviation of 1.
+
+        Args:
+            features (Union[list[str], str]):
+                The features to normalize. Default is "all".
+                Allows for a list of features or a single feature in str
+                format, or 'all' to normalize all features.
+
+        Returns:
+            None
+        """
+        if type(features) == list:
+            for feature in features:
+                self.data = normalize_column(data=self.data,
+                                             column=feature)
+        else:
+            if features == "all":
+                features = self.get_feature_names()
+                for feature in features:
+                    self.data = normalize_column(data=self.data,
+                                                 column=feature)
+            else:
+                self.data = normalize_column(data=self.data,
+                                             column=features)
+        
+    def rescale(self,
+                features: Union[list[str], str] = "all",
+                minimum: float = 0,
+                maximum: float = 1,
+                **kwargs,
+                ) -> None:
+        """
+        Rescale the extracted features to a specific range.
+
+        Args:
+            features (Union[list[str], str]):
+                The features to rescale. Default is "all".
+                Allows for a list of features or a single feature in str
+                format, or 'all' to rescale all features.
+            minimum (float):
+                The minimum value to rescale the features to.
+                Default is 0.
+            maximum (float):
+                The maximum value to rescale the features to.
+                Default is 1.
+
+        Returns:
+            None
+        """
+        if type(features) == list:
+            for feature in features:
+                self.data = rescale_column(data=self.data,
+                                           column=feature,
+                                           minimum=minimum,
+                                           maximum=maximum)
+        else:
+            if features == "all":
+                features = self.get_feature_names()
+                for feature in features:
+                    self.data = rescale_column(data=self.data,
+                                               column=feature,
+                                               minimum=minimum,
+                                               maximum=maximum)
+            else:
+                self.data = rescale_column(data=self.data,
+                                           column=features,
+                                           minimum=minimum,
+                                           maximum=maximum)
 
     def __gather_resource_from_featurename(self,
                                            feature: str,
