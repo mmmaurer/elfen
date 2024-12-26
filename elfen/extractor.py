@@ -145,7 +145,7 @@ class Extractor:
             **kwargs)
 
     def extract_feature_group(self,
-                              feature_group: str,
+                              feature_group: Union[str, list[str]],
                               feature_area_map: dict[str, str] = \
                                 FEATURE_AREA_MAP
                              ) -> None:
@@ -170,18 +170,24 @@ class Extractor:
             data (pl.DataFrame):
                 The data with the extracted features.
         """
+        if type(feature_group) == str:
+            feature_group = [feature_group]
         if feature_group in feature_area_map:
-            for feature in feature_area_map[feature_group]:
-                if feature in FEATURE_LEXICON_MAP:
-                    lexicon = self.__gather_resource_from_featurename(
-                        feature, feature_lexicon_map=FEATURE_LEXICON_MAP)
-                    if lexicon is not None:
-                        print(f"Extracting {feature}...")
-                        self.__apply_function(feature, lexicon=lexicon)
-                elif feature in FUNCTION_MAP:
-                    self.__apply_function(feature)
-                else:
-                    print(f"Feature {feature} not found. Check spelling.")
+            for group in feature_group:
+                for feature in feature_area_map[group]:
+                    if feature in FEATURE_LEXICON_MAP:
+                        lexicon = self.__gather_resource_from_featurename(
+                            feature,
+                            feature_lexicon_map=FEATURE_LEXICON_MAP)
+                        if lexicon is not None:
+                            print(f"Extracting {feature}...")
+                            self.__apply_function(feature,
+                                                  lexicon=lexicon)
+                    elif feature in FUNCTION_MAP:
+                        self.__apply_function(feature)
+                    else:
+                        print(f"Feature {feature} not found. Check "
+                              "spelling.")
         else:
             print("Feature group not found. Check spelling.")
     
