@@ -143,11 +143,11 @@ def filter_concreteness_norms(concreness_norms: pl.DataFrame,
 def get_avg_concreteness(data: pl.DataFrame,
                          lexicon: pl.DataFrame,
                          backbone: str = 'spacy',
-                         nan_value: float = 0.0,
                          **kwargs: dict[str, str],
                          ) -> pl.DataFrame:
     """
-    Calculates the average concreteness score of a text.
+    Calculates the average concreteness score of a text. NaN/Null values
+    indicate that no word in the text was found in the concreteness norms.
 
     Args:
         data (pl.DataFrame): A Polars DataFrame containing the text data.
@@ -155,8 +155,6 @@ def get_avg_concreteness(data: pl.DataFrame,
             A Polars DataFrame containing the concreteness norms.
         backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
-        nan_value (float): The value to fill NaN and null values with.
-                    Defaults to 0.0.
 
     Returns:
         data (pl.DataFrame):
@@ -174,8 +172,7 @@ def get_avg_concreteness(data: pl.DataFrame,
                                      word_column="Word"). \
                 select(pl.col("Conc.M")).mean().item(),
                 return_dtype=pl.Float64
-                ).fill_nan(nan_value).fill_null(nan_value). \
-                    alias("avg_concreteness")
+                ).alias("avg_concreteness")
     )
 
     return data
@@ -183,12 +180,12 @@ def get_avg_concreteness(data: pl.DataFrame,
 def get_avg_sd_concreteness(data: pl.DataFrame,
                              lexicon: pl.DataFrame,
                              backbone: str = 'spacy',
-                             nan_value: float = 0.0,
                              **kwargs: dict[str, str],
                              ) -> pl.DataFrame:
     """
     Calculates the average standard deviation of concreteness score of a
-    text.
+    text. NaN/Null values indicate that no word in the text was found in
+    the concreteness norms.
 
     Args:
         data (pl.DataFrame): A Polars DataFrame containing the text data.
@@ -214,8 +211,7 @@ def get_avg_sd_concreteness(data: pl.DataFrame,
                                      word_column="Word"). \
                 select(pl.col("Conc.SD")).mean().item(),
                 return_dtype=pl.Float64
-                ).fill_nan(nan_value).fill_null(nan_value). \
-                    alias("avg_sd_concreteness")
+                ).alias("avg_sd_concreteness")
     )
 
     return data
@@ -367,11 +363,12 @@ def load_aoa_norms(path: str,
 def get_avg_aoa(data: pl.DataFrame,
                 lexicon: pl.DataFrame,
                 backbone: str = 'spacy',
-                nan_value: float = 0.0,
                 **kwargs: dict[str, str],
                 ) -> pl.DataFrame:
     """
-    Calculates the average age of acquisition score of a text.
+    Calculates the average age of acquisition score of a text. NaN/Null
+    values indicate that no word in the text was found in the age of
+    acquisition norms.
 
     Args:
         data (pl.DataFrame): A Polars DataFrame containing the text data.
@@ -396,8 +393,7 @@ def get_avg_aoa(data: pl.DataFrame,
                                      word_column="Word"). \
                 select(pl.col("Rating.Mean")).mean().item(),
                 return_dtype=pl.Float64
-                ).fill_nan(nan_value).fill_null(nan_value). \
-                    alias("avg_aoa")
+                ).alias("avg_aoa")
     )
 
     return data
@@ -405,12 +401,12 @@ def get_avg_aoa(data: pl.DataFrame,
 def get_avg_sd_aoa(data: pl.DataFrame,
                     lexicon: pl.DataFrame,
                     backbone: str = 'spacy',
-                    nan_value: float = 0.0,
                     **kwargs: dict[str, str],
                     ) -> pl.DataFrame:
     """
     Calculates the average standard deviation of age of acquisition score 
-    of a text.
+    of a text. NaN/Null values indicate that no word in the text was found
+    in the age of acquisition norms.
 
     Args:
         data (pl.DataFrame): A Polars DataFrame containing the text data.
@@ -590,11 +586,11 @@ def load_prevalence_norms(path: str,
 def get_avg_prevalence(data: pl.DataFrame,
                        lexicon: pl.DataFrame,
                        backbone: str = 'spacy',
-                       nan_value: float = 0.0,
                        **kwargs: dict[str, str],
                        ) -> pl.DataFrame:
     """
-    Calculates the average prevalence score of a text.
+    Calculates the average prevalence score of a text. NaN/Null values
+    indicate that no word in the text was found in the prevalence norms.
 
     Args:
         data (pl.DataFrame): A Polars DataFrame containing the text data.
@@ -602,8 +598,6 @@ def get_avg_prevalence(data: pl.DataFrame,
             A Polars DataFrame containing the word prevalence norms.
         backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
-        nan_value (float): The value to fill NaN and null values with.
-                    Defaults to 0.0.
 
     Returns:
         data (pl.DataFrame):
@@ -620,8 +614,7 @@ def get_avg_prevalence(data: pl.DataFrame,
                                      word_column="Word"). \
                 select(pl.col("Prevalence")).mean().item(),
                 return_dtype=pl.Float64
-                ).fill_nan(nan_value).fill_null(nan_value). \
-                    alias("avg_prevalence")
+                ).alias("avg_prevalence")
     )
 
     return data              
@@ -724,11 +717,11 @@ def load_socialness_norms(path: str,
 def get_avg_socialness(data: pl.DataFrame,
                        lexicon: pl.DataFrame,
                        backbone: str = 'spacy',
-                       nan_value: float = 0.0,
                        **kwargs: dict[str, str],
                        ) -> pl.DataFrame:
     """
-    Calculates the average socialness score of a text.
+    Calculates the average socialness score of a text. NaN/Null values
+    indicate that no word in the text was found in the socialness norms.
 
     Args:
         data (pl.DataFrame): A Polars DataFrame containing the text data.
@@ -736,8 +729,6 @@ def get_avg_socialness(data: pl.DataFrame,
             A Polars DataFrame containing the socialness norms.
         backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
-        nan_value (float): The value to fill NaN and null values with.
-                    Defaults to 0.0.
 
     Returns:
         data (pl.DataFrame):
@@ -754,21 +745,20 @@ def get_avg_socialness(data: pl.DataFrame,
                                      word_column="Word"). \
                 select(pl.col("Mean")).mean().item(),
                 return_dtype=pl.Float64
-                ).fill_nan(nan_value).fill_null(nan_value). \
-                    alias("avg_socialness")
+                ).alias("avg_socialness")
     )
 
     return data
 
 def get_avg_sd_socialness(data: pl.DataFrame,
-                           lexicon: pl.DataFrame,
-                           backbone: str = 'spacy',
-                           nan_value: float = 0.0,
-                           **kwargs: dict[str, str],
-                           ) -> pl.DataFrame:
+                          lexicon: pl.DataFrame,
+                          backbone: str = 'spacy',
+                          **kwargs: dict[str, str],
+                          ) -> pl.DataFrame:
     """
     Calculates the average standard deviation of socialness score of a
-    text.
+    text. NaN/Null values indicate that no word in the text was found in
+    the socialness norms.
 
     Args:
         data (pl.DataFrame): A Polars DataFrame containing the text data.
@@ -794,8 +784,7 @@ def get_avg_sd_socialness(data: pl.DataFrame,
                                      word_column="Word"). \
                 select(pl.col("SD")).mean().item(),
                 return_dtype=pl.Float64
-                ).fill_nan(nan_value).fill_null(nan_value). \
-                    alias("avg_sd_socialness")
+                ).alias("avg_sd_socialness")
     )
 
     return data
@@ -942,11 +931,11 @@ def load_iconicity_norms(path: str,
 def get_avg_iconicity(data: pl.DataFrame,
                         lexicon: pl.DataFrame,
                         backbone: str = 'spacy',
-                        nan_value: float = 0.0,
                         **kwargs: dict[str, str],
                         ) -> pl.DataFrame:
     """
-    Calculates the average iconicity score of a text.
+    Calculates the average iconicity score of a text. NaN/Null values
+    indicate that no word in the text was found in the iconicity norms.
 
     Args:
         data (pl.DataFrame): A Polars DataFrame containing the text data.
@@ -954,8 +943,6 @@ def get_avg_iconicity(data: pl.DataFrame,
             A Polars DataFrame containing the iconicity norms.
         backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
-        nan_value (float): The value to fill NaN and null values with.
-                    Defaults to 0.0.
 
     Returns:
         data (pl.DataFrame):
@@ -972,8 +959,7 @@ def get_avg_iconicity(data: pl.DataFrame,
                                      word_column="word"). \
                 select(pl.col("rating")).mean().item(),
                 return_dtype=pl.Float64
-                ).fill_nan(nan_value).fill_null(nan_value). \
-                    alias("avg_iconicity")
+                ).alias("avg_iconicity")
     )
 
     return data
@@ -981,11 +967,12 @@ def get_avg_iconicity(data: pl.DataFrame,
 def get_avg_sd_iconicity(data: pl.DataFrame,
                           lexicon: pl.DataFrame,
                           backbone: str = 'spacy',
-                          nan_value: float = 0.0,
                           **kwargs: dict[str, str],
                           ) -> pl.DataFrame:
     """
     Calculates the average standard deviation of iconicity score of a text.
+    NaN/Null values indicate that no word in the text was found in the
+    iconicity norms.
 
     Args:
         data (pl.DataFrame): A Polars DataFrame containing the text data.
@@ -1011,8 +998,7 @@ def get_avg_sd_iconicity(data: pl.DataFrame,
                                      word_column="word"). \
                 select(pl.col("rating_sd")).mean().item(),
                 return_dtype=pl.Float64
-                ).fill_nan(nan_value).fill_null(nan_value). \
-                    alias("avg_sd_iconicity")
+                ).alias("avg_sd_iconicity")
     )
 
     return data
@@ -1176,7 +1162,6 @@ def load_sensorimotor_norms(path: str,
 def get_avg_sensorimotor(data: pl.DataFrame,
                          lexicon: pl.DataFrame,
                          backbone: str = 'spacy',
-                         nan_value: float = 0.0,
                          sensorimotor_vars: list[str] = SENSORIMOTOR_VARS,
                          **kwargs: dict[str, str],
                          ) -> pl.DataFrame:
@@ -1189,8 +1174,6 @@ def get_avg_sensorimotor(data: pl.DataFrame,
             A Polars DataFrame containing the sensorimotor norms.
         backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
-        nan_value (float): The value to fill NaN and null values with.
-                    Defaults to 0.0.
         sensorimotor_vars (list[str]):
             A list of sensorimotor variables to calculate the average
             score for. Defaults to SENSORIMOTOR_VARS.
@@ -1212,8 +1195,7 @@ def get_avg_sensorimotor(data: pl.DataFrame,
                                          word_column="word"). \
                     select(pl.col(f"{var}.mean")).mean().item(),
                     return_dtype=pl.Float64
-                    ).fill_nan(nan_value).fill_null(nan_value). \
-                        alias(f"avg_{var}")
+                    ).alias(f"avg_{var}")
         )
 
     return data
@@ -1221,7 +1203,6 @@ def get_avg_sensorimotor(data: pl.DataFrame,
 def get_avg_sd_sensorimotor(data: pl.DataFrame,
                             lexicon: pl.DataFrame,
                             backbone: str = 'spacy',
-                            nan_value: float = 0.0,
                             sensorimotor_vars: list[str] = \
                                 SENSORIMOTOR_VARS,
                             **kwargs: dict[str, str],
@@ -1236,8 +1217,6 @@ def get_avg_sd_sensorimotor(data: pl.DataFrame,
             A Polars DataFrame containing the sensorimotor norms.
         backbone (str): The NLP library used to process the text data.
                 Either 'spacy' or 'stanza'.
-        nan_value (float): The value to fill NaN and null values with.
-                 Defaults to 0.0.
         sensorimotor_vars (list[str]):
             A list of sensorimotor variables to calculate the average
             standard deviation for.
@@ -1260,8 +1239,7 @@ def get_avg_sd_sensorimotor(data: pl.DataFrame,
                                          word_column="word"). \
                     select(pl.col(f"{var}.SD")).mean().item(),
                     return_dtype=pl.Float64
-                    ).fill_nan(nan_value).fill_null(nan_value). \
-                        alias(f"avg_sd_{var}")
+                    ).alias(f"avg_sd_{var}")
         )
 
     return data

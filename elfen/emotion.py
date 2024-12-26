@@ -161,15 +161,19 @@ def load_vad_lexicon(path: str = VAD_NRC_PATH,
 def get_avg_valence(data: pl.DataFrame,
                     lexicon: pl.DataFrame,
                     backbone: str = "spacy",
-                    nan_value: float = 0.0,
                     language: str = "en",
+                    nan_value: float = 0.0,
                     **kwargs: dict[str, str],
                     ) -> pl.DataFrame:
     """
-    Calculates the valence of the text.
+    Calculates the average valence of the text. Only takes into account
+    words in the text that are present in the VAD lexicon.
 
     The valence of the text is calculated as the mean of the valence
     values of the words in the text.
+
+    NaN/Null values are filled with 0 as the valence is in the range [0,1]
+    and 0 is the neutral value in the NRC-VAD lexicon.
 
     Args:
         data (pl.DataFrame):
@@ -214,10 +218,14 @@ def get_avg_arousal(data: pl.DataFrame,
                     **kwargs: dict[str, str],
                     ) -> pl.DataFrame:
     """
-    Calculates the arousal of the text.
+    Calculates the average arousal of the text. Only takes into account
+    words in the text that are present in the VAD lexicon.
     
     The arousal of the text is calculated as the mean of the arousal
     values of the words in the text.
+
+    NaN/Null values are filled with 0 as the arousal is in the range [0,1]
+    and 0 is the neutral value in the NRC-VAD lexicon.
 
     Args:
         data (pl.DataFrame):
@@ -263,10 +271,14 @@ def get_avg_dominance(data: pl.DataFrame,
                       **kwargs: dict[str, str],
                       ) -> pl.DataFrame:
     """
-    Calculates the dominance of the text.
+    Calculates the average dominance of the text. Only takes into account
+    words in the text that are present in the VAD lexicon.
 
     The dominance of the text is calculated as the mean of the dominance
     values of the words in the text.
+
+    NaN/Null values are filled with 0 as the dominance is in the range
+    [0,1] and 0 is the neutral value in the NRC-VAD lexicon.
 
     Args:
         data (pl.DataFrame):
@@ -654,10 +666,16 @@ def get_avg_emotion_intensity(data: pl.DataFrame,
                               **kwargs: dict[str, str],
                               ) -> pl.DataFrame:
     """
-    Calculates the average emotion intensity of the text.
+    Calculates the average emotion intensity of the text. Only takes into
+    account words in the text that are present in the emotion intensity
+    lexicon.
 
     The average emotion intensity is calculated as the mean of the emotion
     intensity values of the words in the text.
+
+    NaN/Null values are filled with 0 as the emotion intensity is in the
+    range [0,1] and 0 is the neutral value in the NRC emotion intensity
+    lexicon.
 
     Args:
         data (pl.DataFrame):
@@ -823,7 +841,8 @@ def get_n_high_intensity(data: pl.DataFrame,
 #         separator (str): The separator used in the lexicon.
 
 #     Returns:
-#         sentiwordnet (pl.DataFrame): The SentiWordNet lexicon as a polars DataFrame.
+#         sentiwordnet (pl.DataFrame):
+#           The SentiWordNet lexicon as a polars DataFrame.
 #     """
 #     sentiwordnet = pl.read_csv(path,
 #                               has_header=has_header,
