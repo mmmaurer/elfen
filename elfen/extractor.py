@@ -73,7 +73,7 @@ class Extractor:
     file, and clean up the extracted features.
 
     To access the data with the extracted features, use the data attribute
-    of the Extractor class: `extractor.data`.
+    of the Extractor class: ``extractor.data``.
     """
     def __init__(self, 
                  data: pl.DataFrame,

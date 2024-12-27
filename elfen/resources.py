@@ -18,7 +18,16 @@ RESOURCE_MAP = {
         "subarea": "Hedges",
         "filename": "hedges.txt",
         "filepath": os.path.join(PROJECT_PATH, "resources", "Semantics",
-                                 "Hedges", "hedges.txt")
+                                 "Hedges", "hedges.txt"),
+        "bibtex": """misc{hedges,
+        author = {Titus Wormer},
+        title = {Hedges},
+        year = {2022},
+        publisher = {GitHub},
+        journal = {GitHub repository},
+        howpublished = {\url{github.com/words/hedges}},
+        }
+        """
     },
     # Warriner, A. B., Kuperman, V., & Brysbaert, M. (2013).
     # Norms of valence, arousal, and dominance for 13,915 English lemmas.
@@ -31,7 +40,18 @@ RESOURCE_MAP = {
         "subarea": "VAD",
         "filename": "BRM-emot-submit.csv",
         "filepath": os.path.join(PROJECT_PATH, "resources", "Emotion",
-                                 "VAD", "BRM-emot-submit.csv")
+                                 "VAD", "BRM-emot-submit.csv"),
+        "bibtex": """
+        @article{vad_warriner,
+        title={Norms of valence, arousal, and dominance for 13,915 English lemmas},
+        author={Warriner, Amy Beth and Kuperman, Victor and Brysbaert, Marc},
+        journal={Behavior research methods},
+        volume={45},
+        pages={1191--1207},
+        year={2013},
+        publisher={Springer}
+        }
+        """
     },
     # Mohammad, S. M. (2018).
     # Obtaining reliable human ratings of valence, arousal, and dominance for 
@@ -51,7 +71,23 @@ RESOURCE_MAP = {
                                               "Emotion", "VAD",
                                               "NRC-VAD-Lexicon",
                                               "NRC-VAD-Lexicon-"
-                                              "ForVariousLanguages.txt")
+                                              "ForVariousLanguages.txt"),
+        "bibtex": """
+        @inproceedings{vad_nrc,
+        title = "Obtaining Reliable Human Ratings of Valence, Arousal, and Dominance for 20,000 {E}nglish Words",
+        author = "Mohammad, Saif",
+        editor = "Gurevych, Iryna  and
+        Miyao, Yusuke",
+        booktitle = "Proceedings of the 56th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+        month = jul,
+        year = "2018",
+        address = "Melbourne, Australia",
+        publisher = "Association for Computational Linguistics",
+        url = "https://aclanthology.org/P18-1017",
+        doi = "10.18653/v1/P18-1017",
+        pages = "174--184",
+        }
+    """
     },
     # Mohammad, S. M. (2018)
     # Word affect intensity.
@@ -71,7 +107,33 @@ RESOURCE_MAP = {
                                               "Emotion", "Intensity",
                                               "NRC-Emotion-Intensity-Lexicon",
                                               "NRC-Emotion-Intensity-"
-                                              "Lexicon-ForVariousLanguages.txt")
+                                              "Lexicon-ForVariousLanguages.txt"),
+        "bibtex": """
+        @inproceedings{vad_nrc,
+            title = "Word Affect Intensities",
+            author = "Mohammad, Saif",
+            editor = "Calzolari, Nicoletta  and
+            Choukri, Khalid  and
+            Cieri, Christopher  and
+            Declerck, Thierry  and
+            Goggi, Sara  and
+            Hasida, Koiti  and
+            Isahara, Hitoshi  and
+            Maegaard, Bente  and
+            Mariani, Joseph  and
+            Mazo, H{\'e}l{\`e}ne  and
+            Moreno, Asuncion  and
+            Odijk, Jan  and
+            Piperidis, Stelios  and
+            Tokunaga, Takenobu",
+            booktitle = "Proceedings of the Eleventh International Conference on Language Resources and Evaluation ({LREC} 2018)",
+            month = may,
+            year = "2018",
+            address = "Miyazaki, Japan",
+            publisher = "European Language Resources Association (ELRA)",
+            url = "https://aclanthology.org/L18-1027",
+        }
+        """
     },
     # Brysbaert, M., Warriner, A. B., & Kuperman, V. (2014).
     # Concreteness ratings for 40 thousand generally known English word lemmas.
@@ -84,7 +146,18 @@ RESOURCE_MAP = {
         "subarea": "Concreteness",
         "filename": "13428_2013_403_MOESM1_ESM.xlsx",
         "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
-                                 "Concreteness", "13428_2013_403_MOESM1_ESM.xlsx")
+                                 "Concreteness", "13428_2013_403_MOESM1_ESM.xlsx"),
+        "bibtex": """
+        @article{concreteness_brysbaert,
+        title={Concreteness ratings for 40 thousand generally known English word lemmas},
+        author={Brysbaert, Marc and Warriner, Amy Beth and Kuperman, Victor},
+        journal={Behavior research methods},
+        volume={46},
+        pages={904--911},
+        year={2014},
+        publisher={Springer}
+        }
+    """
     },
     # Brysbaert, M., Mandera, P., McCormick, S. F., & Keuleers, E. (2019).
     # Word prevalence norms for 62,000 English lemmas.
@@ -97,7 +170,18 @@ RESOURCE_MAP = {
         "subarea": "Prevalence",
         "filename": "13428_2018_1077_MOESM2_ESM.xlsx",
         "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
-                                 "Prevalence", "13428_2018_1077_MOESM2_ESM.xlsx")
+                                 "Prevalence", "13428_2018_1077_MOESM2_ESM.xlsx"),
+        "bibtex": """
+        @article{prevalence_brysbaert,
+        title={Word prevalence norms for 62,000 English lemmas},
+        author={Brysbaert, Marc and Mandera, Pawe{\l} and McCormick, Samantha F and Keuleers, Emmanuel},
+        journal={Behavior research methods},
+        volume={51},
+        pages={467--479},
+        year={2019},
+        publisher={Springer}
+        }
+        """
     },
     # Kuperman, V., Stadthagen-Gonzalez, H., & Brysbaert, M. (2013).
     # Age-of-acquisition ratings for 30,000 English words.
@@ -110,21 +194,32 @@ RESOURCE_MAP = {
         "subarea": "AgeOfAcquisition",
         "filename": "13428_2013_348_MOESM1_ESM.xlsx",
         "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
-                                 "AgeOfAcquisition", "13428_2013_348_MOESM1_ESM.xlsx")
+                                 "AgeOfAcquisition", "13428_2013_348_MOESM1_ESM.xlsx"),
+        "bibtex": """
+        @article{aoa_kuperman,
+        title={Age-of-acquisition ratings for 30,000 English words},
+        author={Kuperman, Victor and Stadthagen-Gonzalez, Hans and Brysbaert, Marc},
+        journal={Behavior research methods},
+        volume={44},
+        pages={978--990},
+        year={2012},
+        publisher={Springer}
+        }
+        """
     },
     # Baccianella, S., Esuli, A., & Sebastiani, F. (2010).
     # SentiWordNet 3.0: An enhanced lexical resource for sentiment
     # analysis and opinion mining.
     # In LREC (Vol. 10, pp. 2200-2204).
-    "sentiwordnet": {
-        "link": "https://raw.githubusercontent.com/aesuli/SentiWordNet/"
-                "master/data/SentiWordNet_3.0.0.txt",
-        "area": "Emotion",
-        "subarea": "Sentiment",
-        "filename": "SentiWordNet_3.0.0.txt",
-        "filepath": os.path.join(PROJECT_PATH, "resources", "Emotion",
-                                 "Sentiment", "SentiWordNet_3.0.0.txt")
-    },
+    # "sentiwordnet": { # Currently not supported
+    #     "link": "https://raw.githubusercontent.com/aesuli/SentiWordNet/"
+    #             "master/data/SentiWordNet_3.0.0.txt",
+    #     "area": "Emotion",
+    #     "subarea": "Sentiment",
+    #     "filename": "SentiWordNet_3.0.0.txt",
+    #     "filepath": os.path.join(PROJECT_PATH, "resources", "Emotion",
+    #                              "Sentiment", "SentiWordNet_3.0.0.txt")
+    # },
     # Mohammad, S. M., & Turney, P. D. (2013).
     # Emotions evoked by common words and phrases:
     # Using Mechanical Turk to create an emotion lexicon.
@@ -143,7 +238,18 @@ RESOURCE_MAP = {
                                               "Emotion", "Sentiment",
                                               "NRC-Emotion-Lexicon",
                                               "NRC-Emotion-Lexicon-"
-                                              "ForVariousLanguages.txt")
+                                              "ForVariousLanguages.txt"),
+        "bibtex": """
+        @article{sentiment_nrc,
+        Author = {Mohammad, Saif M. and Turney, Peter D.},
+        Journal = {Computational Intelligence},
+        Number = {3},
+        Pages = {436--465},
+        Title = {Crowdsourcing a Word-Emotion Association Lexicon},
+        Volume = {29},
+        Year = {2013}
+    }
+        """
     },
     # Coso, B., Guasch, M., Buganovic, I., Ferre, P., & Hinojosa, J. A. (2022).
     # CROWD-5e: A croatian psycholinguistic database for affective norms for
@@ -168,7 +274,19 @@ RESOURCE_MAP = {
         "subarea": "Socialness",
         "filename": "Socialness.csv",
         "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
-                                 "Socialness", "Socialness.csv")
+                                 "Socialness", "Socialness.csv"),
+        "bibtex": """
+        @article{socialness,
+        title={Quantifying social semantics: An inclusive definition of socialness and ratings for 8388 English words},
+        author={Diveica, Veronica and Pexman, Penny M and Binney, Richard J},
+        journal={Behavior Research Methods},
+        volume={55},
+        number={2},
+        pages={461--473},
+        year={2023},
+        publisher={Springer}
+        }
+        """
     },
     # Lynott, D., Connell, L., Brysbaert, M., Brand, J., & Carney, J. (2020).
     # The Lancaster Sensorimotor Norms: Multidimensional measures of
@@ -180,7 +298,18 @@ RESOURCE_MAP = {
         "subarea": "Sensorimotor",
         "filename": "LancasterSensorimotorNorms.xlsx",
         "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
-                                 "Sensorimotor", "LancasterSensorimotorNorms.xlsx")
+                                 "Sensorimotor", "LancasterSensorimotorNorms.xlsx"),
+        "bibtex": """
+        @article{sensorimotor_lancaster,
+        title={The Lancaster Sensorimotor Norms: multidimensional measures of perceptual and action strength for 40,000 English words},
+        author={Lynott, Dermot and Connell, Louise and Brysbaert, Marc and Brand, James and Carney, James},
+        journal={Behavior research methods},
+        volume={52},
+        pages={1271--1291},
+        year={2020},
+        publisher={Springer}
+        }
+        """
     },
     # Winter, B., Lupyan, G., Perry, L. K., Dingemanse, M., & Perlman, M. (2021).
     # Iconicity ratings for 14,000 English words.
@@ -191,7 +320,19 @@ RESOURCE_MAP = {
         "subarea": "Iconicity",
         "filename": "WinterIconicityNorms.csv",
         "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
-                                 "Iconicity", "WinterIconicityNorms.csv")
+                                 "Iconicity", "WinterIconicityNorms.csv"),
+        "bibtex": """
+        @article{iconicity_winter,
+        title={Iconicity ratings for 14,000+ English words},
+        author={Winter, Bodo and Lupyan, Gary and Perry, Lynn K and Dingemanse, Mark and Perlman, Marcus},
+        journal={Behavior research methods},
+        volume={56},
+        number={3},
+        pages={1640--1655},
+        year={2024},
+        publisher={Springer}
+        }
+        """
     },
     # TODO: Find and add psycholinguistic norms for other languages?
 }
@@ -398,3 +539,26 @@ def list_external_resources() -> None:
         print(f"Feature: {feature}")
         print("\n")
 
+def get_bibtex() -> str:
+    """
+    Print the bibtex citation for all the resources in the RESOURCE_MAP,
+    definitions of the functions, and the package itself.
+
+    Args:
+        None
+
+    Returns:
+        bibxtex (str): Bibtex citation for all the resources.
+    """
+
+    bibtex = """
+    @misc{maurer-2024-elfen,
+        author = {Maurer, Maximilian},
+        title = {ELFEN - Efficient Linguistic Feature Extraction for Natural Language Datasets},
+        year = {2024},
+        publisher = {GitHub},
+        journal = {GitHub repository},
+        howpublished = {\url{https://github.com/mmmaurer/elfen}},
+    }\n"""
+    for feature in RESOURCE_MAP:
+        bibtex += RESOURCE_MAP[feature]["bibtex"] + "\n"
