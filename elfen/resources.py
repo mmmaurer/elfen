@@ -19,15 +19,7 @@ RESOURCE_MAP = {
         "filename": "hedges.txt",
         "filepath": os.path.join(PROJECT_PATH, "resources", "Semantics",
                                  "Hedges", "hedges.txt"),
-        "bibtex": """misc{hedges,
-        author = {Titus Wormer},
-        title = {Hedges},
-        year = {2022},
-        publisher = {GitHub},
-        journal = {GitHub repository},
-        howpublished = {\url{github.com/words/hedges}},
-        }
-        """
+        "bibtex": rb"""@misc{hedges, author = {Titus Wormer}, title = {Hedges}, year = {2022}, publisher = {GitHub}, journal = {GitHub repository}, howpublished = {\url{github.com/words/hedges}}, }"""
     },
     # Warriner, A. B., Kuperman, V., & Brysbaert, M. (2013).
     # Norms of valence, arousal, and dominance for 13,915 English lemmas.
@@ -41,7 +33,7 @@ RESOURCE_MAP = {
         "filename": "BRM-emot-submit.csv",
         "filepath": os.path.join(PROJECT_PATH, "resources", "Emotion",
                                  "VAD", "BRM-emot-submit.csv"),
-        "bibtex": """
+        "bibtex": rb"""
         @article{vad_warriner,
         title={Norms of valence, arousal, and dominance for 13,915 English lemmas},
         author={Warriner, Amy Beth and Kuperman, Victor and Brysbaert, Marc},
@@ -72,7 +64,7 @@ RESOURCE_MAP = {
                                               "NRC-VAD-Lexicon",
                                               "NRC-VAD-Lexicon-"
                                               "ForVariousLanguages.txt"),
-        "bibtex": """
+        "bibtex": rb"""
         @inproceedings{vad_nrc,
         title = "Obtaining Reliable Human Ratings of Valence, Arousal, and Dominance for 20,000 {E}nglish Words",
         author = "Mohammad, Saif",
@@ -87,7 +79,7 @@ RESOURCE_MAP = {
         doi = "10.18653/v1/P18-1017",
         pages = "174--184",
         }
-    """
+        """
     },
     # Mohammad, S. M. (2018)
     # Word affect intensity.
@@ -108,7 +100,7 @@ RESOURCE_MAP = {
                                               "NRC-Emotion-Intensity-Lexicon",
                                               "NRC-Emotion-Intensity-"
                                               "Lexicon-ForVariousLanguages.txt"),
-        "bibtex": """
+        "bibtex": rb"""
         @inproceedings{vad_nrc,
             title = "Word Affect Intensities",
             author = "Mohammad, Saif",
@@ -147,7 +139,7 @@ RESOURCE_MAP = {
         "filename": "13428_2013_403_MOESM1_ESM.xlsx",
         "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
                                  "Concreteness", "13428_2013_403_MOESM1_ESM.xlsx"),
-        "bibtex": """
+        "bibtex": rb"""
         @article{concreteness_brysbaert,
         title={Concreteness ratings for 40 thousand generally known English word lemmas},
         author={Brysbaert, Marc and Warriner, Amy Beth and Kuperman, Victor},
@@ -157,7 +149,7 @@ RESOURCE_MAP = {
         year={2014},
         publisher={Springer}
         }
-    """
+        """
     },
     # Brysbaert, M., Mandera, P., McCormick, S. F., & Keuleers, E. (2019).
     # Word prevalence norms for 62,000 English lemmas.
@@ -171,7 +163,7 @@ RESOURCE_MAP = {
         "filename": "13428_2018_1077_MOESM2_ESM.xlsx",
         "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
                                  "Prevalence", "13428_2018_1077_MOESM2_ESM.xlsx"),
-        "bibtex": """
+        "bibtex": rb"""
         @article{prevalence_brysbaert,
         title={Word prevalence norms for 62,000 English lemmas},
         author={Brysbaert, Marc and Mandera, Pawe{\l} and McCormick, Samantha F and Keuleers, Emmanuel},
@@ -195,7 +187,7 @@ RESOURCE_MAP = {
         "filename": "13428_2013_348_MOESM1_ESM.xlsx",
         "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
                                  "AgeOfAcquisition", "13428_2013_348_MOESM1_ESM.xlsx"),
-        "bibtex": """
+        "bibtex": rb"""
         @article{aoa_kuperman,
         title={Age-of-acquisition ratings for 30,000 English words},
         author={Kuperman, Victor and Stadthagen-Gonzalez, Hans and Brysbaert, Marc},
@@ -211,15 +203,16 @@ RESOURCE_MAP = {
     # SentiWordNet 3.0: An enhanced lexical resource for sentiment
     # analysis and opinion mining.
     # In LREC (Vol. 10, pp. 2200-2204).
-    # "sentiwordnet": { # Currently not supported
-    #     "link": "https://raw.githubusercontent.com/aesuli/SentiWordNet/"
-    #             "master/data/SentiWordNet_3.0.0.txt",
-    #     "area": "Emotion",
-    #     "subarea": "Sentiment",
-    #     "filename": "SentiWordNet_3.0.0.txt",
-    #     "filepath": os.path.join(PROJECT_PATH, "resources", "Emotion",
-    #                              "Sentiment", "SentiWordNet_3.0.0.txt")
-    # },
+    "sentiwordnet": { # Currently not supported
+        "link": "https://raw.githubusercontent.com/aesuli/SentiWordNet/"
+                "master/data/SentiWordNet_3.0.0.txt",
+        "area": "Emotion",
+        "subarea": "Sentiment",
+        "filename": "SentiWordNet_3.0.0.txt",
+        "filepath": os.path.join(PROJECT_PATH, "resources", "Emotion",
+                                 "Sentiment", "SentiWordNet_3.0.0.txt"),
+        "bibtex": rb""  # TODO
+    },
     # Mohammad, S. M., & Turney, P. D. (2013).
     # Emotions evoked by common words and phrases:
     # Using Mechanical Turk to create an emotion lexicon.
@@ -239,7 +232,7 @@ RESOURCE_MAP = {
                                               "NRC-Emotion-Lexicon",
                                               "NRC-Emotion-Lexicon-"
                                               "ForVariousLanguages.txt"),
-        "bibtex": """
+        "bibtex": rb"""
         @article{sentiment_nrc,
         Author = {Mohammad, Saif M. and Turney, Peter D.},
         Journal = {Computational Intelligence},
@@ -248,7 +241,7 @@ RESOURCE_MAP = {
         Title = {Crowdsourcing a Word-Emotion Association Lexicon},
         Volume = {29},
         Year = {2013}
-    }
+        }
         """
     },
     # Coso, B., Guasch, M., Buganovic, I., Ferre, P., & Hinojosa, J. A. (2022).
@@ -262,7 +255,8 @@ RESOURCE_MAP = {
         "subarea": "Affect",
         "filename": "CROWD-5e.xlsx",
         "filepath": os.path.join(PROJECT_PATH, "resources", "Emotion",
-                                 "Affect", "CROWD-5e.xlsx")
+                                 "Affect", "CROWD-5e.xlsx"),
+        "bibtex": rb""  # TODO
     },
     # Diveica, V, Pexman, P. M., & Binney, R. J. (2023).
     # Quantifying Social Semantics: An Inclusive Definition
@@ -275,7 +269,7 @@ RESOURCE_MAP = {
         "filename": "Socialness.csv",
         "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
                                  "Socialness", "Socialness.csv"),
-        "bibtex": """
+        "bibtex": rb"""
         @article{socialness,
         title={Quantifying social semantics: An inclusive definition of socialness and ratings for 8388 English words},
         author={Diveica, Veronica and Pexman, Penny M and Binney, Richard J},
@@ -299,7 +293,7 @@ RESOURCE_MAP = {
         "filename": "LancasterSensorimotorNorms.xlsx",
         "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
                                  "Sensorimotor", "LancasterSensorimotorNorms.xlsx"),
-        "bibtex": """
+        "bibtex": rb"""
         @article{sensorimotor_lancaster,
         title={The Lancaster Sensorimotor Norms: multidimensional measures of perceptual and action strength for 40,000 English words},
         author={Lynott, Dermot and Connell, Louise and Brysbaert, Marc and Brand, James and Carney, James},
@@ -321,7 +315,7 @@ RESOURCE_MAP = {
         "filename": "WinterIconicityNorms.csv",
         "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
                                  "Iconicity", "WinterIconicityNorms.csv"),
-        "bibtex": """
+        "bibtex": rb"""
         @article{iconicity_winter,
         title={Iconicity ratings for 14,000+ English words},
         author={Winter, Bodo and Lupyan, Gary and Perry, Lynn K and Dingemanse, Mark and Perlman, Marcus},
@@ -542,7 +536,11 @@ def list_external_resources() -> None:
 def get_bibtex() -> str:
     """
     Print the bibtex citation for all the resources in the RESOURCE_MAP,
-    definitions of the functions, and the package itself.
+    and the package itself.
+
+    The citation keys for the lexicons are the names of the lexicons in
+    the RESOURCE_MAP.
+    The citation key for the package is "maurer-2024-elfen".
 
     Args:
         None
@@ -551,7 +549,7 @@ def get_bibtex() -> str:
         bibxtex (str): Bibtex citation for all the resources.
     """
 
-    bibtex = """
+    bibtex = rb"""
     @misc{maurer-2024-elfen,
         author = {Maurer, Maximilian},
         title = {ELFEN - Efficient Linguistic Feature Extraction for Natural Language Datasets},
@@ -559,6 +557,10 @@ def get_bibtex() -> str:
         publisher = {GitHub},
         journal = {GitHub repository},
         howpublished = {\url{https://github.com/mmmaurer/elfen}},
-    }\n"""
+    }
+    """
     for feature in RESOURCE_MAP:
-        bibtex += RESOURCE_MAP[feature]["bibtex"] + "\n"
+        bibtex += RESOURCE_MAP[feature]["bibtex"]
+
+    return bibtex.decode("utf-8")
+
