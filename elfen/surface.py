@@ -437,3 +437,63 @@ def get_token_freqs(data: pl.DataFrame,
     
     return data
 
+def get_global_token_frequencies(data: pl.DataFrame,
+                                 backbone: str = 'spacy',
+                                 **kwargs: dict[str, str],
+                                 ) -> dict[str, int]:
+    """
+    Calculates the global frequency of each token in the text.
+
+    Args:
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+
+    Returns:
+        token_freqs (dict[str, int]):
+            A dictionary containing the frequency of each token in the text.
+    """
+    if backbone == 'spacy':
+        token_freqs = dict(Counter([token.text for text in 
+                                    data["nlp"].to_list() for 
+                                    token in text]
+        ))
+    elif backbone == 'stanza':
+        token_freqs = dict(Counter([token.text for text in
+                                    data["nlp"].to_list() for
+                                    sent in text.sentences for 
+                                    token in sent.tokens]
+        ))
+
+    return token_freqs
+
+def get_global_lemma_frequencies(data: pl.DataFrame,
+                                 backbone: str = 'spacy',
+                                 **kwargs: dict[str, str],
+                                 ) -> dict[str, int]:
+    """
+    Calculates the global frequency of each lemma in the text.
+
+    Args:
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+
+    Returns:
+        lemma_freqs (dict[str, int]):
+            A dictionary containing the frequency of each lemma in the text.
+    """
+    if backbone == 'spacy':
+        lemma_freqs = dict(Counter([token.lemma_ for text in
+                                    data["nlp"].to_list() for
+                                    token in text]
+        ))
+    elif backbone == 'stanza':
+        lemma_freqs = dict(Counter([token.lemma for text in
+                                    data["nlp"].to_list() for
+                                    sent in text.sentences for
+                                    token in sent.tokens]
+        ))
+
+    return lemma_freqs
+

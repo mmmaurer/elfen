@@ -58,6 +58,8 @@ from .surface import (
     get_num_tokens,
     get_num_types,
     get_token_freqs,
+    get_global_token_frequencies,
+    get_global_lemma_frequencies
 )
 from .pos import (
     get_num_lexical_tokens,
@@ -369,6 +371,82 @@ def get_n_hapax_legomena(data: pl.DataFrame,
     
     return data
 
+def get_n_global_token_hapax_legomena(data: pl.DataFrame,
+                                      backbone: str = 'spacy',
+                                      **kwargs: dict[str, str],
+                                      ) -> pl.DataFrame:
+    """
+    Calculates the number of global hapax legomena in a text: words that
+    occur only once in the entire corpus.
+
+    Args:
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+    
+    Returns:
+        data (pl.DataFrame):
+            A Polars DataFrame containing the number of global hapax
+            legomena in the text data. The number of global hapax legomena
+            is stored in a new column named 'n_global_hapax_legomena'.
+    """
+    token_freqs = get_global_token_frequencies(data, backbone=backbone)
+    if backbone == 'spacy':
+        data = data.with_columns(
+            pl.col("token_freqs").map_elements(lambda x: len(
+                [token for token in x if token_freqs[token.text] == 1]),
+                return_dtype=pl.UInt32). \
+                    alias("n_global_token_hapax_legomena")
+        )
+    elif backbone == 'stanza':
+        data = data.with_columns(
+            pl.col("token_freqs").map_elements(lambda x: len(
+                [token for sent in x.sentences for token in sent.tokens
+                 if token_freqs[token.text] == 1]),
+                return_dtype=pl.UInt32). \
+                    alias("n_global_token_hapax_legomena")
+        )
+
+    return data
+
+def get_n_global_lemma_hapax_legomena(data: pl.DataFrame,
+                                      backbone: str = 'spacy',
+                                      **kwargs: dict[str, str],
+                                      ) -> pl.DataFrame:
+    """
+    Calculates the number of global hapax legomena in a text: lemmas that
+    occur only once in the entire corpus.
+
+    Args:
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+
+    Returns:
+        data (pl.DataFrame):
+            A Polars DataFrame containing the number of global hapax
+            legomena in the text data. The number of global hapax legomena
+            is stored in a new column named 'n_global_lemma_hapax_legomena'.
+    """
+    lemma_freqs = get_global_lemma_frequencies(data, backbone=backbone)
+    if backbone == 'spacy':
+        data = data.with_columns(
+            pl.col("nlp").map_elements(lambda x: len(
+                [token.lemma for token in x if 
+                 lemma_freqs[token.lemma] == 1]),
+                return_dtype=pl.UInt32). \
+                    alias("n_global_lemma_hapax_legomena")
+        )
+    elif backbone == 'stanza':
+        data = data.with_columns(
+            pl.col("nlp").map_elements(lambda x: len(
+                [token.lemma for sent in x.sentences for 
+                 token in sent.tokens
+                 if lemma_freqs[token.lemma] == 1]),
+                return_dtype=pl.UInt32). \
+                    alias("n_global_lemma_hapax_legomena")
+        )
+
 def get_n_hapax_dislegomena(data: pl.DataFrame,
                             backbone: str = 'spacy',
                             **kwargs: dict[str, str],
@@ -413,6 +491,88 @@ def get_n_hapax_dislegomena(data: pl.DataFrame,
     
     return data
 
+def get_global_token_hapax_dislegomena(data: pl.DataFrame,
+                                       backbone: str = 'spacy',
+                                       **kwargs: dict[str, str],
+                                       ) -> pl.DataFrame:
+    """
+    Calculates the number of global hapax dislegomena in a text: words that
+    occur only once or twice in the entire corpus.
+
+    Args:
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
+                        Either 'spacy' or 'stanza'.
+
+    Returns:
+        data (pl.DataFrame):
+            A Polars DataFrame containing the number of global hapax
+            dislegomena in the text data. The number of global hapax
+            dislegomena is stored in a new column named
+            'n_global_token_hapax_dislegomena'.
+    """
+    token_freqs = get_global_token_frequencies(data, backbone=backbone)
+
+    if backbone == 'spacy':
+        data = data.with_columns(
+            pl.col("token_freqs").map_elements(lambda x: len(
+                [token for token in x if token_freqs[token.text] <= 2]),
+                return_dtype=pl.UInt32). \
+                    alias("n_global_token_hapax_dislegomena")
+        )
+    elif backbone == 'stanza':
+        data = data.with_columns(
+            pl.col("token_freqs").map_elements(lambda x: len(
+                [token for sent in x.sentences for token in sent.tokens
+                 if token_freqs[token.text] <= 2]),
+                return_dtype=pl.UInt32). \
+                    alias("n_global_token_hapax_dislegomena")
+        )
+
+    return data
+
+def get_global_lemma_hapax_dislegomena(data: pl.DataFrame,
+                                       backbone: str = 'spacy',
+                                       **kwargs: dict[str, str],
+                                       ) -> pl.DataFrame:
+    """
+    Calculates the number of global hapax dislegomena in a text: lemmas that
+    occur only once or twice in the entire corpus.
+
+    Args:
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
+                        Either 'spacy' or 'stanza'.
+
+    Returns:
+        data (pl.DataFrame):
+            A Polars DataFrame containing the number of global hapax
+            dislegomena in the text data. The number of global hapax
+            dislegomena is stored in a new column named
+            'n_global_lemma_hapax_dislegomena'.
+    """
+    lemma_freqs = get_global_lemma_frequencies(data, backbone=backbone)
+
+    if backbone == 'spacy':
+        data = data.with_columns(
+            pl.col("nlp").map_elements(lambda x: len(
+                [token.lemma for token in x if 
+                 lemma_freqs[token.lemma] <= 2]),
+                return_dtype=pl.UInt32). \
+                    alias("n_global_lemma_hapax_dislegomena")
+        )
+    elif backbone == 'stanza':
+        data = data.with_columns(
+            pl.col("nlp").map_elements(lambda x: len(
+                [token.lemma for sent in x.sentences for 
+                 token in sent.tokens
+                 if lemma_freqs[token.lemma] <= 2]),
+                return_dtype=pl.UInt32). \
+                    alias("n_global_lemma_hapax_dislegomena")
+        )
+
+    return data
+
 def get_sichel_s(data: pl.DataFrame,
                  backbone: str = 'spacy',
                  **kwargs: dict[str, str],
@@ -420,8 +580,6 @@ def get_sichel_s(data: pl.DataFrame,
     """
     Calculates the Sichel's S of a text:
     N_hapax_dislegomena / N_types.
-
-    TODO: Add global Sichel's S calculation.
 
     Args:
         data (pl.DataFrame): A Polars DataFrame containing the text data.
@@ -441,6 +599,37 @@ def get_sichel_s(data: pl.DataFrame,
     data = data.with_columns(
         (pl.col("n_hapax_dislegomena") / pl.col("n_types")
          ).alias("sichel_s"),
+    )
+
+    return data
+
+def get_global_sichel_s(data: pl.DataFrame,
+                        backbone: str = 'spacy',
+                        **kwargs: dict[str, str],
+                        ) -> pl.DataFrame:
+    """
+    Calculates the global Sichel's S of a text:
+    N_global_token_hapax_dislegomena / N_types.
+
+    Args:
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        backbone (str): The NLP library used to process the text data.
+                        Either 'spacy' or 'stanza'.
+    
+    Returns:
+        data (pl.DataFrame):
+            A Polars DataFrame containing the global Sichel's S of the
+            text data. The global Sichel's S is stored in a new column
+            named 'global_sichel_s'.
+    """
+    if 'n_types' not in data.columns:
+        data = get_num_types(data, backbone=backbone)
+    if 'n_global_token_hapax_dislegomena' not in data.columns:
+        data = get_global_token_hapax_dislegomena(data, backbone=backbone)
+
+    data = data.with_columns(
+        (pl.col("n_global_token_hapax_dislegomena") / pl.col("n_types")
+         ).alias("global_sichel_s"),
     )
 
     return data
