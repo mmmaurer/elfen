@@ -45,6 +45,11 @@ from .semantic import (
     load_hedges,
 )
 
+from .surface import (
+    get_global_lemma_frequencies,
+    get_global_token_frequencies,
+)
+
 from .util import (
     rescale_column,
     normalize_column,
@@ -488,9 +493,9 @@ class Extractor:
                                             self.helper_cols))
     
     def write_csv(self,
-               filepath: str,
-               **kwargs,
-               ) -> None:
+                  filepath: str,
+                  **kwargs,
+                  ) -> None:
         """
         Save the extracted features to a CSV file.
         Cleans up the data by removing helper columns before saving and
@@ -506,4 +511,41 @@ class Extractor:
         """
         self.__cleanup_cols()
         self.data.write_csv(filepath, **kwargs)
+
+    def get_data(self) -> pl.DataFrame:
+        """
+        Get the data with the extracted features.
+
+        Returns:
+            data (pl.DataFrame):
+                The data with the extracted features.
+        """
+        return self.data
+    
+    def get_corpus_frequencies(self,
+                               kind: str = "token",
+                               ) -> dict[str, int]:
+        """
+        Get the global frequencies of tokens or lemmas in the data.
+
+        Args:
+            kind (str): 
+                The kind of frequency to get. Default is "token".
+                Options are "token" or "lemma".
+        
+        Returns:
+            frequencies (dict[str, int]):
+                A dictionary of the global frequencies of tokens or lemmas
+                in the data.
+        """
+        if kind == "token":
+            frequencies = get_global_token_frequencies(
+                data=self.data,
+                backbone=self.config["backbone"])
+        elif kind == "lemma":
+            frequencies = get_global_lemma_frequencies(
+                data=self.data,
+                backbone=self.config["backbone"])
+            
+        return frequencies
 
