@@ -23,11 +23,6 @@ The norms used in this module are:
     Word prevalence norms for 62,000 English lemmas.
     Behavior Research Methods, 51(2), 467-479.
 
-- Prevalence norms:
-    Brysbaert, M., Mandera, P., McCormick, S. F., & Keuleers, E. (2019).
-    Word prevalence norms for 62,000 English lemmas.
-    Behavior Research Methods, 51(2), 467-479.
-
 - Socialness Norms:
     Diveica, V., Pexman, P.M., & Binney, R.J. (2023).
     Quantifying Social Semantics: An Inclusive Definition of Socialness
