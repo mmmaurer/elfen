@@ -29,11 +29,24 @@ The lexical richness metrics implemented in this module are:
     by the square of the logarithm of the number of types.
 - Number of Hapax Legomena:
     The number of words that occur only once in the text.
+- Number of Global Token Hapax Legomena:
+    The number of words that occur only once in the entire corpus.
+- Number of Global Lemma Hapax Legomena:
+    The number of lemmas that occur only once in the entire corpus.
 - Number of Hapax Dislegomena:
     The number of words that occur only once or twice in the text.
+- Number of Global Token Hapax Dislegomena:
+    The number of words that occur only once or twice in the entire
+    corpus.
+- Number of Global Lemma Hapax Dislegomena:
+    The number of lemmas that occur only once or twice in the entire
+    corpus.
 - Sichel's S:
     The number of hapax dislegomena divided by the number of types in the
     text.
+- Global Sichel's S:
+    The number of global token hapax dislegomena divided by the number of
+    types in the text.
 - Lexical Density:
     The ratio of the number of lexical tokens to the number of tokens in
     the text.
