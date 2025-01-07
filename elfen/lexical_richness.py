@@ -406,14 +406,14 @@ def get_n_global_token_hapax_legomena(data: pl.DataFrame,
     token_freqs = get_global_token_frequencies(data, backbone=backbone)
     if backbone == 'spacy':
         data = data.with_columns(
-            pl.col("token_freqs").map_elements(lambda x: len(
+            pl.col("nlp").map_elements(lambda x: len(
                 [token for token in x if token_freqs[token.text] == 1]),
                 return_dtype=pl.UInt32). \
                     alias("n_global_token_hapax_legomena")
         )
     elif backbone == 'stanza':
         data = data.with_columns(
-            pl.col("token_freqs").map_elements(lambda x: len(
+            pl.col("nlp").map_elements(lambda x: len(
                 [token for sent in x.sentences for token in sent.tokens
                  if token_freqs[token.text] == 1]),
                 return_dtype=pl.UInt32). \
@@ -528,14 +528,14 @@ def get_global_token_hapax_dislegomena(data: pl.DataFrame,
 
     if backbone == 'spacy':
         data = data.with_columns(
-            pl.col("token_freqs").map_elements(lambda x: len(
+            pl.col("nlp").map_elements(lambda x: len(
                 [token for token in x if token_freqs[token.text] <= 2]),
                 return_dtype=pl.UInt32). \
                     alias("n_global_token_hapax_dislegomena")
         )
     elif backbone == 'stanza':
         data = data.with_columns(
-            pl.col("token_freqs").map_elements(lambda x: len(
+            pl.col("nlp").map_elements(lambda x: len(
                 [token for sent in x.sentences for token in sent.tokens
                  if token_freqs[token.text] <= 2]),
                 return_dtype=pl.UInt32). \
