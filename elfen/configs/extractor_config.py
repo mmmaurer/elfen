@@ -58,10 +58,10 @@ CONFIG_ALL = {
             "lexical_density",
             "n_hapax_legomena",
             "n_global_token_hapax_legomena",
-            "n_global_type_hapax_legomena",
+            "n_global_lemma_hapax_legomena",
             "n_hapax_dislegomena",
             "n_global_token_hapax_dislegomena",
-            "n_global_type_hapax_dislegomena",
+            "n_global_lemma_hapax_dislegomena",
             "sichel_s",
             "global_sichel_s"
             "giroud_index",

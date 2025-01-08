@@ -101,6 +101,7 @@ class Extractor:
                                     max_length=max_length)
         
         self.helper_cols = [
+            "nlp",
             "lemmas",
             "tokens",
             "token_freqs",
@@ -467,7 +468,8 @@ class Extractor:
         """
         if self.config["remove_constant_cols"] and len(self.data) > 1:
             self.__remove_constant_cols()
-        self.data = self.data.drop(self.helper_cols)
+        self.data = self.data.drop(
+            set(self.data.columns).intersection(set(self.helper_cols)))
 
     def __remove_constant_cols(self):
         """

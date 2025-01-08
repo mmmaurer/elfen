@@ -427,8 +427,7 @@ def get_avg_sd_aoa(data: pl.DataFrame,
                                      word_column="Word"). \
                 select(pl.col("Rating.SD")).mean().item(),
                 return_dtype=pl.Float64
-                ).fill_nan(nan_value).fill_null(nan_value). \
-                    alias("avg_sd_aoa")
+                ).alias("avg_sd_aoa")
     )
 
     return data

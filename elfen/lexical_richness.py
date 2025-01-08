@@ -445,8 +445,8 @@ def get_n_global_lemma_hapax_legomena(data: pl.DataFrame,
     if backbone == 'spacy':
         data = data.with_columns(
             pl.col("nlp").map_elements(lambda x: len(
-                [token.lemma for token in x if 
-                 lemma_freqs[token.lemma] == 1]),
+                [token.lemma_ for token in x if 
+                 lemma_freqs[token.lemma_] == 1]),
                 return_dtype=pl.UInt32). \
                     alias("n_global_lemma_hapax_legomena")
         )
@@ -459,6 +459,8 @@ def get_n_global_lemma_hapax_legomena(data: pl.DataFrame,
                 return_dtype=pl.UInt32). \
                     alias("n_global_lemma_hapax_legomena")
         )
+
+    return data
 
 def get_n_hapax_dislegomena(data: pl.DataFrame,
                             backbone: str = 'spacy',
@@ -504,7 +506,7 @@ def get_n_hapax_dislegomena(data: pl.DataFrame,
     
     return data
 
-def get_global_token_hapax_dislegomena(data: pl.DataFrame,
+def get_n_global_token_hapax_dislegomena(data: pl.DataFrame,
                                        backbone: str = 'spacy',
                                        **kwargs: dict[str, str],
                                        ) -> pl.DataFrame:
@@ -544,7 +546,7 @@ def get_global_token_hapax_dislegomena(data: pl.DataFrame,
 
     return data
 
-def get_global_lemma_hapax_dislegomena(data: pl.DataFrame,
+def get_n_global_lemma_hapax_dislegomena(data: pl.DataFrame,
                                        backbone: str = 'spacy',
                                        **kwargs: dict[str, str],
                                        ) -> pl.DataFrame:
@@ -569,8 +571,8 @@ def get_global_lemma_hapax_dislegomena(data: pl.DataFrame,
     if backbone == 'spacy':
         data = data.with_columns(
             pl.col("nlp").map_elements(lambda x: len(
-                [token.lemma for token in x if 
-                 lemma_freqs[token.lemma] <= 2]),
+                [token.lemma_ for token in x if 
+                 lemma_freqs[token.lemma_] <= 2]),
                 return_dtype=pl.UInt32). \
                     alias("n_global_lemma_hapax_dislegomena")
         )
@@ -638,7 +640,8 @@ def get_global_sichel_s(data: pl.DataFrame,
     if 'n_types' not in data.columns:
         data = get_num_types(data, backbone=backbone)
     if 'n_global_token_hapax_dislegomena' not in data.columns:
-        data = get_global_token_hapax_dislegomena(data, backbone=backbone)
+        data = get_n_global_token_hapax_dislegomena(data,
+                                                    backbone=backbone)
 
     data = data.with_columns(
         (pl.col("n_global_token_hapax_dislegomena") / pl.col("n_types")
