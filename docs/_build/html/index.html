@@ -1,0 +1,388 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ELFEN - Efficient Linguistic Feature Extraction for Natural Language Datasets &mdash; ELFEN 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            ELFEN
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_configuration.html">Custom configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="feature_overview.html">Feature Overview</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="elfen.html">Module documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">ELFEN</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">ELFEN - Efficient Linguistic Feature Extraction for Natural Language Datasets</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="elfen-efficient-linguistic-feature-extraction-for-natural-language-datasets">
+<h1>ELFEN - Efficient Linguistic Feature Extraction for Natural Language Datasets<a class="headerlink" href="#elfen-efficient-linguistic-feature-extraction-for-natural-language-datasets" title="Link to this heading"></a></h1>
+<p>ELFEN (Efficient Linguistic Feature Extraction for Natural Language Datasets) is a Python package that provides a set of tools for extracting linguistic features from text datasets. It provides an extensive set of features that can be used to analyze text data and NLP model outputs.
+Since it is built on top of the modern dataframe package <a class="reference external" href="https://www.pola.rs">polars</a>, it is able to handle large datasets efficiently. Preprocessing backbones are built on top of the popular NLP libraries <a class="reference external" href="https://spacy.io">spaCy</a> and <a class="reference external" href="https://stanfordnlp.github.io/stanza/">stanza</a>, allowing for the use of both light-weight and state-of-the-art NLP models for feature extraction in various Languages.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The package is still under development. If you encounter any issues or have any suggestions, please feel free to open an issue or add a pull request on the <a class="reference external" href="https://www.github.com/mmmaurer/elfen">GitHub repository</a>.</p>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#package-installation">Package installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#additional-resources-and-models">Additional resources and models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#backbone-models">Backbone models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#third-party-resources">Third-party resources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#default-norms-and-lexicons">Default norms and lexicons</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#extracting-a-single-feature">Extracting a single feature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#extracting-a-single-feature-with-additional-parameters">Extracting a single feature with additional parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#extracting-multiple-specific-features">Extracting multiple specific features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#extracting-feature-areas">Extracting feature areas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#extracting-features-using-a-custom-configuration">Extracting features using a custom configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#normalizing-extracted-features">Normalizing extracted features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials.html#normalize">Normalize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials.html#ratio-normalize">Ratio Normalize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials.html#rescale">Rescale</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#extracting-custom-lexicon-based-features">Extracting custom lexicon-based features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="custom_configuration.html">Custom configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="feature_overview.html">Feature Overview</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="elfen.html">Module documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="elfen.html#module-elfen.custom">elfen.custom module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.custom.get_avg_custom"><code class="docutils literal notranslate"><span class="pre">get_avg_custom()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.custom.get_n_custom"><code class="docutils literal notranslate"><span class="pre">get_n_custom()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.custom.get_n_custom_high"><code class="docutils literal notranslate"><span class="pre">get_n_custom_high()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.custom.get_n_custom_low"><code class="docutils literal notranslate"><span class="pre">get_n_custom_low()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.custom.get_occurs_custom"><code class="docutils literal notranslate"><span class="pre">get_occurs_custom()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="elfen.html#module-elfen.dependency">elfen.dependency module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.dependency.get_n_noun_chunks"><code class="docutils literal notranslate"><span class="pre">get_n_noun_chunks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.dependency.get_n_per_dependency_type"><code class="docutils literal notranslate"><span class="pre">get_n_per_dependency_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.dependency.get_ramification_factor"><code class="docutils literal notranslate"><span class="pre">get_ramification_factor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.dependency.get_tree_branching"><code class="docutils literal notranslate"><span class="pre">get_tree_branching()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.dependency.get_tree_depth"><code class="docutils literal notranslate"><span class="pre">get_tree_depth()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.dependency.get_tree_width"><code class="docutils literal notranslate"><span class="pre">get_tree_width()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="elfen.html#module-elfen.emotion">elfen.emotion module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.emotion.load_intensity_lexicon"><code class="docutils literal notranslate"><span class="pre">load_intensity_lexicon()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.emotion.load_sentiment_nrc_lexicon"><code class="docutils literal notranslate"><span class="pre">load_sentiment_nrc_lexicon()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.emotion.load_vad_lexicon"><code class="docutils literal notranslate"><span class="pre">load_vad_lexicon()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.emotion.filter_intensity_lexicon"><code class="docutils literal notranslate"><span class="pre">filter_intensity_lexicon()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.emotion.filter_sentiment_lexicon"><code class="docutils literal notranslate"><span class="pre">filter_sentiment_lexicon()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.emotion.get_avg_arousal"><code class="docutils literal notranslate"><span class="pre">get_avg_arousal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.emotion.get_avg_dominance"><code class="docutils literal notranslate"><span class="pre">get_avg_dominance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.emotion.get_avg_emotion_intensity"><code class="docutils literal notranslate"><span class="pre">get_avg_emotion_intensity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.emotion.get_avg_valence"><code class="docutils literal notranslate"><span class="pre">get_avg_valence()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.emotion.get_n_high_arousal"><code class="docutils literal notranslate"><span class="pre">get_n_high_arousal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.emotion.get_n_high_dominance"><code class="docutils literal notranslate"><span class="pre">get_n_high_dominance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.emotion.get_n_high_intensity"><code class="docutils literal notranslate"><span class="pre">get_n_high_intensity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.emotion.get_n_high_valence"><code class="docutils literal notranslate"><span class="pre">get_n_high_valence()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.emotion.get_n_low_arousal"><code class="docutils literal notranslate"><span class="pre">get_n_low_arousal()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.emotion.get_n_low_dominance"><code class="docutils literal notranslate"><span class="pre">get_n_low_dominance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.emotion.get_n_low_intensity"><code class="docutils literal notranslate"><span class="pre">get_n_low_intensity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.emotion.get_n_low_valence"><code class="docutils literal notranslate"><span class="pre">get_n_low_valence()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.emotion.get_n_negative_sentiment"><code class="docutils literal notranslate"><span class="pre">get_n_negative_sentiment()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.emotion.get_n_positive_sentiment"><code class="docutils literal notranslate"><span class="pre">get_n_positive_sentiment()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.emotion.get_sentiment_score"><code class="docutils literal notranslate"><span class="pre">get_sentiment_score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="elfen.html#module-elfen.entities">elfen.entities module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.entities.get_num_entities"><code class="docutils literal notranslate"><span class="pre">get_num_entities()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.entities.get_num_per_entity_type"><code class="docutils literal notranslate"><span class="pre">get_num_per_entity_type()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="elfen.html#module-elfen.extractor">elfen.extractor module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.extractor.Extractor"><code class="docutils literal notranslate"><span class="pre">Extractor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="elfen.html#elfen.extractor.Extractor.extract_feature_group"><code class="docutils literal notranslate"><span class="pre">Extractor.extract_feature_group()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="elfen.html#elfen.extractor.Extractor.extract"><code class="docutils literal notranslate"><span class="pre">Extractor.extract()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="elfen.html#elfen.extractor.Extractor.extract_features"><code class="docutils literal notranslate"><span class="pre">Extractor.extract_features()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="elfen.html#elfen.extractor.Extractor.get_corpus_frequencies"><code class="docutils literal notranslate"><span class="pre">Extractor.get_corpus_frequencies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="elfen.html#elfen.extractor.Extractor.get_data"><code class="docutils literal notranslate"><span class="pre">Extractor.get_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="elfen.html#elfen.extractor.Extractor.get_feature_names"><code class="docutils literal notranslate"><span class="pre">Extractor.get_feature_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="elfen.html#elfen.extractor.Extractor.normalize"><code class="docutils literal notranslate"><span class="pre">Extractor.normalize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="elfen.html#elfen.extractor.Extractor.ratio_normalize"><code class="docutils literal notranslate"><span class="pre">Extractor.ratio_normalize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="elfen.html#elfen.extractor.Extractor.rescale"><code class="docutils literal notranslate"><span class="pre">Extractor.rescale()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="elfen.html#elfen.extractor.Extractor.write_csv"><code class="docutils literal notranslate"><span class="pre">Extractor.write_csv()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="elfen.html#module-elfen.features">elfen.features module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elfen.html#module-elfen.information">elfen.information module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.information.entropy"><code class="docutils literal notranslate"><span class="pre">entropy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.information.get_compressibility"><code class="docutils literal notranslate"><span class="pre">get_compressibility()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.information.get_entropy"><code class="docutils literal notranslate"><span class="pre">get_entropy()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="elfen.html#module-elfen.lexical_richness">elfen.lexical_richness module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_cttr"><code class="docutils literal notranslate"><span class="pre">get_cttr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_dougast_u"><code class="docutils literal notranslate"><span class="pre">get_dougast_u()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_giroud_index"><code class="docutils literal notranslate"><span class="pre">get_giroud_index()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_global_sichel_s"><code class="docutils literal notranslate"><span class="pre">get_global_sichel_s()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_hdd"><code class="docutils literal notranslate"><span class="pre">get_hdd()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_herdan_c"><code class="docutils literal notranslate"><span class="pre">get_herdan_c()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_herdan_v"><code class="docutils literal notranslate"><span class="pre">get_herdan_v()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_lemma_token_ratio"><code class="docutils literal notranslate"><span class="pre">get_lemma_token_ratio()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_lexical_density"><code class="docutils literal notranslate"><span class="pre">get_lexical_density()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_maas_index"><code class="docutils literal notranslate"><span class="pre">get_maas_index()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_mattr"><code class="docutils literal notranslate"><span class="pre">get_mattr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_msttr"><code class="docutils literal notranslate"><span class="pre">get_msttr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_mtld"><code class="docutils literal notranslate"><span class="pre">get_mtld()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_n_global_lemma_hapax_dislegomena"><code class="docutils literal notranslate"><span class="pre">get_n_global_lemma_hapax_dislegomena()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_n_global_lemma_hapax_legomena"><code class="docutils literal notranslate"><span class="pre">get_n_global_lemma_hapax_legomena()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_n_global_token_hapax_dislegomena"><code class="docutils literal notranslate"><span class="pre">get_n_global_token_hapax_dislegomena()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_n_global_token_hapax_legomena"><code class="docutils literal notranslate"><span class="pre">get_n_global_token_hapax_legomena()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_n_hapax_dislegomena"><code class="docutils literal notranslate"><span class="pre">get_n_hapax_dislegomena()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_n_hapax_legomena"><code class="docutils literal notranslate"><span class="pre">get_n_hapax_legomena()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_rttr"><code class="docutils literal notranslate"><span class="pre">get_rttr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_sichel_s"><code class="docutils literal notranslate"><span class="pre">get_sichel_s()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_simpsons_d"><code class="docutils literal notranslate"><span class="pre">get_simpsons_d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_summer_index"><code class="docutils literal notranslate"><span class="pre">get_summer_index()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_ttr"><code class="docutils literal notranslate"><span class="pre">get_ttr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.lexical_richness.get_yule_k"><code class="docutils literal notranslate"><span class="pre">get_yule_k()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="elfen.html#module-elfen.morphological">elfen.morphological module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.morphological.get_morph_feats"><code class="docutils literal notranslate"><span class="pre">get_morph_feats()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="elfen.html#module-elfen.pos">elfen.pos module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.pos.get_num_lexical_tokens"><code class="docutils literal notranslate"><span class="pre">get_num_lexical_tokens()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.pos.get_num_per_pos"><code class="docutils literal notranslate"><span class="pre">get_num_per_pos()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.pos.get_pos_variability"><code class="docutils literal notranslate"><span class="pre">get_pos_variability()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="elfen.html#module-elfen.preprocess">elfen.preprocess module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.preprocess.get_lemmas"><code class="docutils literal notranslate"><span class="pre">get_lemmas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.preprocess.get_tokens"><code class="docutils literal notranslate"><span class="pre">get_tokens()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.preprocess.preprocess_data"><code class="docutils literal notranslate"><span class="pre">preprocess_data()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="elfen.html#module-elfen.psycholinguistic">elfen.psycholinguistic module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.filter_concreteness_norms"><code class="docutils literal notranslate"><span class="pre">filter_concreteness_norms()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_avg_aoa"><code class="docutils literal notranslate"><span class="pre">get_avg_aoa()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_avg_concreteness"><code class="docutils literal notranslate"><span class="pre">get_avg_concreteness()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_avg_iconicity"><code class="docutils literal notranslate"><span class="pre">get_avg_iconicity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_avg_prevalence"><code class="docutils literal notranslate"><span class="pre">get_avg_prevalence()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_avg_sd_aoa"><code class="docutils literal notranslate"><span class="pre">get_avg_sd_aoa()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_avg_sd_concreteness"><code class="docutils literal notranslate"><span class="pre">get_avg_sd_concreteness()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_avg_sd_iconicity"><code class="docutils literal notranslate"><span class="pre">get_avg_sd_iconicity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_avg_sd_sensorimotor"><code class="docutils literal notranslate"><span class="pre">get_avg_sd_sensorimotor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_avg_sd_socialness"><code class="docutils literal notranslate"><span class="pre">get_avg_sd_socialness()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_avg_sensorimotor"><code class="docutils literal notranslate"><span class="pre">get_avg_sensorimotor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_avg_socialness"><code class="docutils literal notranslate"><span class="pre">get_avg_socialness()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_n_controversial_aoa"><code class="docutils literal notranslate"><span class="pre">get_n_controversial_aoa()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_n_controversial_concreteness"><code class="docutils literal notranslate"><span class="pre">get_n_controversial_concreteness()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_n_controversial_iconicity"><code class="docutils literal notranslate"><span class="pre">get_n_controversial_iconicity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_n_controversial_sensorimotor"><code class="docutils literal notranslate"><span class="pre">get_n_controversial_sensorimotor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_n_controversial_socialness"><code class="docutils literal notranslate"><span class="pre">get_n_controversial_socialness()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_n_high_aoa"><code class="docutils literal notranslate"><span class="pre">get_n_high_aoa()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_n_high_concreteness"><code class="docutils literal notranslate"><span class="pre">get_n_high_concreteness()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_n_high_iconicity"><code class="docutils literal notranslate"><span class="pre">get_n_high_iconicity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_n_high_prevalence"><code class="docutils literal notranslate"><span class="pre">get_n_high_prevalence()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_n_high_sensorimotor"><code class="docutils literal notranslate"><span class="pre">get_n_high_sensorimotor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_n_high_socialness"><code class="docutils literal notranslate"><span class="pre">get_n_high_socialness()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_n_low_aoa"><code class="docutils literal notranslate"><span class="pre">get_n_low_aoa()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_n_low_concreteness"><code class="docutils literal notranslate"><span class="pre">get_n_low_concreteness()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_n_low_iconicity"><code class="docutils literal notranslate"><span class="pre">get_n_low_iconicity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_n_low_prevalence"><code class="docutils literal notranslate"><span class="pre">get_n_low_prevalence()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_n_low_sensorimotor"><code class="docutils literal notranslate"><span class="pre">get_n_low_sensorimotor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.get_n_low_socialness"><code class="docutils literal notranslate"><span class="pre">get_n_low_socialness()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.load_aoa_norms"><code class="docutils literal notranslate"><span class="pre">load_aoa_norms()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.load_concreteness_norms"><code class="docutils literal notranslate"><span class="pre">load_concreteness_norms()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.load_iconicity_norms"><code class="docutils literal notranslate"><span class="pre">load_iconicity_norms()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.load_prevalence_norms"><code class="docutils literal notranslate"><span class="pre">load_prevalence_norms()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.load_sensorimotor_norms"><code class="docutils literal notranslate"><span class="pre">load_sensorimotor_norms()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.psycholinguistic.load_socialness_norms"><code class="docutils literal notranslate"><span class="pre">load_socialness_norms()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="elfen.html#module-elfen.ratios">elfen.ratios module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.ratios.get_feature_sentence_ratio"><code class="docutils literal notranslate"><span class="pre">get_feature_sentence_ratio()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.ratios.get_feature_token_ratio"><code class="docutils literal notranslate"><span class="pre">get_feature_token_ratio()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.ratios.get_feature_type_ratio"><code class="docutils literal notranslate"><span class="pre">get_feature_type_ratio()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="elfen.html#module-elfen.readability">elfen.readability module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.readability.get_ari"><code class="docutils literal notranslate"><span class="pre">get_ari()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.readability.get_cli"><code class="docutils literal notranslate"><span class="pre">get_cli()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.readability.get_flesch_kincaid_grade"><code class="docutils literal notranslate"><span class="pre">get_flesch_kincaid_grade()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.readability.get_flesch_reading_ease"><code class="docutils literal notranslate"><span class="pre">get_flesch_reading_ease()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.readability.get_gunning_fog"><code class="docutils literal notranslate"><span class="pre">get_gunning_fog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.readability.get_lix"><code class="docutils literal notranslate"><span class="pre">get_lix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.readability.get_num_monosyllables"><code class="docutils literal notranslate"><span class="pre">get_num_monosyllables()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.readability.get_num_polysyllables"><code class="docutils literal notranslate"><span class="pre">get_num_polysyllables()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.readability.get_num_syllables"><code class="docutils literal notranslate"><span class="pre">get_num_syllables()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.readability.get_rix"><code class="docutils literal notranslate"><span class="pre">get_rix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.readability.get_smog"><code class="docutils literal notranslate"><span class="pre">get_smog()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="elfen.html#module-elfen.resources">elfen.resources module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.resources.download_lexicon"><code class="docutils literal notranslate"><span class="pre">download_lexicon()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.resources.get_bibtex"><code class="docutils literal notranslate"><span class="pre">get_bibtex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.resources.get_resource"><code class="docutils literal notranslate"><span class="pre">get_resource()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.resources.list_external_resources"><code class="docutils literal notranslate"><span class="pre">list_external_resources()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="elfen.html#module-elfen.schemas">elfen.schemas module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elfen.html#module-elfen.semantic">elfen.semantic module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.semantic.get_avg_num_synsets"><code class="docutils literal notranslate"><span class="pre">get_avg_num_synsets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.semantic.get_avg_num_synsets_per_pos"><code class="docutils literal notranslate"><span class="pre">get_avg_num_synsets_per_pos()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.semantic.get_hedges_ratio"><code class="docutils literal notranslate"><span class="pre">get_hedges_ratio()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.semantic.get_high_synsets_per_pos"><code class="docutils literal notranslate"><span class="pre">get_high_synsets_per_pos()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.semantic.get_low_synsets_per_pos"><code class="docutils literal notranslate"><span class="pre">get_low_synsets_per_pos()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.semantic.get_num_hedges"><code class="docutils literal notranslate"><span class="pre">get_num_hedges()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.semantic.get_num_high_synsets"><code class="docutils literal notranslate"><span class="pre">get_num_high_synsets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.semantic.get_num_low_synsets"><code class="docutils literal notranslate"><span class="pre">get_num_low_synsets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.semantic.get_synsets"><code class="docutils literal notranslate"><span class="pre">get_synsets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.semantic.load_hedges"><code class="docutils literal notranslate"><span class="pre">load_hedges()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="elfen.html#module-elfen.surface">elfen.surface module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.surface.get_avg_word_length"><code class="docutils literal notranslate"><span class="pre">get_avg_word_length()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.surface.get_chars_per_sentence"><code class="docutils literal notranslate"><span class="pre">get_chars_per_sentence()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.surface.get_global_lemma_frequencies"><code class="docutils literal notranslate"><span class="pre">get_global_lemma_frequencies()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.surface.get_global_token_frequencies"><code class="docutils literal notranslate"><span class="pre">get_global_token_frequencies()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.surface.get_num_characters"><code class="docutils literal notranslate"><span class="pre">get_num_characters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.surface.get_num_lemmas"><code class="docutils literal notranslate"><span class="pre">get_num_lemmas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.surface.get_num_long_words"><code class="docutils literal notranslate"><span class="pre">get_num_long_words()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.surface.get_num_sentences"><code class="docutils literal notranslate"><span class="pre">get_num_sentences()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.surface.get_num_tokens"><code class="docutils literal notranslate"><span class="pre">get_num_tokens()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.surface.get_num_tokens_per_sentence"><code class="docutils literal notranslate"><span class="pre">get_num_tokens_per_sentence()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.surface.get_num_types"><code class="docutils literal notranslate"><span class="pre">get_num_types()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.surface.get_raw_length_per_sentence"><code class="docutils literal notranslate"><span class="pre">get_raw_length_per_sentence()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.surface.get_raw_sequence_length"><code class="docutils literal notranslate"><span class="pre">get_raw_sequence_length()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.surface.get_token_freqs"><code class="docutils literal notranslate"><span class="pre">get_token_freqs()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="elfen.html#module-elfen.util">elfen.util module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.util.filter_lexicon"><code class="docutils literal notranslate"><span class="pre">filter_lexicon()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.util.normalize_column"><code class="docutils literal notranslate"><span class="pre">normalize_column()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.util.rescale_column"><code class="docutils literal notranslate"><span class="pre">rescale_column()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="elfen.html#elfen.util.upos_to_wn"><code class="docutils literal notranslate"><span class="pre">upos_to_wn()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Maximilian Maurer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

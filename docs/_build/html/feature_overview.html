@@ -1,0 +1,1068 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feature Overview &mdash; ELFEN 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Module documentation" href="elfen.html" />
+    <link rel="prev" title="Custom configuration" href="custom_configuration.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ELFEN
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_configuration.html">Custom configuration</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Feature Overview</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="elfen.html">Module documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ELFEN</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Feature Overview</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/feature_overview.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="feature-overview">
+<span id="id1"></span><h1>Feature Overview<a class="headerlink" href="#feature-overview" title="Link to this heading"></a></h1>
+<p>The table below gives an overview of the implemented features in ELFEN, grouped by feature area,
+with details on the feature name, description, and the feature area it belongs to.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14.3%" />
+<col style="width: 14.3%" />
+<col style="width: 14.3%" />
+<col style="width: 14.3%" />
+<col style="width: 14.3%" />
+<col style="width: 14.3%" />
+<col style="width: 14.3%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Feature</p></th>
+<th class="head"><p>Feature Area</p></th>
+<th class="head"><p>Feature name</p></th>
+<th class="head"><p>Name in extracted dataframe</p></th>
+<th class="head"><p>Function</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Raw sequence length/total number of characters</p></td>
+<td><p>surface</p></td>
+<td><p>raw_sequence_length</p></td>
+<td><p>raw_sequence_length</p></td>
+<td><p>get_raw_sequence_length</p></td>
+<td><p>Number of characters in the text (including whitespaces)</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Number of tokens</p></td>
+<td><p>surface</p></td>
+<td><p>n_tokens</p></td>
+<td><p>n_tokens</p></td>
+<td><p>get_num_tokens</p></td>
+<td><p>Number of tokens in the text</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Number of sentences</p></td>
+<td><p>surface</p></td>
+<td><p>n_sentences</p></td>
+<td><p>n_sentences</p></td>
+<td><p>get_num_sentences</p></td>
+<td><p>Number of sentences in the text</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Number of token per sentence</p></td>
+<td><p>surface</p></td>
+<td><p>tokens_per_sentence</p></td>
+<td><p>tokens_per_sentence</p></td>
+<td><p>get_num_tokens_per_sentence</p></td>
+<td><p>Average number of tokens per sentence: n_tokens / n_sentences</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Number of characters</p></td>
+<td><p>surface</p></td>
+<td><p>n_characters</p></td>
+<td><p>n_characters</p></td>
+<td><p>get_num_characters</p></td>
+<td><p>Number of characters in the text (excluding whitespaces)</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Characters per sentence</p></td>
+<td><p>surface</p></td>
+<td><p>characters_per_sentence</p></td>
+<td><p>characters_per_sentence</p></td>
+<td><p>get_chars_per_sentence</p></td>
+<td><p>Average number of characters per sentence: n_characters / n_sentences</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Raw sequence length per sentence</p></td>
+<td><p>surface</p></td>
+<td><p>raw_length_per_sentence</p></td>
+<td><p>raw_length_per_sentence</p></td>
+<td><p>get_raw_length_per_sentence</p></td>
+<td><p>Average number of characters per sentence: raw_sequence_length / n_sentences</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Average word length</p></td>
+<td><p>surface</p></td>
+<td><p>avg_word_length</p></td>
+<td><p>avg_word_length</p></td>
+<td><p>get_avg_word_length</p></td>
+<td><p>Average word length (in characters): n_characters / n_tokens</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Number of types</p></td>
+<td><p>surface</p></td>
+<td><p>n_types</p></td>
+<td><p>n_types</p></td>
+<td><p>get_num_types</p></td>
+<td><p>Number of types (unique tokens) in the text</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Number of long words</p></td>
+<td><p>surface</p></td>
+<td><p>n_long_words</p></td>
+<td><p>n_long_words</p></td>
+<td><p>get_num_long_words</p></td>
+<td><p>Number of long words (i.t.o. characters)</p></td>
+<td><p>Threshold of what is considered a long word defaults to &gt;6 characters; can be adapted in the config</p></td>
+</tr>
+<tr class="row-even"><td><p>Number of lemmas</p></td>
+<td><p>surface</p></td>
+<td><p>n_lemmas</p></td>
+<td><p>n_lemmas</p></td>
+<td><p>get_num_lemmas</p></td>
+<td><p>Number of lemmas in the text</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Token frequencies</p></td>
+<td><p>surface</p></td>
+<td><p>token_freqs</p></td>
+<td><p>token_freqs</p></td>
+<td><p>get_token_freqs</p></td>
+<td><p>Token frequencies of the types in the text</p></td>
+<td><p>As this produces a list in a column, writing to file has to be handled</p></td>
+</tr>
+<tr class="row-even"><td><p>Number of lexical tokens</p></td>
+<td><p>pos</p></td>
+<td><p>n_lexical_tokens</p></td>
+<td><p>n_lexical_tokens</p></td>
+<td><p>get_num_lexical_tokens</p></td>
+<td><p>Number of lexical tokens (tokens w/ upos tag NOUN, ADVERB, ADJ, ADV)</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>POS variability</p></td>
+<td><p>pos</p></td>
+<td><p>pos_variability</p></td>
+<td><p>pos_variability</p></td>
+<td><p>get_pos_variability</p></td>
+<td><p>POS variability of the text: (unique upos text in the text) / n_tokens</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Number of tokens with upos tag {pos}</p></td>
+<td><p>pos</p></td>
+<td><p>n_per_pos</p></td>
+<td><p>n_{pos}</p></td>
+<td><p>get_num_per_pos</p></td>
+<td><p>Number of tokens with a given upos tag in the text. Takes a list of upos tag to extract this feature for</p></td>
+<td><p>pos_list defaults to all  upos tags; if you only need a subset, this can be adapted in the config</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lemma token ratio</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>lemma_token_ratio</p></td>
+<td><p>lemma_token_ratio</p></td>
+<td><p>get_lemma_token_ratio</p></td>
+<td><p>Lemma token ratio of the text: n_lemmas / n_tokens</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Type token ratio</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>ttr</p></td>
+<td><p>ttr</p></td>
+<td><p>get_ttr</p></td>
+<td><p>Type token ratio of the text: n_types / n_tokens</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Root type token ratio</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>rttr</p></td>
+<td><p>rttr</p></td>
+<td><p>get_rttr</p></td>
+<td><p>Root type token ratio of the text: sqrt(n_types / n_tokens)</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Corrected type token ratio</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>cttr</p></td>
+<td><p>cttr</p></td>
+<td><p>get_cttr</p></td>
+<td><p>Corrected type token ratio of the text: n_types / sqrt(2 * n_tokens)</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Herdan’s C</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>herdan_c</p></td>
+<td><p>herdan_c</p></td>
+<td><p>get_herdan_c</p></td>
+<td><p>Herdan’s C of a text: log(n_types) / log(n_tokens)</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Summer’s type token ratio/ index</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>summer_index</p></td>
+<td><p>summer_index</p></td>
+<td><p>get_summer_index</p></td>
+<td><p>Summer’s text token ratio of the text: log(log(n_types)) / log(log(n_tokens))</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Dougast’s Uber index</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>dougast_u</p></td>
+<td><p>dougast_u</p></td>
+<td><p>get_dougast_u</p></td>
+<td><p>Dougast’s Uber index of the text: log(n_types)^2 / (log(n_tokens) - log( n_types))</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Maas’ text token ratio/index</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>maas_index</p></td>
+<td><p>maas_index</p></td>
+<td><p>get_maas_index</p></td>
+<td><p>Maas’ text token ratio of the text: (n_tokens - n_types) / log(n_types)^2</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Number of local hapax legomena</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>n_hapax_legomena</p></td>
+<td><p>n_hapax_legomena</p></td>
+<td><p>get_n_hapax_legomena</p></td>
+<td><p>Number of hapax legomena (tokens that occur only once) in the text</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Number of global token hapax legomena</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>n_global_token_hapax_legomena</p></td>
+<td><p>n_global_token_hapax_legomena</p></td>
+<td><p>get_n_global_token_hapax_legomena</p></td>
+<td><p>Number of hapax legomena (tokens that occur only once) in the entire corpus in the text instance</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Number of global lemma hapax legomena</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>n_global_lemma_hapax_legomena</p></td>
+<td><p>n_global_lemma_hapax_legomena</p></td>
+<td><p>get_n_global_lemma_hapax_legomena</p></td>
+<td><p>Number of hapax legomena (lemmas that occur only once) in the entire corpus in the text instance</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Number of hapax dislegomena</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>n_hapax_dislegomena</p></td>
+<td><p>n_hapax_dislegomena</p></td>
+<td><p>get_n_hapax_dislegomena</p></td>
+<td><p>Number of hapax dislegomena (tokens that occur once or twice) in the text</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Number of global token hapax dislegomena</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>n_global_token_hapax_dislegomena</p></td>
+<td><p>n_global_token_hapax_dislegomena</p></td>
+<td><p>get_n_global_token_hapax_dislegomena</p></td>
+<td><p>Number of hapax dislegomena (tokens that occur once or twice) in the entire corpus in the text instance</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Number of global lemma hapax dislegomena</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>n_global_lemma_hapax_dislegomena</p></td>
+<td><p>n_global_lemma_hapax_dislegomena</p></td>
+<td><p>get_n_global_lemma_hapax_dislegomena</p></td>
+<td><p>Number of hapax dislegomena (tokens that occur once or twice) in the entire corpus in the text instance</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Sichel’s S</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>sichel_s</p></td>
+<td><p>sichel_s</p></td>
+<td><p>get_sichel_s</p></td>
+<td><p>Sichel’s S of the text: n_hapax_dislegomena / n_types</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Global Sichel’s S</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>global_sichel_s</p></td>
+<td><p>global_sichel_s</p></td>
+<td><p>get_global_sichel_s</p></td>
+<td><p>Global Sichel’s S of the text: n_global_token_hapax_dislegomena / n_types</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Lexical density</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>lexical_density</p></td>
+<td><p>lexical_density</p></td>
+<td><p>get_lexical_density</p></td>
+<td><p>Lexical density of the text: n_lexical_tokens / n_tokens</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Giroud’s index</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>giroud_index</p></td>
+<td><p>giroud_index</p></td>
+<td><p>get_giroud_index</p></td>
+<td><p>Giroud’s index of a text: n_types / sqrt(n_tokens)</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Measure of Textual Lexical Density (MTLD)</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>mtld</p></td>
+<td><p>mtld</p></td>
+<td><p>get_mtld</p></td>
+<td><p>For definition, check <a class="reference external" href="https://link.springer.com/article/10.3758/BRM.42.2.381">https://link.springer.com/article/10.3758/BRM.42.2.381</a></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Hypergeometric Distribution Diversity (HD-D</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>hdd</p></td>
+<td><p>hdd</p></td>
+<td><p>get_hdd</p></td>
+<td><p>For definition, check <a class="reference external" href="https://link.springer.com/article/10.3758/BRM.42.2.381">https://link.springer.com/article/10.3758/BRM.42.2.381</a></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Moving-average type token ratio (MATTR)</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>mattr</p></td>
+<td><p>mattr</p></td>
+<td><p>get_mattr</p></td>
+<td><p>Calculates the TTR for a sliding window of n tokens, then takes the average</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Mean segmental type token ratio (MSTTR)</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>msttr</p></td>
+<td><p>msttr</p></td>
+<td><p>get_msttr</p></td>
+<td><p>Divides the text into n segments, calculates the TTR for all of them, then takes the average</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Yule’s K</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>yule_k</p></td>
+<td><p>yule_k</p></td>
+<td><p>get_yule_k</p></td>
+<td><p>Yule’s characteristic constant of vocabulary richness</p></td>
+<td><p>For definition, check <a class="reference external" href="https://quantling.org/~hbaayen/publications/TweedieBaayen1998.pdf">https://quantling.org/~hbaayen/publications/TweedieBaayen1998.pdf</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Simpson’s D</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>simpsons_d</p></td>
+<td><p>simpsons_d</p></td>
+<td><p>get_simpsons_d</p></td>
+<td></td>
+<td><p>For definition, check <a class="reference external" href="https://quantling.org/~hbaayen/publications/TweedieBaayen1998.pdf">https://quantling.org/~hbaayen/publications/TweedieBaayen1998.pdf</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Herdan’s Vm</p></td>
+<td><p>lexical_richness</p></td>
+<td><p>herdan_v</p></td>
+<td><p>herdan_v</p></td>
+<td><p>get_herdan_v</p></td>
+<td></td>
+<td><p>For definition, check <a class="reference external" href="https://quantling.org/~hbaayen/publications/TweedieBaayen1998.pdf">https://quantling.org/~hbaayen/publications/TweedieBaayen1998.pdf</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Number of syllables</p></td>
+<td><p>readability</p></td>
+<td><p>n_syllables</p></td>
+<td><p>n_syllables</p></td>
+<td><p>get_num_syllables</p></td>
+<td><p>Number of syllables in the text</p></td>
+<td><p>Only implemented for spacy backbone</p></td>
+</tr>
+<tr class="row-odd"><td><p>Number of monosyllables</p></td>
+<td><p>readability</p></td>
+<td><p>n_monosyllables</p></td>
+<td><p>n_monosyllables</p></td>
+<td><p>get_num_monosyllables</p></td>
+<td><p>Number of monosyllables (words with only one syllable) in the text</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Number of polysyllables</p></td>
+<td><p>readability</p></td>
+<td><p>n_polysyllables</p></td>
+<td><p>n_polysyllables</p></td>
+<td><p>get_num_polysyllables</p></td>
+<td><p>Number of polysyllables (words with three or more syllables) in the text</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Flesch reading ease</p></td>
+<td><p>readability</p></td>
+<td><p>flesch_reading_ease</p></td>
+<td><p>flesch_reading_ease</p></td>
+<td><p>get_flesch_reading_ease</p></td>
+<td><p>Flesch reading ease score of the text</p></td>
+<td><p>For reference: <a class="reference external" href="https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests#Flesch_Reading_Ease">https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests#Flesch_Reading_Ease</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Flesch-Kincaid Grade Level</p></td>
+<td><p>readability</p></td>
+<td><p>flesch_kincaid_grade</p></td>
+<td><p>flesch_kincaid_grade</p></td>
+<td><p>get_flesch_kincaid_grade</p></td>
+<td><p>Flesch-Kincaid grade level of the text</p></td>
+<td><p>For reference: <a class="reference external" href="https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests#Flesch.E2.80.93Kincaid_Grade_Level">https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests#Flesch.E2.80.93Kincaid_Grade_Level</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Automated Readability Index (ARI)</p></td>
+<td><p>readability</p></td>
+<td><p>ari</p></td>
+<td><p>ari</p></td>
+<td><p>get_ari</p></td>
+<td></td>
+<td><p>For reference: <a class="reference external" href="https://en.wikipedia.org/wiki/Automated_readability_index">https://en.wikipedia.org/wiki/Automated_readability_index</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Simple Measure of Gobbledygook (SMOG)</p></td>
+<td><p>readability</p></td>
+<td><p>smog</p></td>
+<td><p>smog</p></td>
+<td><p>get_smog</p></td>
+<td></td>
+<td><p>For reference: <a class="reference external" href="https://en.wikipedia.org/wiki/SMOG">https://en.wikipedia.org/wiki/SMOG</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Coleman-Liau Index (CLI)</p></td>
+<td><p>readability</p></td>
+<td><p>cli</p></td>
+<td><p>cli</p></td>
+<td><p>get_cli</p></td>
+<td></td>
+<td><p>For reference: <a class="reference external" href="https://en.wikipedia.org/wiki/Coleman%E2%80%93Liau_index">https://en.wikipedia.org/wiki/Coleman%E2%80%93Liau_index</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Gunning-fog Index</p></td>
+<td><p>readability</p></td>
+<td><p>gunning_fog</p></td>
+<td><p>gunning_fog</p></td>
+<td><p>get_gunning_fog</p></td>
+<td></td>
+<td><p>For reference: <a class="reference external" href="https://en.wikipedia.org/wiki/Gunning_fog_index">https://en.wikipedia.org/wiki/Gunning_fog_index</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>LIX</p></td>
+<td><p>readability</p></td>
+<td><p>lix</p></td>
+<td><p>lix</p></td>
+<td><p>get_lix</p></td>
+<td></td>
+<td><p>For reference: <a class="reference external" href="https://en.wikipedia.org/wiki/Lix_(readability_test">https://en.wikipedia.org/wiki/Lix_(readability_test</a>)</p></td>
+</tr>
+<tr class="row-even"><td><p>RIX</p></td>
+<td><p>readability</p></td>
+<td><p>rix</p></td>
+<td><p>rix</p></td>
+<td><p>get_rix</p></td>
+<td></td>
+<td><p>For reference: <a class="reference external" href="https://www.jstor.org/stable/40031755">https://www.jstor.org/stable/40031755</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Compressibility</p></td>
+<td><p>information</p></td>
+<td><p>compressibility</p></td>
+<td><p>compressibility</p></td>
+<td><p>get_compressibility</p></td>
+<td><p>Compressibility is the ratio of the length of the compressed text to the length of the original text. This is a proxy for the Kolmogorov complexity of the text</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Entropy</p></td>
+<td><p>information</p></td>
+<td><p>entropy</p></td>
+<td><p>entropy</p></td>
+<td><p>get_entropy</p></td>
+<td><p>Shannon entropy of the text</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Number of named entities</p></td>
+<td><p>entities</p></td>
+<td><p>n_entitites</p></td>
+<td><p>n_entitites</p></td>
+<td><p>get_num_entities</p></td>
+<td><p>Number of named entities in the text</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Number of named entities of type {ent}</p></td>
+<td><p>entities</p></td>
+<td><p>n_per_entity_type</p></td>
+<td><p>n_{ent}</p></td>
+<td><p>get_num_per_entity_type</p></td>
+<td><p>Number of named entities in the text with type {ent}. Takes a list of entity types to extract this feature for</p></td>
+<td><p>ent_types defaults to all possible entity types; if you only need a subset, this can be adapted in the config</p></td>
+</tr>
+<tr class="row-odd"><td><p>Number of hedge words</p></td>
+<td><p>semantic</p></td>
+<td><p>n_hedges</p></td>
+<td><p>n_hedges</p></td>
+<td><p>get_num_hedges</p></td>
+<td><p>Number of hedge words in the text (words expressing uncertainty of the speaker).</p></td>
+<td><p>requires a hedge lexicon; currently only supported in English</p></td>
+</tr>
+<tr class="row-even"><td><p>Hedges token ratio</p></td>
+<td><p>semantic</p></td>
+<td><p>hedges_ratio</p></td>
+<td><p>hedges_ratio</p></td>
+<td><p>get_hedges_ratio</p></td>
+<td><p>Ratio of hedges in the text: n_hedges / n_tokens</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Average number of synsets</p></td>
+<td><p>semantic</p></td>
+<td><p>avg_n_synsets</p></td>
+<td><p>avg_n_synsets</p></td>
+<td><p>get_avg_num_synsets</p></td>
+<td><p>Average number of wordnet synsets of lexical tokens; proxy for ambiguity/polysemy</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Number of words with a low number of synsets per pos</p></td>
+<td><p>semantic</p></td>
+<td><p>n_low_synsets_per_pos</p></td>
+<td><p>n_low_synsets_{pos}</p></td>
+<td><p>get_low_synsets_{pos}</p></td>
+<td><p>Number of lexical tokens with a low number of synsets per pos tag</p></td>
+<td><p>Threshold defaults to 2</p></td>
+</tr>
+<tr class="row-odd"><td><p>Number of words with a high number of synsets per pos</p></td>
+<td><p>semantic</p></td>
+<td><p>n_high_synsets_per_pos</p></td>
+<td><p>n_high_synsets_{pos}</p></td>
+<td><p>get_high_synsets_{pos}</p></td>
+<td><p>Number of lexical tokens with a high number of synsets per pos tag</p></td>
+<td><p>Threshold defaults to 5</p></td>
+</tr>
+<tr class="row-even"><td><p>Number of words with a low number of synsets</p></td>
+<td><p>semantic</p></td>
+<td><p>n_low_synsets</p></td>
+<td><p>n_low_synsets</p></td>
+<td><p>get_num_low_synsets</p></td>
+<td><p>Number of lexical tokens with a low number of synsets</p></td>
+<td><p>Threshold defaults to 2</p></td>
+</tr>
+<tr class="row-odd"><td><p>Number of words with a high number of synsets</p></td>
+<td><p>semantic</p></td>
+<td><p>n_high_synsets</p></td>
+<td><p>n_high_synsets</p></td>
+<td><p>get_num_high_synsets</p></td>
+<td><p>Number of lexical tokens with a high number of synsets</p></td>
+<td><p>Threshold defaults to 5</p></td>
+</tr>
+<tr class="row-even"><td><p>Average valence</p></td>
+<td><p>emotion</p></td>
+<td><p>avg_valence</p></td>
+<td><p>avg_valence</p></td>
+<td><p>get_avg_valence</p></td>
+<td><p>Average valence of the tokens in the text</p></td>
+<td><p>For reference: <a class="reference external" href="https://saifmohammad.com/WebPages/nrc-vad.html">https://saifmohammad.com/WebPages/nrc-vad.html</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Number of low valence tokens</p></td>
+<td><p>emotion</p></td>
+<td><p>n_low_valence</p></td>
+<td><p>n_low_valence</p></td>
+<td><p>get_n_low_valence</p></td>
+<td><p>Number of low valence tokens in the text</p></td>
+<td><p>Threshold defaults to 0.33; For reference: <a class="reference external" href="https://saifmohammad.com/WebPages/nrc-vad.html">https://saifmohammad.com/WebPages/nrc-vad.html</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Number of high valence tokens</p></td>
+<td><p>emotion</p></td>
+<td><p>n_high_valence</p></td>
+<td><p>n_high_valence</p></td>
+<td><p>get_n_high_valence</p></td>
+<td><p>Number of high valence tokens in the text</p></td>
+<td><p>Threshold defaults to 0.66; For reference: <a class="reference external" href="https://saifmohammad.com/WebPages/nrc-vad.html">https://saifmohammad.com/WebPages/nrc-vad.html</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Average arousal</p></td>
+<td><p>emotion</p></td>
+<td><p>avg_arousal</p></td>
+<td><p>avg_arousal</p></td>
+<td><p>get_avg_arousal</p></td>
+<td><p>Average arousal of the tokens in the text</p></td>
+<td><p>For reference: <a class="reference external" href="https://saifmohammad.com/WebPages/nrc-vad.html">https://saifmohammad.com/WebPages/nrc-vad.html</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Number of low arousal tokens</p></td>
+<td><p>emotion</p></td>
+<td><p>n_low_arousal</p></td>
+<td><p>n_low_arousal</p></td>
+<td><p>get_n_low_arousal</p></td>
+<td><p>Number of low arousal tokens in the text</p></td>
+<td><p>Threshold defaults to 0.33; For reference: <a class="reference external" href="https://saifmohammad.com/WebPages/nrc-vad.html">https://saifmohammad.com/WebPages/nrc-vad.html</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Number of high arousal tokens</p></td>
+<td><p>emotion</p></td>
+<td><p>n_high_arousal</p></td>
+<td><p>n_high_arousal</p></td>
+<td><p>get_n_high_arousal</p></td>
+<td><p>Number of high arousal tokens in the text</p></td>
+<td><p>Threshold defaults to 0.66; For reference: <a class="reference external" href="https://saifmohammad.com/WebPages/nrc-vad.html">https://saifmohammad.com/WebPages/nrc-vad.html</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Average dominance</p></td>
+<td><p>emotion</p></td>
+<td><p>avg_dominance</p></td>
+<td><p>avg_dominance</p></td>
+<td><p>get_avg_dominance</p></td>
+<td><p>Average dominance of the tokens in the text</p></td>
+<td><p>For reference: <a class="reference external" href="https://saifmohammad.com/WebPages/nrc-vad.html">https://saifmohammad.com/WebPages/nrc-vad.html</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Number of low dominance tokens</p></td>
+<td><p>emotion</p></td>
+<td><p>n_low_dominance</p></td>
+<td><p>n_low_dominance</p></td>
+<td><p>get_n_low_dominance</p></td>
+<td><p>Number of low dominance tokens in the text</p></td>
+<td><p>Threshold defaults to 0.33; For reference: <a class="reference external" href="https://saifmohammad.com/WebPages/nrc-vad.html">https://saifmohammad.com/WebPages/nrc-vad.html</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Number of high dominance tokens</p></td>
+<td><p>emotion</p></td>
+<td><p>n_high_dominance</p></td>
+<td><p>n_high_dominance</p></td>
+<td><p>get_n_high_dominance</p></td>
+<td><p>Number of high dominance tokens in the text</p></td>
+<td><p>Threshold defaults to 0.66; For reference: <a class="reference external" href="https://saifmohammad.com/WebPages/nrc-vad.html">https://saifmohammad.com/WebPages/nrc-vad.html</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Average emotion intensity for {emotion}</p></td>
+<td><p>emotion</p></td>
+<td><p>avg_intensity</p></td>
+<td><p>avg_intensity</p></td>
+<td><p>get_avg_intensity</p></td>
+<td><p>Average intensity of an emotion; takes a list of emotions</p></td>
+<td><p>For reference: <a class="reference external" href="https://saifmohammad.com/WebPages/AffectIntensity.htm">https://saifmohammad.com/WebPages/AffectIntensity.htm</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Number of high intensity tokens for {emotion}</p></td>
+<td><p>emotion</p></td>
+<td><p>n_high_intensity</p></td>
+<td><p>n_high_intensity</p></td>
+<td><p>get_n_high_intensity</p></td>
+<td><p>Number of high intensity tokens for a given emotion</p></td>
+<td><p>Threshold defaults to 0.33; For reference: <a class="reference external" href="https://saifmohammad.com/WebPages/AffectIntensity.htm">https://saifmohammad.com/WebPages/AffectIntensity.htm</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Number of low intensity tokens for {emotion}</p></td>
+<td><p>emotion</p></td>
+<td><p>n_low_intensity</p></td>
+<td><p>n_low_intensity</p></td>
+<td><p>get_n_low_intensity</p></td>
+<td><p>Number of high§§ intensity tokens for a given emotion</p></td>
+<td><p>Threshold defaults to 0.66; For reference: <a class="reference external" href="https://saifmohammad.com/WebPages/AffectIntensity.htm">https://saifmohammad.com/WebPages/AffectIntensity.htm</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Sentiment score</p></td>
+<td><p>emotion</p></td>
+<td><p>sentiment_score</p></td>
+<td><p>sentiment_score</p></td>
+<td><p>get_sentiment_score</p></td>
+<td><p>Difference between the number of positive and negative sentiment words in the text: (n_positive_sentiment - n_negative_sentiment) / n_tokens</p></td>
+<td><p>Values in range (-1,1) where 0 is neutral, -1 is completely negative sentiment, and 1 is completely positive sentiment; For reference: <a class="reference external" href="https://saifmohammad.com/WebDocs/NRC-Emotion-Lexicon.htm">https://saifmohammad.com/WebDocs/NRC-Emotion-Lexicon.htm</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Number of negative sentiment tokens</p></td>
+<td><p>emotion</p></td>
+<td><p>n_negative_sentiment</p></td>
+<td><p>n_negative_sentiment</p></td>
+<td><p>get_n_negative_sentiment</p></td>
+<td><p>Number of negative sentiment tokens</p></td>
+<td><p>For reference: <a class="reference external" href="https://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm">https://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Number of positive sentiment tokens</p></td>
+<td><p>emotion</p></td>
+<td><p>n_positive_sentiment</p></td>
+<td><p>n_positive_sentiment</p></td>
+<td><p>get_n_positive_sentiment</p></td>
+<td><p>Number of positive sentiment tokens</p></td>
+<td><p>For reference: <a class="reference external" href="https://saifmohammad.com/WebDocs/NRC-Emotion-Lexicon.htm">https://saifmohammad.com/WebDocs/NRC-Emotion-Lexicon.htm</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Average concreteness</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>avg_concreteness</p></td>
+<td><p>avg_concreteness</p></td>
+<td><p>get_avg_concreteness</p></td>
+<td><p>Average human concreteness ratings of the tokens in the text</p></td>
+<td><p>For reference: <a class="reference external" href="https://link.springer.com/article/10.3758/s13428-013-0403-5">https://link.springer.com/article/10.3758/s13428-013-0403-5</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Average standard deviation of concreteness</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>avg_sd_concreteness</p></td>
+<td><p>avg_sd_concreteness</p></td>
+<td><p>get_avg_sd_concreteness</p></td>
+<td><p>Average standard deviation in the human concreteness ratings of the tokens in the text</p></td>
+<td><p>For reference: <a class="reference external" href="https://link.springer.com/article/10.3758/s13428-013-0403-5">https://link.springer.com/article/10.3758/s13428-013-0403-5</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Number of low concreteness tokens</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>n_low_concreteness</p></td>
+<td><p>n_low_concreteness</p></td>
+<td><p>get_n_low_concreteness</p></td>
+<td><p>Number of tokens with a low concreteness rating</p></td>
+<td><p>For reference: <a class="reference external" href="https://link.springer.com/article/10.3758/s13428-013-0403-5">https://link.springer.com/article/10.3758/s13428-013-0403-5</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Number of high concreteness tokens</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>n_high_concreteness</p></td>
+<td><p>n_high_concreteness</p></td>
+<td><p>get_n_high_concreteness</p></td>
+<td><p>Number of tokens with a high concreteness rating</p></td>
+<td><p>For reference: <a class="reference external" href="https://link.springer.com/article/10.3758/s13428-013-0403-5">https://link.springer.com/article/10.3758/s13428-013-0403-5</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Number of tokens with controversial concreteness</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>n_controversial_concreteness</p></td>
+<td><p>n_controversial_concreteness</p></td>
+<td><p>get_n_controversial_concreteness</p></td>
+<td><p>Number of tokens with a high standard deviation in the human concreteness rating</p></td>
+<td><p>For reference: <a class="reference external" href="https://link.springer.com/article/10.3758/s13428-013-0403-5">https://link.springer.com/article/10.3758/s13428-013-0403-5</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Average age of acquisition</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>avg_aoa</p></td>
+<td><p>avg_aoa</p></td>
+<td><p>get_avg_aoa</p></td>
+<td><p>Average age of acquisition rating</p></td>
+<td><p>For reference: <a class="reference external" href="https://link.springer.com/article/10.3758/s13428-016-0811-4">https://link.springer.com/article/10.3758/s13428-016-0811-4</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Average standard deviation of age of acquisition</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>avg_sd_aoa</p></td>
+<td><p>avg_sd_aoa</p></td>
+<td><p>get_avg_sd_aoa</p></td>
+<td><p>Average standard deviation in the age of acquisition rating</p></td>
+<td><p>For reference: <a class="reference external" href="https://link.springer.com/article/10.3758/s13428-016-0811-4">https://link.springer.com/article/10.3758/s13428-016-0811-4</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Number of low age of acquisition tokens</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>n_low_aoa</p></td>
+<td><p>n_low_aoa</p></td>
+<td><p>get_n_low_aoa</p></td>
+<td><p>Number of low age of acquisition tokens</p></td>
+<td><p>For reference: <a class="reference external" href="https://link.springer.com/article/10.3758/s13428-016-0811-4">https://link.springer.com/article/10.3758/s13428-016-0811-4</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Number of high age of acquisition tokens</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>n_high_aoa</p></td>
+<td><p>n_high_aoa</p></td>
+<td><p>get_n_high_aoa</p></td>
+<td><p>Number of high age of acquisition tokens</p></td>
+<td><p>For reference: <a class="reference external" href="https://link.springer.com/article/10.3758/s13428-016-0811-4">https://link.springer.com/article/10.3758/s13428-016-0811-4</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Number of tokens with controversial age of acquisition</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>n_controversial_aoa</p></td>
+<td><p>n_controversial_aoa</p></td>
+<td><p>get_n_controversial_aoa</p></td>
+<td><p>Number of tokens with a high standard deviation in the age of acquisition rating</p></td>
+<td><p>For reference: <a class="reference external" href="https://link.springer.com/article/10.3758/s13428-016-0811-4">https://link.springer.com/article/10.3758/s13428-016-0811-4</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Average prevalence</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>avg_prevalence</p></td>
+<td><p>avg_prevalence</p></td>
+<td><p>get_avg_prevalence</p></td>
+<td><p>Average human prevalence ratings of the tokens in the text</p></td>
+<td><p>For reference: <a class="reference external" href="https://link.springer.com/article/10.3758/s13428-018-1077-9">https://link.springer.com/article/10.3758/s13428-018-1077-9</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Number of low prevalence tokens</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>n_low_prevalence</p></td>
+<td><p>n_low_prevalence</p></td>
+<td><p>get_n_low_prevalence</p></td>
+<td><p>Number of low prevalence tokens</p></td>
+<td><p>For reference: <a class="reference external" href="https://link.springer.com/article/10.3758/s13428-018-1077-9">https://link.springer.com/article/10.3758/s13428-018-1077-9</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Number of high prevalence tokens</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>n_high_prevalence</p></td>
+<td><p>n_high_prevalence</p></td>
+<td><p>get_n_high_prevalence</p></td>
+<td><p>Number of high prevalence tokens</p></td>
+<td><p>For reference: <a class="reference external" href="https://link.springer.com/article/10.3758/s13428-018-1077-9">https://link.springer.com/article/10.3758/s13428-018-1077-9</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Average socialness</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>avg_socialness</p></td>
+<td><p>avg_socialness</p></td>
+<td><p>get_avg_socialness</p></td>
+<td><p>Average human socialness ratings of the tokens in the text</p></td>
+<td><p>For reference: <a class="reference external" href="https://link.springer.com/article/10.3758/s13428-022-01810-x">https://link.springer.com/article/10.3758/s13428-022-01810-x</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Average standard deviation of socialness</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>avg_sd_socialness</p></td>
+<td><p>avg_sd_socialness</p></td>
+<td><p>get_avg_sd_socialness</p></td>
+<td><p>Average standard deviation in the human socialness ratings of the tokens in the text</p></td>
+<td><p>For reference: <a class="reference external" href="https://link.springer.com/article/10.3758/s13428-022-01810-x">https://link.springer.com/article/10.3758/s13428-022-01810-x</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Number of high socialness tokens</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>n_high_socialness</p></td>
+<td><p>n_high_socialness</p></td>
+<td><p>get_n_high_socialness</p></td>
+<td><p>Number of high socialness tokens</p></td>
+<td><p>For reference: <a class="reference external" href="https://link.springer.com/article/10.3758/s13428-022-01810-x">https://link.springer.com/article/10.3758/s13428-022-01810-x</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Number of low socialness tokens</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>n_low_socialness</p></td>
+<td><p>n_low_socialness</p></td>
+<td><p>get_n_low_socialness</p></td>
+<td><p>Number of low socialness tokens</p></td>
+<td><p>For reference: <a class="reference external" href="https://link.springer.com/article/10.3758/s13428-022-01810-x">https://link.springer.com/article/10.3758/s13428-022-01810-x</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Number of tokens with controversial socialness</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>n_controversial_socialness</p></td>
+<td><p>n_controversial_socialness</p></td>
+<td><p>get_n_controversial_socialness</p></td>
+<td><p>Number of tokens with a high standard deviation in the human socialness rating</p></td>
+<td><p>For reference: <a class="reference external" href="https://link.springer.com/article/10.3758/s13428-022-01810-x">https://link.springer.com/article/10.3758/s13428-022-01810-x</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Average iconicity</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>avg_iconicity</p></td>
+<td><p>avg_iconicity</p></td>
+<td><p>get_avg_iconicity</p></td>
+<td><p>Average human iconicity ratings of the tokens in the text</p></td>
+<td><p>For reference: <a class="reference external" href="https://link.springer.com/article/10.3758/s13428-023-02112-6">https://link.springer.com/article/10.3758/s13428-023-02112-6</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Average standard deviation of iconicity</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>avg_sd_iconicity</p></td>
+<td><p>avg_sd_iconicity</p></td>
+<td><p>get_avg_sd_iconicity</p></td>
+<td><p>Average standard deviation in the human iconicity ratings of the tokens in the text</p></td>
+<td><p>For reference: <a class="reference external" href="https://link.springer.com/article/10.3758/s13428-023-02112-6">https://link.springer.com/article/10.3758/s13428-023-02112-6</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Number of high iconicity tokens</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>n_high_iconicity</p></td>
+<td><p>n_high_iconicity</p></td>
+<td><p>get_n_high_iconicity</p></td>
+<td><p>Number of high iconicity tokens</p></td>
+<td><p>For reference: <a class="reference external" href="https://link.springer.com/article/10.3758/s13428-023-02112-6">https://link.springer.com/article/10.3758/s13428-023-02112-6</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Number of low iconicity tokens</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>n_low_iconicity</p></td>
+<td><p>n_low_iconicity</p></td>
+<td><p>get_n_low_iconicity</p></td>
+<td><p>Number of low iconicity tokens</p></td>
+<td><p>For reference: <a class="reference external" href="https://link.springer.com/article/10.3758/s13428-023-02112-6">https://link.springer.com/article/10.3758/s13428-023-02112-6</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Number of tokens with controversial iconicity</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>n_controversial_iconicity</p></td>
+<td><p>n_controversial_iconicity</p></td>
+<td><p>get_n_controversial_iconicity</p></td>
+<td><p>Number of tokens with a high standard deviation in the human iconicity rating</p></td>
+<td><p>For reference: <a class="reference external" href="https://link.springer.com/article/10.3758/s13428-023-02112-6">https://link.springer.com/article/10.3758/s13428-023-02112-6</a></p></td>
+</tr>
+<tr class="row-even"><td><p>Average sensorimotor score for {sensorimotor}</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>avg_sensorimotor</p></td>
+<td><p>avg_sensorimotor</p></td>
+<td><p>get_avg_sensorimotor</p></td>
+<td><p>Average sensorimotor score for a given sensorimotor dimension</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Average standard deviation of sensorimotor score</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>avg_sd_sensorimotor</p></td>
+<td><p>avg_sd_sensorimotor</p></td>
+<td><p>get_avg_sd_sensorimotor</p></td>
+<td><p>Average standard deviation in the sensorimotor scores of the tokens in the text</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Number of tokens with low sensorimotor rating</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>n_low_sensorimotor</p></td>
+<td><p>n_low_sensorimotor</p></td>
+<td><p>get_n_low_sensorimotor</p></td>
+<td><p>Number of tokens with low sensorimotor rating</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Number of tokens with high sensorimotor rating</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>n_high_sensorimotor</p></td>
+<td><p>n_high_sensorimotor</p></td>
+<td><p>get_n_high_sensorimotor</p></td>
+<td><p>Number of tokens with high sensorimotor rating</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Number of tokens with controversial sensorimotor rating</p></td>
+<td><p>psycholinguistic</p></td>
+<td><p>n_controversial_sensorimotor</p></td>
+<td><p>n_controversial_sensorimotor</p></td>
+<td><p>get_n_controversial_sensorimotor</p></td>
+<td><p>Number of tokens with a high standard deviation in the sensorimotor rating</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Morphological feature counts</p></td>
+<td><p>morphological</p></td>
+<td><p>n_per_morph_feature</p></td>
+<td><p>n_{pos}_{feature}_{val}</p></td>
+<td><p>get_morph_feats</p></td>
+<td><p>Number of tokens with {pos} {feature} {val} (e.g. VERB VerbForm Inf), takes a dictionary of pos and associated features and values for them</p></td>
+<td><p>Default dictionary is the full set of UD options; adapt if you do not need all of them (may be language-specific)</p></td>
+</tr>
+<tr class="row-even"><td><p>Dependency tree width</p></td>
+<td><p>dependency</p></td>
+<td><p>tree_width</p></td>
+<td><p>tree_width</p></td>
+<td><p>get_tree_width</p></td>
+<td><p>Maximum number of siblings of a node at any level</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Dependency tree depth</p></td>
+<td><p>dependency</p></td>
+<td><p>tree_depth</p></td>
+<td><p>tree_depth</p></td>
+<td><p>get_tree_depth</p></td>
+<td><p>Maximum distance of a token to the root of the dependency tree</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Tree branching factor</p></td>
+<td><p>dependency</p></td>
+<td><p>tree_branching</p></td>
+<td><p>tree_branching</p></td>
+<td><p>get_tree_branching</p></td>
+<td><p>Average number of children of a token in the dependency tree</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Tree ramification factor</p></td>
+<td><p>dependency</p></td>
+<td><p>ramification_factor</p></td>
+<td><p>ramification_factor</p></td>
+<td><p>get_ramification_factor</p></td>
+<td><p>Average number of children per level</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Number of noun chunks</p></td>
+<td><p>dependency</p></td>
+<td><p>n_noun_chunks</p></td>
+<td><p>n_noun_chunks</p></td>
+<td><p>get_n_noun_chunks</p></td>
+<td><p>Number of noun chunks in the dependency tree</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Number of dependencies of type {type}</p></td>
+<td><p>dependency</p></td>
+<td><p>n_per_dependency_type</p></td>
+<td><p>n_dependency_{type}</p></td>
+<td><p>get_n_per_dependency_type</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>{Feature} token ratio</p></td>
+<td><p>ratios/normalization</p></td>
+<td></td>
+<td><p>{feature}_token_ratio</p></td>
+<td><p>get_feature_token_ratio</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>{Feature} type ratio</p></td>
+<td><p>ratios/normalization</p></td>
+<td></td>
+<td><p>{feature}_type_ratio</p></td>
+<td><p>get_feature_type_ratio</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>{Feature} sentence ratio</p></td>
+<td><p>ratios/normalization</p></td>
+<td></td>
+<td><p>{feature}_sentence ratio</p></td>
+<td><p>get_feature_sentence_ratio</p></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="custom_configuration.html" class="btn btn-neutral float-left" title="Custom configuration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="elfen.html" class="btn btn-neutral float-right" title="Module documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Maximilian Maurer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
