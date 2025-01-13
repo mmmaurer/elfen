@@ -20,7 +20,7 @@ sys.path.insert(0, setup_py_dir)
 sys.path.insert(0, os.path.abspath(elfen_dir))
 
 project = 'ELFEN'
-copyright = '2024, Maximilian Maurer'
+copyright = '2025, Maximilian Maurer'
 author = 'Maximilian Maurer'
 release = '0.0.1'
 
