@@ -9,4 +9,4 @@ with details on the feature name, description, and the feature area it belongs t
 .. csv-table::
    :header-rows: 1
    :widths: 20, 20, 20, 20, 20, 20, 20
-   :file: ../../elfen/feature_description.csv
+   :file: ../elfen/feature_description.csv
