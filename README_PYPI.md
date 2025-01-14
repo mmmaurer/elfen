@@ -17,7 +17,7 @@ If you use this package in your work, for now, please cite
 @misc{maurer-2024-elfen,
   author = {Maurer, Maximilian},
   title = {ELFEN - Efficient Linguistic Feature Extraction for Natural Language Datasets},
-  year = {2024},
+  year = {2025},
   publisher = {GitHub},
   journal = {GitHub repository},
   howpublished = {\url{https://github.com/mmmaurer/elfen}},
