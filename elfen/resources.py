@@ -17,7 +17,7 @@ RESOURCE_MAP = {
         "area": "Semantics",
         "subarea": "Hedges",
         "filename": "hedges.txt",
-        "filepath": os.path.join(PROJECT_PATH, "resources", "Semantics",
+        "filepath": os.path.join(PROJECT_PATH, "elfen_resources", "Semantics",
                                  "Hedges", "hedges.txt"),
         "bibtex": rb"""@misc{hedges, author = {Titus Wormer}, title = {Hedges}, year = {2022}, publisher = {GitHub}, journal = {GitHub repository}, howpublished = {\url{github.com/words/hedges}}, }"""
     },
@@ -31,7 +31,7 @@ RESOURCE_MAP = {
         "area": "Emotion",
         "subarea": "VAD",
         "filename": "BRM-emot-submit.csv",
-        "filepath": os.path.join(PROJECT_PATH, "resources", "Emotion",
+        "filepath": os.path.join(PROJECT_PATH, "elfen_resources", "Emotion",
                                  "VAD", "BRM-emot-submit.csv"),
         "bibtex": rb"""
         @article{vad_warriner,
@@ -56,10 +56,10 @@ RESOURCE_MAP = {
         "area": "Emotion",
         "subarea": "VAD",
         "filename": "NRC-VAD-Lexicon/NRC-VAD-Lexicon.txt",
-        "filepath": os.path.join(PROJECT_PATH, "resources", "Emotion",
+        "filepath": os.path.join(PROJECT_PATH, "elfen_resources", "Emotion",
                                  "VAD", "NRC-VAD-Lexicon", 
                                  "NRC-VAD-Lexicon.txt"),
-        "multilingual_filepath": os.path.join(PROJECT_PATH, "resources", 
+        "multilingual_filepath": os.path.join(PROJECT_PATH, "elfen_resources", 
                                               "Emotion", "VAD",
                                               "NRC-VAD-Lexicon",
                                               "NRC-VAD-Lexicon-"
@@ -92,10 +92,10 @@ RESOURCE_MAP = {
         "subarea": "Intensity",
         "filename": "NRC-Emotion-Intensity-Lexicon/"
                     "NRC-Emotion-Intensity-Lexicon-v1.txt",
-        "filepath": os.path.join(PROJECT_PATH, "resources", "Emotion",
+        "filepath": os.path.join(PROJECT_PATH, "elfen_resources", "Emotion",
                                  "Intensity", "NRC-Emotion-Intensity-Lexicon",
                                  "NRC-Emotion-Intensity-Lexicon-v1.txt"),
-        "multilingual_filepath": os.path.join(PROJECT_PATH, "resources",
+        "multilingual_filepath": os.path.join(PROJECT_PATH, "elfen_resources",
                                               "Emotion", "Intensity",
                                               "NRC-Emotion-Intensity-Lexicon",
                                               "NRC-Emotion-Intensity-"
@@ -137,7 +137,7 @@ RESOURCE_MAP = {
         "area": "Psycholinguistics",
         "subarea": "Concreteness",
         "filename": "13428_2013_403_MOESM1_ESM.xlsx",
-        "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
+        "filepath": os.path.join(PROJECT_PATH, "elfen_resources", "Psycholinguistics",
                                  "Concreteness", "13428_2013_403_MOESM1_ESM.xlsx"),
         "bibtex": rb"""
         @article{concreteness_brysbaert,
@@ -161,7 +161,7 @@ RESOURCE_MAP = {
         "area": "Psycholinguistics",
         "subarea": "Prevalence",
         "filename": "13428_2018_1077_MOESM2_ESM.xlsx",
-        "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
+        "filepath": os.path.join(PROJECT_PATH, "elfen_resources", "Psycholinguistics",
                                  "Prevalence", "13428_2018_1077_MOESM2_ESM.xlsx"),
         "bibtex": rb"""
         @article{prevalence_brysbaert,
@@ -185,7 +185,7 @@ RESOURCE_MAP = {
         "area": "Psycholinguistics",
         "subarea": "AgeOfAcquisition",
         "filename": "13428_2013_348_MOESM1_ESM.xlsx",
-        "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
+        "filepath": os.path.join(PROJECT_PATH, "elfen_resources", "Psycholinguistics",
                                  "AgeOfAcquisition", "13428_2013_348_MOESM1_ESM.xlsx"),
         "bibtex": rb"""
         @article{aoa_kuperman,
@@ -209,7 +209,7 @@ RESOURCE_MAP = {
         "area": "Emotion",
         "subarea": "Sentiment",
         "filename": "SentiWordNet_3.0.0.txt",
-        "filepath": os.path.join(PROJECT_PATH, "resources", "Emotion",
+        "filepath": os.path.join(PROJECT_PATH, "elfen_resources", "Emotion",
                                  "Sentiment", "SentiWordNet_3.0.0.txt"),
         "bibtex": rb""  # TODO
     },
@@ -224,10 +224,10 @@ RESOURCE_MAP = {
         "area": "Emotion",
         "subarea": "Sentiment",
         "filename": "NRC-Emotion-Lexicon/NRC-Emotion-Lexicon-Wordlevel-v0.92.txt",
-        "filepath": os.path.join(PROJECT_PATH, "resources", "Emotion",
+        "filepath": os.path.join(PROJECT_PATH, "elfen_resources", "Emotion",
                                  "Sentiment", "NRC-Emotion-Lexicon",
                                  "NRC-Emotion-Lexicon-Wordlevel-v0.92.txt"),
-        "multilingual_filepath": os.path.join(PROJECT_PATH, "resources",
+        "multilingual_filepath": os.path.join(PROJECT_PATH, "elfen_resources",
                                               "Emotion", "Sentiment",
                                               "NRC-Emotion-Lexicon",
                                               "NRC-Emotion-Lexicon-"
@@ -254,7 +254,7 @@ RESOURCE_MAP = {
         "area": "Emotion",
         "subarea": "Affect",
         "filename": "CROWD-5e.xlsx",
-        "filepath": os.path.join(PROJECT_PATH, "resources", "Emotion",
+        "filepath": os.path.join(PROJECT_PATH, "elfen_resources", "Emotion",
                                  "Affect", "CROWD-5e.xlsx"),
         "bibtex": rb""  # TODO
     },
@@ -267,7 +267,7 @@ RESOURCE_MAP = {
         "area": "Psycholinguistics",
         "subarea": "Socialness",
         "filename": "Socialness.csv",
-        "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
+        "filepath": os.path.join(PROJECT_PATH, "elfen_resources", "Psycholinguistics",
                                  "Socialness", "Socialness.csv"),
         "bibtex": rb"""
         @article{socialness,
@@ -291,7 +291,7 @@ RESOURCE_MAP = {
         "area": "Psycholinguistics",
         "subarea": "Sensorimotor",
         "filename": "LancasterSensorimotorNorms.xlsx",
-        "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
+        "filepath": os.path.join(PROJECT_PATH, "elfen_resources", "Psycholinguistics",
                                  "Sensorimotor", "LancasterSensorimotorNorms.xlsx"),
         "bibtex": rb"""
         @article{sensorimotor_lancaster,
@@ -313,7 +313,7 @@ RESOURCE_MAP = {
         "area": "Psycholinguistics",
         "subarea": "Iconicity",
         "filename": "WinterIconicityNorms.csv",
-        "filepath": os.path.join(PROJECT_PATH, "resources", "Psycholinguistics",
+        "filepath": os.path.join(PROJECT_PATH, "elfen_resources", "Psycholinguistics",
                                  "Iconicity", "WinterIconicityNorms.csv"),
         "bibtex": rb"""
         @article{iconicity_winter,
@@ -507,14 +507,14 @@ def get_resource(feature: str) -> None:
         raise ValueError(f"Feature {feature} not found in RESOURCE_MAP.")
 
     # Making sure all the necessary directories exist
-    os.makedirs(os.path.join(PROJECT_PATH, "resources",
+    os.makedirs(os.path.join(PROJECT_PATH, "elfen_resources",
                              RESOURCE_MAP[feature]["area"],
                              RESOURCE_MAP[feature]["subarea"]),
                              exist_ok=True)
     # Downloading the lexicon if it does not exist
     if not os.path.exists(RESOURCE_MAP[feature]["filepath"]):
         download_lexicon(RESOURCE_MAP[feature]["link"],
-                         os.path.join(PROJECT_PATH, "resources",
+                         os.path.join(PROJECT_PATH, "elfen_resources",
                                       RESOURCE_MAP[feature]["area"],
                                       RESOURCE_MAP[feature]["subarea"]),
                                       RESOURCE_MAP[feature]["filename"])

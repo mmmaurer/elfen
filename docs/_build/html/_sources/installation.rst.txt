@@ -8,7 +8,7 @@ To install the current release of the package, you can use ``pip``
 
 .. code-block:: bash
 
-    pip install elfen
+    python -m pip install elfen
 
 or ``conda``
 
@@ -20,13 +20,13 @@ Alternatively, you can install the package from source:
 
 .. code-block:: bash
 
-    pip install git+https://github.com/mmmaurer/elfen.git
+    python -m pip install git+https://github.com/mmmaurer/elfen.git
 
 To install an editable version of the package, you can use the following command:
 
 .. code-block:: bash
 
-    pip install -e git+https://github.com/mmmaurer/elfen.git
+    python -m pip install -e git+https://github.com/mmmaurer/elfen.git
 
 
 All of these options will install the package and all its dependencies.
@@ -49,13 +49,6 @@ For the default small English spacy model, you can install it using the followin
 .. code-block:: bash
 
     python -m spacy download en_core_web_sm
-
-If you want to use transformer models with the spacy backbone, you will additionally need to install ``spacy_transformers`` and the respective transformer model.
-
-.. code-block:: bash
-
-    pip install spacy_transformers
-    python -m spacy download en_core_web_trf  # for the English transformer model
 
 The default stanza model will be downloaded automatically when you first use it.
 

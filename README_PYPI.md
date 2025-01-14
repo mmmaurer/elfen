@@ -2,7 +2,7 @@
 
 This python package provides efficient linguistic feature extraction for text datasets (i.e. datasets with N text instances, in a tabular structure).
 
-For further information, check the [GitHub repository](https://github.com/mmmaurer/elfen) and the [documentation](TODO)
+For further information, check the [GitHub repository](https://github.com/mmmaurer/elfen) and the [documentation](https://elfen.readthedocs.io)
 
 ## Usage of third-party resources usable in this package
 Please refer to the original author's licenses and conditions for usage, and cite them if you use the resources through this package in your analyses.

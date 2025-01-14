@@ -3,29 +3,30 @@
 This python package provides efficient linguistic feature extraction for text datasets (i.e. datasets with N text instances, in a tabular structure). 
 
 For a full overview of the features available, check the [overview table](features.md), for further details and tutorials check the
-[Documentation (TODO)]()
+[documentation](https://elfen.readthedocs.io)
 
 
 ## Installation
-
-(Currently, final version should be pip install [final name])
-
-Step 1: Download this repo
+Install this package using pip
 ```bash
-git clone git@github.com:mmmaurer/elfen.git
+python -m pip install elfen
+```
+Install this package using conda
+```bash
+conda install -c conda-forge elfen
 ```
 
-Step 2: Move to the dir and install using pip
+Install this package from source 
 ```bash
-cd elfen && pip install -e .
+python -m pip install git+https://github.com/mmmaurer/elfen.git
 ```
 
-Step 3: If you want to use the spacy backbone, download the respective model, e.g. "en_core_web_sm":
+If you want to use the spacy backbone, download the respective model, e.g. "en_core_web_sm":
 ```bash
 python -m spacy download en_core_web_sm
 ```
 
-Step 4: To use wordnet features, download open multilingual wordnet using:
+To use wordnet features, download open multilingual wordnet using:
 ```bash
 python -m wn download omw:1.4
 ```
