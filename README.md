@@ -7,13 +7,9 @@ For a full overview of the features available, check the [overview table](featur
 
 
 ## Installation
-Install this package using pip
+Install this package using the current pypi version
 ```bash
 python -m pip install elfen
-```
-Install this package using conda
-```bash
-conda install -c conda-forge elfen
 ```
 
 Install this package from source 

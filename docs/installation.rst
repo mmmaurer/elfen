@@ -10,12 +10,6 @@ To install the current release of the package, you can use ``pip``
 
     python -m pip install elfen
 
-or ``conda``
-
-.. code-block:: bash
-
-    conda install -c conda-forge elfen
-
 Alternatively, you can install the package from source:
 
 .. code-block:: bash
