@@ -10,7 +10,7 @@ import os
 from pathlib import Path
 import sys
 
-setup_py_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+setup_py_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 elfen_dir = os.path.join(setup_py_dir, 'elfen')
 
 # Add "../" to the system path
