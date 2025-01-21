@@ -28,7 +28,10 @@ python -m wn download omw:1.4
 ```
 
 ## Usage of third-party resources usable in this package
+The extraction of psycholinguistic, emotion/lexicon and semantic features relies on third-party resources such as lexicons.
 Please refer to the original author's licenses and conditions for usage, and cite them if you use the resources through this package in your analyses.
+
+For an overview which features use which resource, and how to export all third-party resource references in a `bibtex` string, consult the [documentation](https://elfen.readthedocs.io).
 
 ## Acknowledgements
 
