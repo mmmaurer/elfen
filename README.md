@@ -34,6 +34,8 @@ Please refer to the original author's licenses and conditions for usage, and cit
 
 While all feature extraction functions in this package are written from scratch, the choice of features in the readability and lexical richness feature areas (partially) follows the [`readability`](https://github.com/andreasvc/readability) and [`lexicalrichness`](https://github.com/LSYS/LexicalRichness) python packages.
 
+We use the [`wn`](https://github.com/goodmami/wn) python package to extract Open  Multilingual Wordnet synsets.
+
 ## Citation
 If you use this package in your work, for now, please cite
 ```bibtex
