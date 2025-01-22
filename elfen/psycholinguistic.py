@@ -1238,7 +1238,7 @@ def get_avg_sd_sensorimotor(data: pl.DataFrame,
                                          word_column="Word"). \
                     select(pl.col(f"{var}.SD")).mean().item(),
                     return_dtype=pl.Float64
-                    ).alias(f"avg_sd_{var}")
+                    ).alias(f"avg_sd_{var}_sensorimotor")
         )
 
     return data
@@ -1286,7 +1286,8 @@ def get_n_low_sensorimotor(data: pl.DataFrame,
                     select(pl.col(f"{var}.mean")).filter(
                         pl.col(f"{var}.mean") < threshold). \
                         count().item(),
-                    return_dtype=pl.Int64).alias(f"n_low_{var}")
+                    return_dtype=pl.Int64).alias(f"n_low_{var}"
+                                                 "_sensorimotor")
         )
 
     return data
@@ -1335,7 +1336,8 @@ def get_n_high_sensorimotor(data: pl.DataFrame,
                     select(pl.col(f"{var}.mean")).filter(
                         pl.col(f"{var}.mean") > threshold). \
                         count().item(),
-                    return_dtype=pl.Int64).alias(f"n_high_{var}")
+                    return_dtype=pl.Int64).alias(f"n_high_{var}"
+                                                 "_sensorimotor")
         )
 
     return data
@@ -1384,7 +1386,8 @@ def get_n_controversial_sensorimotor(data: pl.DataFrame,
                     select(pl.col(f"{var}.SD")).filter(
                         pl.col(f"{var}.SD") > threshold). \
                         count().item(),
-                    return_dtype=pl.Int64).alias(f"n_controversial_{var}")
+                    return_dtype=pl.Int64).alias(f"n_controversial_{var}"
+                                                 "_sensorimotor")
         )
 
     return data
