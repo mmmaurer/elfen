@@ -1150,6 +1150,11 @@ def load_sensorimotor_norms(path: str,
             A Polars DataFrame containing the sensorimotor norms dataset.
     """
     sensorimotor_norms = pl.read_excel(path)
+    # the lancaster sensorimotor norms have all caps lemmas, so we con-
+    # vert them to lowercase for consistency
+    sensorimotor_norms = sensorimotor_norms.with_columns(
+        pl.col("Word").str.to_lowercase().alias("Word")
+    )
 
     return sensorimotor_norms
 
@@ -1186,10 +1191,10 @@ def get_avg_sensorimotor(data: pl.DataFrame,
             pl.col("lemmas").map_elements(
                 lambda x: filter_lexicon(lexicon=lexicon,
                                          words=x,
-                                         word_column="word"). \
+                                         word_column="Word"). \
                     select(pl.col(f"{var}.mean")).mean().item(),
                     return_dtype=pl.Float64
-                    ).alias(f"avg_{var}")
+                    ).alias(f"avg_{var}_sensorimotor")
         )
 
     return data
@@ -1230,7 +1235,7 @@ def get_avg_sd_sensorimotor(data: pl.DataFrame,
             pl.col("lemmas").map_elements(
                 lambda x: filter_lexicon(lexicon=lexicon,
                                          words=x,
-                                         word_column="word"). \
+                                         word_column="Word"). \
                     select(pl.col(f"{var}.SD")).mean().item(),
                     return_dtype=pl.Float64
                     ).alias(f"avg_sd_{var}")
@@ -1277,7 +1282,7 @@ def get_n_low_sensorimotor(data: pl.DataFrame,
             pl.col("lemmas").map_elements(
                 lambda x: filter_lexicon(lexicon=lexicon,
                                          words=x,
-                                         word_column="word"). \
+                                         word_column="Word"). \
                     select(pl.col(f"{var}.mean")).filter(
                         pl.col(f"{var}.mean") < threshold). \
                         count().item(),
@@ -1326,7 +1331,7 @@ def get_n_high_sensorimotor(data: pl.DataFrame,
             pl.col("lemmas").map_elements(
                 lambda x: filter_lexicon(lexicon=lexicon,
                                          words=x,
-                                         word_column="word"). \
+                                         word_column="Word"). \
                     select(pl.col(f"{var}.mean")).filter(
                         pl.col(f"{var}.mean") > threshold). \
                         count().item(),
@@ -1375,7 +1380,7 @@ def get_n_controversial_sensorimotor(data: pl.DataFrame,
             pl.col("lemmas").map_elements(
                 lambda x: filter_lexicon(lexicon=lexicon,
                                          words=x,
-                                         word_column="word"). \
+                                         word_column="Word"). \
                     select(pl.col(f"{var}.SD")).filter(
                         pl.col(f"{var}.SD") > threshold). \
                         count().item(),

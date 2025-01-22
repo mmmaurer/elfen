@@ -550,10 +550,10 @@ def get_bibtex() -> str:
     """
 
     bibtex = rb"""
-    @misc{maurer-2024-elfen,
+    @misc{maurer-2025-elfen,
         author = {Maurer, Maximilian},
         title = {ELFEN - Efficient Linguistic Feature Extraction for Natural Language Datasets},
-        year = {2024},
+        year = {2025},
         publisher = {GitHub},
         journal = {GitHub repository},
         howpublished = {\url{https://github.com/mmmaurer/elfen}},

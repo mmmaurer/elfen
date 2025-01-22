@@ -42,7 +42,7 @@ We use the [`wn`](https://github.com/goodmami/wn) python package to extract Open
 ## Citation
 If you use this package in your work, for now, please cite
 ```bibtex
-@misc{maurer-2024-elfen,
+@misc{maurer-2025-elfen,
   author = {Maurer, Maximilian},
   title = {ELFEN - Efficient Linguistic Feature Extraction for Natural Language Datasets},
   year = {2025},
