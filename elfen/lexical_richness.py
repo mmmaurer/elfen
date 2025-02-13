@@ -75,6 +75,9 @@ from .surface import (
     get_global_lemma_frequencies,
     get_num_lemmas
 )
+from .pos import (
+    get_num_lexical_tokens,
+)
 from .preprocess import (
     get_tokens,
 )
