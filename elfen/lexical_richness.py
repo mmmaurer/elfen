@@ -72,10 +72,8 @@ from .surface import (
     get_num_types,
     get_token_freqs,
     get_global_token_frequencies,
-    get_global_lemma_frequencies
-)
-from .pos import (
-    get_num_lexical_tokens,
+    get_global_lemma_frequencies,
+    get_num_lemmas
 )
 from .preprocess import (
     get_tokens,
@@ -104,7 +102,7 @@ def get_lemma_token_ratio(data: pl.DataFrame,
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
     if 'n_lemmas' not in data.columns:
-        data = get_num_lexical_tokens(data, backbone=backbone)
+        data = get_num_lemmas(data, backbone=backbone)
     
     data = data.with_columns(
         (pl.col("n_lemmas") / pl.col("n_tokens")
