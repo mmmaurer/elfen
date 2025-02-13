@@ -178,8 +178,8 @@ class Extractor:
         """
         if type(feature_group) == str:
             feature_group = [feature_group]
-        if feature_group in feature_area_map:
-            for group in feature_group:
+        for group in feature_group:
+            if group in feature_area_map:
                 for feature in feature_area_map[group]:
                     if feature in FEATURE_LEXICON_MAP:
                         lexicon = self.__gather_resource_from_featurename(
@@ -194,8 +194,8 @@ class Extractor:
                     else:
                         print(f"Feature {feature} not found. Check "
                               "spelling.")
-        else:
-            print("Feature group not found. Check spelling.")
+            else:
+                print("Feature group not found. Check spelling.")
     
     def __load_lexicon_from_featurename(self,
                                         filepath: str,
