@@ -289,8 +289,6 @@ FUNCTION_MAP = {
 
 FEATURE_AREA_MAP = {
     "surface": [
-        "tokens",
-        "lemmas",
         "raw_sequence_length",
         "n_tokens",
         "n_lemmas",
@@ -329,7 +327,7 @@ FEATURE_AREA_MAP = {
         "n_low_intensity",
         "n_high_intensity",
     ],
-    "entity": [
+    "entities": [
         "n_entities",
         "n_per_entity_type",
     ],
@@ -418,8 +416,8 @@ FEATURE_AREA_MAP = {
         "avg_num_synsets_per_pos",
         "n_high_synsets",
         "n_low_synsets",
-        "high_synsets_per_pos",
-        "low_synsets_per_pos",
+        "n_high_synsets_per_pos",
+        "n_low_synsets_per_pos",
     ],
 }
 
