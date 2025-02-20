@@ -26,4 +26,15 @@ The easiest way to get started with ELFEN is to use the Extractor class in with 
     print(extractor.data.head())
 
 
+To load a specific model in a different language, you can specify the `language` and `model` parameters in the Extractor class.
+
+.. code-block:: python
+
+    extractor = Extractor(data = df, language = "de", model = "de_dep_news_trf")
+
+    # Extract features
+    features = extractor.extract_features()
+
+    print(extractor.data.head())
+
 For more advanced usage, check our :ref:`tutorials` section.

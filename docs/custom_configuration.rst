@@ -15,7 +15,7 @@ The full specification of the custom configuration is as follows:
         "max_length": int,  # Maximum length (chars) of the text to process. Default is 100000
         "remove_constant_cols": bool,  # Remove feature columns with constant values, i.e. where all texts produce the same feature value. Default is True
         "text_column": str,  # Name of the text column in the DataFrame. Default is "text"
-        "features": {  # Features to extract, grouped by feature area
+        "features": {  # Features to extract, grouped by feature area; each feature area is a list of feature names.
             "dependency": List[str],
             "emotion": List[str],
             "entities": List[str],
@@ -28,3 +28,5 @@ The full specification of the custom configuration is as follows:
             "surface": List[str]
         }
     }
+
+For a fully specified configuration, check `CONFIG_ALL` in the `elfen.config` module.

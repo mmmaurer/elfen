@@ -78,6 +78,7 @@ class Extractor:
     def __init__(self, 
                  data: pl.DataFrame,
                  config: dict[str, str] = CONFIG_ALL,
+                 **kwargs,
                  ) -> None:
         self.data = data
         self.config = config
@@ -87,6 +88,18 @@ class Extractor:
             "token": [],
             "sentence": [],
         }
+
+        # Handle typical keyword arguments
+        if "language" in kwargs:
+            self.config["language"] = kwargs["language"]
+        if "backbone" in kwargs:
+            self.config["backbone"] = kwargs["backbone"]
+        if "model" in kwargs:
+            self.config["model"] = kwargs["model"]
+        if "text_column" in kwargs:
+            self.config["text_column"] = kwargs["text_column"]
+        if "max_length" in kwargs:
+            self.config["max_length"] = kwargs["max_length"]
 
         if "max_length" in self.config:
             max_length = self.config["max_length"]
@@ -183,7 +196,8 @@ class Extractor:
                 for feature in feature_area_map[group]:
                     if feature in FEATURE_LEXICON_MAP:
                         lexicon = self.__gather_resource_from_featurename(
-                            feature,
+                            language=self.config["language"],
+                            feature=feature,
                             feature_lexicon_map=FEATURE_LEXICON_MAP)
                         if lexicon is not None:
                             print(f"Extracting {feature}...")
@@ -220,11 +234,16 @@ class Extractor:
             lexicon = load_prevalence_norms(filepath)
         elif re.search(r"(valence|arousal|dominance)",
                        featurename):
-            lexicon = load_vad_lexicon(filepath)
+            lexicon = load_vad_lexicon(filepath,
+                                       language=self.config["language"])
         elif "sentiment" in featurename:
-            lexicon = load_sentiment_nrc_lexicon(filepath)
+            lexicon = load_sentiment_nrc_lexicon(filepath,
+                                                 language=self.config[
+                                                     "language"])
         elif "intensity" in featurename:
-            lexicon = load_intensity_lexicon(filepath)
+            lexicon = load_intensity_lexicon(filepath,
+                                             language=self.config[
+                                                 "language"])
         elif "hedges" in featurename:
             lexicon = load_hedges(filepath)
         elif "socialness" in featurename:
@@ -360,6 +379,7 @@ class Extractor:
                                            maximum=maximum)
 
     def __gather_resource_from_featurename(self,
+                                           language: str,
                                            feature: str,
                                            feature_lexicon_map: 
                                            dict[str, str] = \
@@ -379,8 +399,13 @@ class Extractor:
         """
         if feature in feature_lexicon_map:
             if feature_lexicon_map[feature] in RESOURCE_MAP:
-                filepath = RESOURCE_MAP[
-                    feature_lexicon_map[feature]]["filepath"]
+                if language == "en":
+                    filepath = RESOURCE_MAP[
+                        feature_lexicon_map[feature]]["filepath"]
+                else:
+                    filepath = RESOURCE_MAP[
+                        feature_lexicon_map[feature]][
+                            "multilingual_filepath"]
                 if not os.path.exists(filepath):
                     get_resource(feature_lexicon_map[feature])
                 lexicon = self.__load_lexicon_from_featurename(
@@ -408,7 +433,8 @@ class Extractor:
                 if feature in FUNCTION_MAP:
                     if feature in FEATURE_LEXICON_MAP:
                         lexicon = self.__gather_resource_from_featurename(
-                            feature,
+                            language=self.config["language"],
+                            feature=feature,
                             feature_lexicon_map=FEATURE_LEXICON_MAP
                         )
                         self.__apply_function(feature,
@@ -453,7 +479,9 @@ class Extractor:
             elif feature_name in FEATURE_LEXICON_MAP and \
                  "lexicon" not in kwargs:
                 lexicon = self.__gather_resource_from_featurename(
-                    feature_name, feature_lexicon_map=FEATURE_LEXICON_MAP)
+                    language=self.config["language"],
+                    feature=feature_name,
+                    feature_lexicon_map=FEATURE_LEXICON_MAP)
                 self.__apply_function(feature_name,
                                       lexicon=lexicon,
                                       **kwargs)

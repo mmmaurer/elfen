@@ -3,7 +3,9 @@
 This python package provides efficient linguistic feature extraction for text datasets (i.e. datasets with N text instances, in a tabular structure). 
 
 For a full overview of the features available, check the [overview table](features.md), for further details and tutorials check the
-[documentation](https://elfen.readthedocs.io)
+[documentation](https://elfen.readthedocs.io).
+
+The multilingual support is documented in the [multilingual support table](multilingual_support.md).
 
 
 ## Installation

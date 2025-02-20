@@ -31,6 +31,7 @@ Since it is built on top of the modern dataframe package `polars`_, it is able t
    tutorials
    custom_configuration
    feature_overview
+   multilingual_support
 
 .. toctree::
    :caption: API Reference

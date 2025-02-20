@@ -29,7 +29,7 @@ To extract a single feature, you will need to use the ``extract`` method and pas
 
     # Extract a single feature
     # In this case, we are extracting the "average_word_length" feature
-    feature = extractor.extract(feature = "avg_word_length")
+    extractor.extract(feature = "avg_word_length")
 
     print(extractor.data.head())
 
@@ -59,7 +59,7 @@ You can pass these additional parameters such as custom lexicons and thresholds 
     # We are passing a custom lexicon and a threshold
     # Assuming the words in the lexicon are in the "word" column
     # and the valence ratings are in the "valence" column
-    feature = extractor.extract(feature = "n_low_valence", lexicon = custom_lexicon, threshold = 0.5)
+    extractor.extract(feature = "n_low_valence", lexicon = custom_lexicon, threshold = 0.5)
 
     print(extractor.data.head())
 
@@ -85,7 +85,7 @@ You can extract multiple specific features at once by passing a list of features
 
     # Extract multiple specific features
     # In this case, we are extracting the "avg_word_length" and "n_low_valence" features
-    features = extractor.extract(features = ["avg_word_length", "n_low_valence"])
+    extractor.extract(features = ["avg_word_length", "n_low_valence"])
 
     print(extractor.data.head())
 
@@ -121,7 +121,7 @@ Given that you have initialized the ``Extractor`` class, you can now extract fea
     # Extract features in groups
     # This will extract all implemented features for the specified feature area
     # In this case, we are extracting features from the "lexical_richness" area
-    features = extractor.extract_feature_group(feature_group = "lexical_richness")
+    extractor.extract_feature_group(feature_group = "lexical_richness")
 
     print(extractor.data.head())
 
@@ -132,11 +132,39 @@ Alternatively, you can also extract features from multiple feature areas at once
     # Extract features in groups
     # This will extract all implemented features for the specified feature areas
     # In this case, we are extracting features from the "lexical_richness" and "readability" areas
-    features = extractor.extract_feature_group(feature_group = ["lexical_richness", "readability"])
+    extractor.extract_feature_group(feature_group = ["lexical_richness", "readability"])
 
     print(extractor.data.head())
 
 For more information on the available feature areas, check the :ref:`feature_overview` section.
+
+Specifying the model, language, text column, and maximum length
+===============================================================
+By default, the Extractor class uses the spaCy backbone and the `en_core_web_sm` model, the column `text`, and a maximum length of 100,000 tokens for feature extraction. However, you can specify the model, language, text column, and maximum length of the text to process by passing the respective parameters to the Extractor class.
+
+.. code-block:: python
+
+    import polars as pl
+    from elfen.extractor import Extractor
+
+    # Load your dataset as a polars DataFrame
+    # example from csv
+    df = pl.read_csv("path/to/your/dataset.csv")
+
+    # Initialize the Extractor with your DataFrame
+    # This will automatically load the specified model
+    # and preprocess the text column
+    # Assumes the text column is named "comment"
+    extractor = Extractor(data = df,
+                          language = "de",
+                          model = "de_dep_news_trf",
+                          text_column = "comment",
+                          max_length = 10000)
+
+    # Extract features
+    extractor.extract_features()
+
+    print(extractor.data.head())
 
 Extracting features using a custom configuration
 ------------------------------------------------
@@ -172,7 +200,7 @@ For example, you can extract features using the spacy backbone, in German, using
     extractor = Extractor(data = df, config = custom_config)
 
     # Extract features using a custom configuration
-    features = extractor.extract_features()
+    extractor.extract_features()
 
     print(extractor.data.head())
 
@@ -210,7 +238,7 @@ Normalize
     # Normalize extracted features
     extractor.normalize("all") # Normalizes all extracted features
     extractor.normalize("avg_word_length") # Normalizes specific feature
-    normalized_features = extractor.normalize(["avg_word_length", "n_low_valence"]) # Normalizes multiple specific features
+    extractor.normalize(["avg_word_length", "n_low_valence"]) # Normalizes multiple specific features
 
     print(extractor.data.head())
 
@@ -237,7 +265,7 @@ Ratio Normalize
     # Ratio normalize extracted features
     extractor.ratio_normalize("all", "tokens") # Ratio normalizes all extracted features
     extractor.ratio_normalize("avg_word_length", "tokens") # Ratio normalizes specific feature
-    ratio_normalized_features = extractor.ratio_normalize(["avg_word_length", "n_low_valence"], "tokens") # Ratio normalizes multiple specific features
+    extractor.ratio_normalize(["avg_word_length", "n_low_valence"], "tokens") # Ratio normalizes multiple specific features
 
     print(extractor.data.head())
 
@@ -264,7 +292,7 @@ Rescale
     # Rescale extracted features to a range of 0 to 1
     extractor.rescale("all") # Rescales all extracted features
     extractor.rescale("avg_word_length") # Rescales specific feature
-    rescaled_features = extractor.rescale(["avg_word_length", "n_low_valence"]) # Rescales multiple specific features
+    extractor.rescale(["avg_word_length", "n_low_valence"]) # Rescales multiple specific features
 
     # Rescale extracted features to a custom range
     extractor.rescale("all", minimum = 0, maximum = 10) # Rescales all extracted features

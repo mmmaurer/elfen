@@ -97,9 +97,10 @@ RESOURCE_MAP = {
                                  "NRC-Emotion-Intensity-Lexicon-v1.txt"),
         "multilingual_filepath": os.path.join(PROJECT_PATH, "elfen_resources",
                                               "Emotion", "Intensity",
-                                              "NRC-Emotion-Intensity-Lexicon",
-                                              "NRC-Emotion-Intensity-"
-                                              "Lexicon-ForVariousLanguages.txt"),
+                                              "NRC-Emotion-Intensity-Lexicon/",
+                                              "NRC-Emotion-Intensity-Lexicon"
+                                              "-v1-ForVariousLanguages.txt"),
+                                              
         "bibtex": rb"""
         @inproceedings{vad_nrc,
             title = "Word Affect Intensities",

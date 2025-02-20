@@ -96,9 +96,11 @@ from .resources import (
 )
 from .schemas import (
     VAD_SCHEMA_NRC,
+    VAD_SCHEMA_NRC_MULTILINGUAL,
     INTENSITY_SCHEMA,
-    SENTIWORDNET_SCHEMA,
+    INTENSITY_SCHEMA_MULTILINGUAL,
     SENTIMENT_NRC_SCHEMA,
+    SENTIMENT_NRC_SCHEMA_MULTILINGUAL,
 )
 from .surface import (
     get_num_tokens,
@@ -128,8 +130,8 @@ SENTIMENT_NRC_PATH = RESOURCE_MAP["sentiment_nrc"]["filepath"]
 # --------------------------------------------------------------------- #
 
 def load_vad_lexicon(path: str = VAD_NRC_PATH,
-                     schema: dict = VAD_SCHEMA_NRC,
-                     has_header: bool = False,
+                     language: str = "en",
+                     has_header: bool = True,
                      separator: str = "\t",
                      **kwargs: dict[str, str],
                      ) -> pl.DataFrame:
@@ -146,15 +148,26 @@ def load_vad_lexicon(path: str = VAD_NRC_PATH,
         vad_lexicon (pl.DataFrame):
             The VAD lexicon as a polars DataFrame.
     """
+    if language != "en":
+        schema = VAD_SCHEMA_NRC_MULTILINGUAL
+    else:
+        schema = VAD_SCHEMA_NRC
+
     vad_lexicon = pl.read_csv(path,
                               has_header=has_header,
                               schema=schema,
                               separator=separator)
     if "V.Mean" in vad_lexicon.columns: # rename columns for consistency
         vad_lexicon = vad_lexicon.rename(
-            [("V.Mean", "valence"),
-             ("A.Mean", "arousal"),
-             ("D.Mean", "dominance")]
+            {"V.Mean": "valence",
+             "A.Mean": "arousal",
+             "D.Mean": "dominance"}
+        )
+    elif "Valence" in vad_lexicon.columns:
+        vad_lexicon = vad_lexicon.rename(
+            {"Valence": "valence",
+             "Arousal": "arousal",
+             "Dominance": "dominance"}
         )
     return vad_lexicon
 
@@ -597,7 +610,8 @@ def get_n_high_dominance(data: pl.DataFrame,
              lambda x: filter_lexicon(lexicon=lexicon,
                                       words=x,
                                       word_column=word_column). \
-               select("dominance").filter(pl.col("dominance") > threshold),
+               select("dominance").filter(
+                   pl.col("dominance") > threshold).shape[0],
                return_dtype=pl.UInt32
         ).fill_nan(nan_value).fill_null(nan_value).alias("n_high_dominance")
     )
@@ -609,8 +623,8 @@ def get_n_high_dominance(data: pl.DataFrame,
 # --------------------------------------------------------------------- #
 
 def load_intensity_lexicon(path: str = INTENSITY_PATH,
-                           schema: dict = INTENSITY_SCHEMA,
-                           has_header: bool = False,
+                           language: str = "en",
+                           has_header: bool = True,
                            separator: str = "\t",
                            **kwargs: dict[str, str],
                            ) -> pl.DataFrame:
@@ -626,10 +640,21 @@ def load_intensity_lexicon(path: str = INTENSITY_PATH,
         intensity_lexicon (pl.DataFrame):
             The intensity lexicon as a polars DataFrame.
     """
+    if language != "en":
+        schema = INTENSITY_SCHEMA_MULTILINGUAL
+    else:
+        schema = INTENSITY_SCHEMA
+
     intensity_lexicon = pl.read_csv(path,
                                     has_header=has_header,
                                     schema=schema,
                                     separator=separator)
+    # rename columns for consistency
+    if "Emotion-Intensity-Score" in intensity_lexicon.columns:
+        intensity_lexicon = intensity_lexicon.rename(
+            {"Emotion-Intensity-Score": "emotion_intensity",
+             "Emotion": "emotion"}
+        )
     return intensity_lexicon
 
 def filter_intensity_lexicon(lexicon: pl.DataFrame,
@@ -813,7 +838,7 @@ def get_n_high_intensity(data: pl.DataFrame,
                         pl.col("emotion_intensity") > threshold).shape[0],
                 return_dtype=pl.UInt32
             ).fill_nan(nan_value).fill_null(nan_value). \
-                alias(f"n_high_{emotion}_intensity")
+                alias(f"n_high_intensity_{emotion}")
         )
 
     return data
@@ -855,8 +880,8 @@ def get_n_high_intensity(data: pl.DataFrame,
 # ---------------------------- Sentiment NRC --------------------------- #
 
 def load_sentiment_nrc_lexicon(path: str = SENTIMENT_NRC_PATH,
-                               schema: dict = SENTIMENT_NRC_SCHEMA,
-                               has_header: bool = False,
+                               language: str = "en",
+                               has_header: bool = True,
                                separator: str = "\t",
                                **kwargs: dict[str, str],
                                ) -> pl.DataFrame:
@@ -873,6 +898,11 @@ def load_sentiment_nrc_lexicon(path: str = SENTIMENT_NRC_PATH,
         sentiment_nrc (pl.DataFrame):
             The sentiment NRC lexicon as a polars DataFrame.
     """
+    if language != "en":
+        schema = SENTIMENT_NRC_SCHEMA_MULTILINGUAL
+    else:
+        schema = SENTIMENT_NRC_SCHEMA
+    
     sentiment_nrc = pl.read_csv(path,
                                has_header=has_header,
                                schema=schema,
@@ -897,11 +927,17 @@ def filter_sentiment_lexicon(lexicon: pl.DataFrame,
         filtered_sentiment_nrc (pl.DataFrame):
             The filtered sentiment NRC lexicon.
     """
-    filtered_sentiment_nrc = lexicon.filter(
-        (pl.col("emotion") == sentiment) &
-        (pl.col("label") == 1) &
-        (pl.col(word_column).is_in(words))
-    )
+    if "label" in lexicon.columns:
+        filtered_sentiment_nrc = lexicon.filter(
+            (pl.col("emotion") == sentiment) &
+            (pl.col("label") == 1) &
+            (pl.col(word_column).is_in(words))
+        )
+    elif "Afrikaans" in lexicon.columns:
+        filtered_sentiment_nrc = lexicon.filter(
+            (pl.col(sentiment) == 1) &
+            (pl.col(word_column).is_in(words))
+        )
     
     return filtered_sentiment_nrc
 
@@ -1009,6 +1045,7 @@ def get_sentiment_score(data: pl.DataFrame,
                         lexicon: pl.DataFrame,
                         backbone: str = "spacy",
                         nan_value: float = 0.0,
+                        language: str = "en",
                         **kwargs: dict[str, str],
                         ) -> pl.DataFrame:
     """
@@ -1034,13 +1071,20 @@ def get_sentiment_score(data: pl.DataFrame,
             The input data with the sentiment score column. The column
             name is "sentiment_score".
     """
+    if language != "en":
+        word_column = LANGUAGES_NRC[language]
+    else:
+        word_column = "word"
+
     if "n_positive_sentiment" not in data.columns:
         data = get_n_positive_sentiment(data,
-                                        lexicon,
+                                        lexicon=lexicon,
+                                        language=language,
                                         backbone=backbone)
     if "n_negative_sentiment" not in data.columns:
         data = get_n_negative_sentiment(data,
-                                        lexicon,
+                                        lexicon=lexicon,
+                                        language=language,
                                         backbone=backbone)
     if "n_tokens" not in data.columns:
         data = get_num_tokens(data, backbone=backbone)

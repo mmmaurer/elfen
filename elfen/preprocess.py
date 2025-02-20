@@ -50,7 +50,10 @@ def preprocess_data(data: pl.DataFrame,
     if backbone == 'spacy':
         nlp = spacy.load(model)
         nlp.max_length = max_length
-        nlp.add_pipe("syllables", after="tagger")
+        if not nlp.has_pipe("tagger"):
+            nlp.add_pipe("syllables")
+        else:
+            nlp.add_pipe("syllables", after="tagger")
     elif backbone == 'stanza':
         nlp = stanza.Pipeline(model=model,
                               processors='tokenize,pos,lemma,depparse')
