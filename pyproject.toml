@@ -23,8 +23,6 @@ dependencies = [
 ]
 description = "ELFEN - Efficient Linguistic Feature Extraction for Natural Language Datasets"
 readme = "README_pypi.md"
-license = "MIT"
-license-files = ["LICENSE"]
 requires-python = ">=3.10, <=3.12.9"
 classifiers = [
     "Programming Language :: Python :: 3.10",
