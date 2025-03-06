@@ -21,6 +21,8 @@ The preprocessing steps implemented in this module are:
 """
 import polars as pl
 import spacy
+# Custom function to download spacy models if they are not available
+from spacy_download import load_spacy
 from spacy_syllables import SpacySyllables
 import stanza
 
@@ -48,7 +50,7 @@ def preprocess_data(data: pl.DataFrame,
             The processed data is stored in a new column named 'nlp'.
     """
     if backbone == 'spacy':
-        nlp = spacy.load(model)
+        nlp = load_spacy(model)
         nlp.max_length = max_length
         if not nlp.has_pipe("tagger"):
             nlp.add_pipe("syllables")

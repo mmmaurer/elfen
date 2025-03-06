@@ -6,11 +6,11 @@
 ELFEN - Efficient Linguistic Feature Extraction for Natural Language Datasets
 =============================================================================
 
-ELFEN (Efficient Linguistic Feature Extraction for Natural Language Datasets) is a Python package that provides a set of tools for extracting linguistic features from text datasets. It provides an extensive set of features that can be used to analyze text data and NLP model outputs.
-Since it is built on top of the modern dataframe package `polars`_, it is able to handle large datasets efficiently. Preprocessing backbones are built on top of the popular NLP libraries `spaCy`_ and `stanza`_, allowing for the use of both light-weight and state-of-the-art NLP models for feature extraction in various Languages.
+ELFEN (Efficient Linguistic Feature Extraction for Natural Language Datasets) is a Python package for extracting linguistic features from text datasets at scale. It provides an extensive set of features that can be used to analyze text data and NLP model outputs.
+It is built on top of the modern dataframe package `polars`_, allowing for handling large datasets efficiently. Preprocessing backbones are built on top of the popular NLP libraries `spaCy`_ and `stanza`_, allowing for the use of both light-weight and state-of-the-art NLP models for feature extraction in various Languages.
 
 .. note::
-   The package is still under development. If you encounter any issues or have any suggestions, please feel free to open an issue or add a pull request on the `GitHub repository`_.
+   The package is actively maintained. If you encounter any issues or have any suggestions, please feel free to open an issue or add a pull request on the `GitHub repository`_.
 
 .. _GitHub repository: https://www.github.com/mmmaurer/elfen
 
