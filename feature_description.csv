@@ -20,7 +20,7 @@ Root type token ratio,lexical_richness,rttr,rttr,get_rttr,Root type token ratio 
 Corrected type token ratio,lexical_richness,cttr,cttr,get_cttr,Corrected type token ratio of the text: n_types / sqrt(2 * n_tokens),
 Herdan's C,lexical_richness,herdan_c,herdan_c,get_herdan_c,Herdan's C of a text: log(n_types) / log(n_tokens),
 Summer's type token ratio/ index,lexical_richness,summer_index,summer_index,get_summer_index,Summer's text token ratio of the text: log(log(n_types)) / log(log(n_tokens)),
-Dougast's Uber index,lexical_richness,dougast_u,dougast_u,get_dougast_u,Dougast's Uber index of the text: log(n_types)^2 / (log(n_tokens) - log( n_types)),
+Dugast's Uber index,lexical_richness,dugast_u,dugast_u,get_dugast_u,Dugast's Uber index of the text: log(n_types)^2 / (log(n_tokens) - log( n_types)),
 Maas' text token ratio/index,lexical_richness,maas_index,maas_index,get_maas_index,Maas' text token ratio of the text: (n_tokens - n_types) / log(n_types)^2,
 Number of local hapax legomena,lexical_richness,n_hapax_legomena,n_hapax_legomena,get_n_hapax_legomena,Number of hapax legomena (tokens that occur only once) in the text,
 Number of global token hapax legomena,lexical_richness,n_global_token_hapax_legomena,n_global_token_hapax_legomena,get_n_global_token_hapax_legomena,Number of hapax legomena (tokens that occur only once) in the entire corpus in the text instance,

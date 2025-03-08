@@ -20,8 +20,8 @@ The lexical richness metrics implemented in this module are:
 - Summer's TTR:
     The logarithm of the logarithm of the number of types divided by the
     logarithm of the logarithm of the number of tokens.
-- Dougast's Uber Index:
-    The square of the logarithm of the number of types divided by the
+- Dugast's Uber Index:
+    The square of the logarithm of the number of tokens divided by the
     logarithm of the number of tokens minus the logarithm of the number
     of types.
 - Maas' TTR:
@@ -218,6 +218,8 @@ def get_herdan_c(data: pl.DataFrame,
 
     log(N_types) / log(N_tokens).
 
+    Note that the convention is to fill NaNs with 1 as log(1) = 0.
+
     Args:
         data (pl.DataFrame): A Polars DataFrame containing the text data.
         backbone (str): The NLP library used to process the text data.
@@ -252,6 +254,8 @@ def get_summer_index(data: pl.DataFrame,
 
     log(log(N_types)) / log(log(N_tokens)).
 
+    Note that the convention is to fill NaNs with 1 as log(1) = 0.
+
     Args:
         data (pl.DataFrame): A Polars DataFrame containing the text data.
         backbone (str): The NLP library used to process the text data.
@@ -277,13 +281,17 @@ def get_summer_index(data: pl.DataFrame,
 
     return data
 
-def get_dougast_u(data: pl.DataFrame,
+def get_dugast_u(data: pl.DataFrame,
                   backbone: str = 'spacy',
                   **kwargs: dict[str, str],
                   ) -> pl.DataFrame:
     """
     Calculates the Dougast's Uber index of a text:
-    log(N_types)^2 / (log(N_tokens) - log(N_types)).
+    log(N_tokens)^2 / (log(N_tokens) - log(N_types)).
+
+    Note that the convention is to fill NaNs with 1 as log(1) = 0.
+    For texts with N_types = N_tokens, this will output Inf as division by
+    0 is not defined.
 
     Args:
         data (pl.DataFrame): A Polars DataFrame containing the text data.
@@ -291,9 +299,9 @@ def get_dougast_u(data: pl.DataFrame,
                 Either 'spacy' or 'stanza'.
 
     Returns:
-        data (pl.DataFrame): A Polars DataFrame containing Dougast's Uber
-        index of the text data. Dougast's Uber index is stored in a new
-        column named 'dougast_u'.
+        data (pl.DataFrame): A Polars DataFrame containing Dugast's Uber
+        index of the text data. Dugast's Uber index is stored in a new
+        column named 'dugast_u'.
     """
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
@@ -301,9 +309,9 @@ def get_dougast_u(data: pl.DataFrame,
         data = get_num_types(data, backbone=backbone)
     
     data = data.with_columns(
-        (pl.col("n_types").log()**2 / (pl.col("n_tokens").log() - \
+        (pl.col("n_tokens").log()**2 / (pl.col("n_tokens").log() - \
                                        pl.col("n_types").log())
-         ).fill_nan(1).alias("dougast_u")
+         ).fill_nan(1).alias("dugast_u")
          # convention to fill NaNs with 1 as log(1) = 0 and
          # division by 0 is not defined.
     )
@@ -317,6 +325,8 @@ def get_maas_index(data: pl.DataFrame,
     """
     Calculates the Maas' TTR of a text:
     (N_tokens - N_types) / log(N_types)^2.
+
+    Note that the convention is to fill NaNs with 1 as log(1) = 0.
 
     Args:
         data (pl.DataFrame): A Polars DataFrame containing the text data.
@@ -470,8 +480,6 @@ def get_n_hapax_dislegomena(data: pl.DataFrame,
     """
     Calculates the number of hapax dislegomena in a text: words that occur
     only once or twice.
-
-    TODO: Add global hapax dislegomena calculation.
 
     Args:
         data (pl.DataFrame): A Polars DataFrame containing the text data.
@@ -881,7 +889,7 @@ def get_mattr(data: pl.DataFrame,
 def get_msttr(data: pl.DataFrame,
               backbone: str = 'spacy',
               window_size: int = 5,
-              discard: bool = True,
+              discard: bool = False,
               **kwargs: dict[str, str],
               ) -> pl.DataFrame:
     """
@@ -904,7 +912,7 @@ def get_msttr(data: pl.DataFrame,
     """
     def msttr(tokens: list[str],
               window_size: int = 5,
-              discard: bool = True,
+              discard: bool = False,
               ) -> float:
         """
         Calculate the MSTTR of a text.
@@ -1042,6 +1050,11 @@ def get_herdan_v(data: pl.DataFrame,
 
     Vm^2 = K + (1/N) - (1/V(N))
     Vm = sqrt(K + (1/N) - (1/V(N)))
+
+    where K is Yule's K, N is the number of tokens, and V(N) is the number
+    of types:
+
+    K = Σ(V(i,N) * (i/n)^2)
 
     Args:
         data (pl.DataFrame): A Polars DataFrame containing the text data.
