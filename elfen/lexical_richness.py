@@ -361,8 +361,6 @@ def get_n_hapax_legomena(data: pl.DataFrame,
     Calculates the number of hapax legomena in a text: words that occur
     only once.
 
-    TODO: Add global hapax legomena calculation.
-
     Args:
         data (pl.DataFrame): A Polars DataFrame containing the text data.
         backbone (str): The NLP library used to process the text data.
