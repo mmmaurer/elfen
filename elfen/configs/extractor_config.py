@@ -53,7 +53,7 @@ CONFIG_ALL = {
             "cttr",
             "herdan_c",
             "summer_index",
-            "dougast_u",
+            "dugast_u",
             "maas_index",
             "lexical_density",
             "n_hapax_legomena",
@@ -63,7 +63,7 @@ CONFIG_ALL = {
             "n_global_token_hapax_dislegomena",
             "n_global_lemma_hapax_dislegomena",
             "sichel_s",
-            "global_sichel_s"
+            "global_sichel_s",
             "giroud_index",
             "mtld",
             "hdd",

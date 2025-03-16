@@ -56,7 +56,8 @@ def get_tree_width(data: pl.DataFrame,
     if backbone == 'spacy':
         data = data.with_columns(
             pl.col('nlp').map_elements(
-                lambda x: get_width(x)
+                lambda x: get_width(x),
+            return_dtype=pl.UInt16
             ).alias('tree_width')
         )
     elif backbone == 'stanza':
@@ -95,7 +96,8 @@ def get_tree_depth(data: pl.DataFrame,
         data = data.with_columns(
             pl.col('nlp').map_elements(
                 lambda x: np.mean([walk_tree(sent.root, 0) for sent in
-                                   x.sents])
+                                   x.sents]),
+            return_dtype=pl.UInt16
             ).alias('tree_depth')
         )
     elif backbone == 'stanza':
@@ -127,7 +129,8 @@ def get_tree_branching(data: pl.DataFrame,
     if backbone == 'spacy':
          data = data.with_columns(
                pl.col('nlp').map_elements(
-                lambda x: get_branching(x)
+                lambda x: get_branching(x),
+                return_dtype=pl.Float32
                ).alias('tree_branching')
          )
     elif backbone == 'stanza':
@@ -164,7 +167,8 @@ def get_ramification_factor(data: pl.DataFrame,
     if backbone == 'spacy':
         data = data.with_columns(
             pl.col('nlp').map_elements(
-                lambda x: get_ramification(x)
+                lambda x: get_ramification(x),
+                return_dtype=pl.Float32
             ).alias('ramification_factor')
         )
     elif backbone == 'stanza':
@@ -195,7 +199,8 @@ def get_n_noun_chunks(data: pl.DataFrame,
     if backbone == 'spacy':
         data = data.with_columns(
             pl.col('nlp').map_elements(
-                lambda x: get_n_chunks(x)
+                lambda x: get_n_chunks(x),
+                return_dtype=pl.UInt16
             ).alias('n_noun_chunks')
         )
     elif backbone == 'stanza':

@@ -6,13 +6,13 @@ GENDER = ["Com",
 ANIMACITY = ["Anim",
              "Hum",
              "Inan",
-             "Nhum"],
+             "Nhum"]
 
 TENSE = ["Fut",
          "Imp",
          "Past",
          "Pres",
-         "Pqp"],
+         "Pqp"]
 
 ASPECT = ["Hab",
                    "Imp",
