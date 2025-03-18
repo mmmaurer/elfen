@@ -133,8 +133,6 @@ CONFIG_ALL = {
         ],
         "entities": [
             "n_entities",
-            "n_entities_token_ratio",
-            "n_entities_sentence_ratio",
             "n_per_entity_type",
         ],
     }
