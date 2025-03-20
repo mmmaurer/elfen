@@ -79,8 +79,8 @@ shape: (2, 4)
 │ ---                            ┆ ---     ┆ ---       ┆ ---      │
 │ str                            ┆ str     ┆ str       ┆ i64      │
 ╞════════════════════════════════╪═════════╪═══════════╪══════════╡
-│ This is a test sentence.       ┆ A       ┆ C         ┆ 5        │
-│ This is another test sentence. ┆ B       ┆ D         ┆ 6        │
+│ This is a test sentence.       ┆ A       ┆ C         ┆ 6        │
+│ This is another sentence.      ┆ B       ┆ D         ┆ 5        │
 └────────────────────────────────┴─────────┴───────────┴──────────┘
 ```
 
