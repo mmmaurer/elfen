@@ -382,6 +382,17 @@ To extract these custom lexicon-based features, you will need to load the respec
 
     print(df.head())
 
+Limiting the numbers of cores used
+----------------------------------
+The underlying dataframe library, polars, uses all available cores by default.
+If you are working on a shared server, you may want to consider limiting the resources available to polars.
+To do that, you will have to set the ``POLARS_MAX_THREADS`` variable in your shell, e.g.:
+
+.. code-block:: shell
+
+    # Limit the number of threads to 8
+    export POLARS_MAX_THREADS=8
+
 .. note::
     If you do not find a suitable template function or different feature extraction function, and you implement your own, please consider contributing to the package by opening a pull request on the `GitHub repository`_.
 

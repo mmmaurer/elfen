@@ -105,6 +105,16 @@ While all feature extraction functions in this package are written from scratch,
 We use the [`wn`](https://github.com/goodmami/wn) python package to extract Open  Multilingual Wordnet synsets.
 
 ## Disclaimer
+### Multiprocessing and limiting the numbers of cores used
+The underlying dataframe library, polars, uses all available cores by default.
+If you are working on a shared server, you may want to consider limiting the resources available to polars.
+To do that, you will have to set the ``POLARS_MAX_THREADS`` variable in your shell, e.g.:
+
+```bash
+export POLARS_MAX_THREADS=8
+```
+
+### Usage of some of the features
 The extraction of psycholinguistic, emotion/lexicon and semantic features available through this package relies on third-party resources such as lexicons.
 Please refer to the original author's licenses and conditions for usage, and cite them if you use the resources through this package in your analyses.
 

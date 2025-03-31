@@ -16,6 +16,16 @@ The extraction of psycholinguistic, emotion/lexicon and semantic features relies
 Please refer to the original author's licenses and conditions for usage, and cite them if you use the resources through this package in your analyses.
 
 For an overview which features use which resource, and how to export all third-party resource references in a `bibtex` string, consult the [documentation](https://elfen.readthedocs.io).
+
+## Multiprocessing and limiting the numbers of cores used
+The underlying dataframe library, polars, uses all available cores by default.
+If you are working on a shared server, you may want to consider limiting the resources available to polars.
+To do that, you will have to set the ``POLARS_MAX_THREADS`` variable in your shell, e.g.:
+
+```bash
+export POLARS_MAX_THREADS=8
+```
+
 ## Acknowledgements
 
 While all feature extraction functions in this package are written from scratch, the choice of features in the readability and lexical richness feature areas (partially) follows the [`readability`](https://github.com/andreasvc/readability) and [`lexicalrichness`](https://github.com/LSYS/LexicalRichness) python packages.

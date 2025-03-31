@@ -29,6 +29,15 @@ To use wordnet features, download open multilingual wordnet using:
 python -m wn download omw:1.4
 ```
 
+## Multiprocessing and limiting the numbers of cores used
+The underlying dataframe library, polars, uses all available cores by default.
+If you are working on a shared server, you may want to consider limiting the resources available to polars.
+To do that, you will have to set the ``POLARS_MAX_THREADS`` variable in your shell, e.g.:
+
+```bash
+export POLARS_MAX_THREADS=8
+```
+
 ## Usage of third-party resources usable in this package
 The extraction of psycholinguistic, emotion/lexicon and semantic features relies on third-party resources such as lexicons.
 Please refer to the original author's licenses and conditions for usage, and cite them if you use the resources through this package in your analyses.
