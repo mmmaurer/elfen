@@ -19,6 +19,11 @@ Install this package from source
 python -m pip install git+https://github.com/mmmaurer/elfen.git
 ```
 
+If you want to use the spacy backbone, you will need to download the respective model, e.g. "en_core_web_sm":
+ ```bash
+ python -m spacy download en_core_web_sm
+ ```
+
 To use wordnet features, download open multilingual wordnet using:
 ```bash
 python -m wn download omw:1.4

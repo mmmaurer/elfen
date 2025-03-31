@@ -38,6 +38,11 @@ To install the package along with the necessary dependencies, run
 python -m pip install elfen
 ```
 
+If you want to use the spacy backbone, you will need to download the respective model, e.g. "en_core_web_sm":
+ ```bash
+ python -m spacy download en_core_web_sm
+ ```
+
 For the full functionality, some external resources are necessary. While most of them are downloaded and located automatically, some have to be loaded manually.
 
 To use wordnet features, download open multilingual wordnet using:

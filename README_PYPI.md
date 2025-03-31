@@ -4,6 +4,13 @@ This python package provides efficient linguistic feature extraction for text da
 
 For further information, check the [GitHub repository](https://github.com/mmmaurer/elfen) and the [documentation](https://elfen.readthedocs.io)
 
+## Using spacy models
+
+If you want to use the spacy backbone, you will need to download the respective model, e.g. "en_core_web_sm":
+ ```bash
+ python -m spacy download en_core_web_sm
+ ```
+
 ## Usage of third-party resources usable in this package
 The extraction of psycholinguistic, emotion/lexicon and semantic features relies on third-party resources such as lexicons.
 Please refer to the original author's licenses and conditions for usage, and cite them if you use the resources through this package in your analyses.

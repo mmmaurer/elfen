@@ -30,6 +30,20 @@ Additional resources and models
 
 To use the package, you will need to install additional resources.
 
+Backbone models
+ ~~~~~~~~~~~~~~~~
+ 
+ Since the NLP backbones are built on top of `spaCy`_ and `stanza`_, you will need to install the respective models for the languages you want to use. You can find the installation instructions for `spacy here <https://spacy.io/usage/models>`_ and for `stanza here <https://stanfordnlp.github.io/stanza/models.html>`_.
+ 
+ .. _spaCy: https://spacy.io
+ .. _stanza: https://stanfordnlp.github.io/stanza/
+ 
+ For the default small English spacy model, you can install it using the following command:
+ 
+ .. code-block:: bash
+ 
+     python -m spacy download en_core_web_sm
+
 Third-party resources
 ~~~~~~~~~~~~~~~~~~~~~
 
