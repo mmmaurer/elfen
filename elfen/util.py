@@ -3,61 +3,68 @@ This module contains utility functions for working with Polars DataFrames.
 """
 import polars as pl
 
-def rescale_column(df: pl.DataFrame,
+def rescale_column(data: pl.DataFrame,
                    column: str,
-                   minimum: float | None = None,
-                   maximum: float | None = None) -> pl.DataFrame:
+                   minimum: float = 0.0,
+                   maximum: float = 1.0) -> pl.DataFrame:
     """
-    Rescales a column to a range of [0, 1].
+    Rescales a column to a custom range. Defaults to [0, 1].
 
     Args:
-        df (pl.DataFrame): A Polars DataFrame.
+        data (pl.DataFrame): A Polars DataFrame.
         column (str): The name of the column to rescale.
         minimum (float): 
-            The minimum value of the column.
-            If None, the minimum value of the
-            column is used.
+            The desired minimum value of the column.
+            Defaults to 0.
         maximum (float):
-            The maximum value of the column.
-            If None, the maximum value of the
-            column is used.
+            The desired maximum value of the column.
+            Defaults to 1.
 
     Returns:
-        rescaled_df (pl.DataFrame):
-            A Polars DataFrame with the column rescaled to [0, 1].
+        rescaled_data (pl.DataFrame):
+            A Polars DataFrame with the column rescaled to
+            [minimum, maximum].
     """
-    if minimum is None:
-        minimum = df[column].min()
-    if maximum is None:
-        maximum = df[column].max()
+    inner_minimum = data[column].min()
+    inner_maximum = data[column].max()
     
-    rescaled_df = df.with_columns([
-        ((pl.col(column) - minimum) / (maximum - minimum)).alias(column)
-    ])
+    # Rescale to [0, 1]
+    if minimum == 0.0 and maximum == 1.0:
+        rescaled_data = data.with_columns([
+            ((pl.col(column) - inner_minimum) / 
+            (inner_maximum - inner_minimum)).alias(column)
+        ])
+    # Rescale to [minimum, maximum]
+    else:
+        rescaled_data = data.with_columns([
+            (((pl.col(column) - inner_minimum) / 
+            (inner_maximum - inner_minimum)) * 
+            (maximum - minimum) + minimum).alias(column)
+        ])
 
-    return rescaled_df
+    return rescaled_data
 
-def normalize_column(df: pl.DataFrame,
+def normalize_column(data: pl.DataFrame,
                      column: str) -> pl.DataFrame:
     """
     Normalizes a column to have a mean of 0 and a standard deviation of 1.
 
     Args:
-        df (pl.DataFrame): A Polars DataFrame.
+        data (pl.DataFrame): A Polars DataFrame.
         column (str): The name of the column to normalize.
     
     Returns:
-        normalized_df (pl.DataFrame):
+        normalized_data (pl.DataFrame):
             A Polars DataFrame with the column normalized
     """
-    mean = df[column].mean()
-    std = df[column].std()
+    mean = data[column].mean()
+    std = data[column].std()
 
-    normalized_df = df.with_columns([
+    normalized_data = data.with_columns([
         ((pl.col(column) - mean) / std).alias(column)
     ])
 
-    return normalized_df
+    return normalized_data
 
 def filter_lexicon(lexicon: pl.DataFrame,
                    words: pl.Series,

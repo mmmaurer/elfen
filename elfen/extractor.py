@@ -402,10 +402,16 @@ class Extractor:
                 if language == "en":
                     filepath = RESOURCE_MAP[
                         feature_lexicon_map[feature]]["filepath"]
-                else:
+                elif "multilingual_filepath" in RESOURCE_MAP[
+                    feature_lexicon_map[feature]]:
                     filepath = RESOURCE_MAP[
                         feature_lexicon_map[feature]][
                             "multilingual_filepath"]
+                else:
+                    print(f"Feature {feature} not (yet) "
+                          f"supported for {self.config["language"]}. "
+                          "Skipping...")
+                    return None
                 if not os.path.exists(filepath):
                     get_resource(feature_lexicon_map[feature])
                 lexicon = self.__load_lexicon_from_featurename(

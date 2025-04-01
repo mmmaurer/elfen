@@ -138,8 +138,100 @@ Alternatively, you can also extract features from multiple feature areas at once
 
 For more information on the available feature areas, check the :ref:`feature_overview` section.
 
-Specifying the model, language, text column, and maximum length
-===============================================================
+Normalizing extracted features
+-------------------------------
+
+We provide the possibility to normalize extracted features in three different ways:
+
+- ``normalize``: Normalizes the extracted features such that they have a mean of 0 and a standard deviation of 1
+- ``ratio_normalize``: Normalizes the extracted features using a specific ratio (e.g. given features divided by the number of tokens)
+- ``rescale``: Rescales the extracted features using the min-max scaling method
+
+Normalize
+~~~~~~~~~
+
+.. code-block:: python
+
+    import polars as pl
+    from elfen.extractor import Extractor
+
+    # Load your dataset as a polars DataFrame
+    # example from csv
+    df = pl.read_csv("path/to/your/dataset.csv")
+
+    # Initialize the Extractor with your DataFrame
+    extractor = Extractor(data = df)
+
+    # Extract features
+    extractor.extract_feature_group(feature_group = "lexical_richness")
+    extractor.extract("avg_word_length")
+    extractor.extract("n_low_valence")
+
+    # Normalize extracted features
+    extractor.normalize("all") # Normalizes all extracted features
+    extractor.normalize("avg_word_length") # Normalizes specific feature
+    extractor.normalize(["avg_word_length", "n_low_valence"]) # Normalizes multiple specific features
+
+    print(extractor.data.head())
+
+Ratio Normalize
+~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+    import polars as pl
+    from elfen.extractor import Extractor
+
+    # Load your dataset as a polars DataFrame
+    # example from csv
+    df = pl.read_csv("path/to/your/dataset.csv")
+
+    # Initialize the Extractor with your DataFrame
+    extractor = Extractor(data = df)
+
+    # Extract features
+    extractor.extract_feature_group(feature_group = "lexical_richness")
+    extractor.extract("avg_word_length")
+    extractor.extract("n_low_valence")
+
+    # Ratio normalize extracted features
+    extractor.ratio_normalize("all", "token") # Ratio normalizes all extracted features
+    extractor.ratio_normalize("avg_word_length", "token") # Ratio normalizes specific feature
+    extractor.ratio_normalize(["avg_word_length", "n_low_valence"], "token") # Ratio normalizes multiple specific features
+
+    print(extractor.data.head())
+
+Rescale
+~~~~~~~
+
+.. code-block:: python
+
+    import polars as pl
+    from elfen.extractor import Extractor
+
+    # Load your dataset as a polars DataFrame
+    # example from csv
+    df = pl.read_csv("path/to/your/dataset.csv")
+
+    # Initialize the Extractor with your DataFrame
+    extractor = Extractor(data = df)
+
+    # Extract features
+    extractor.extract_feature_group(feature_group = "lexical_richness")
+    extractor.extract("avg_word_length")
+    extractor.extract("n_low_valence")
+
+    # Rescale extracted features to a range of 0 to 1
+    extractor.rescale("all") # Rescales all extracted features
+    extractor.rescale("avg_word_length") # Rescales specific feature
+    extractor.rescale(["avg_word_length", "n_low_valence"]) # Rescales multiple specific features
+
+    # Rescale extracted features to a custom range
+    extractor.rescale("all", minimum = 0, maximum = 10) # Rescales all extracted features to a range of 0 to 10
+
+
+Specifying the model, language, text column, maximum length, and the used resources
+===================================================================================
 By default, the Extractor class uses the spaCy backbone and the `en_core_web_sm` model, the column `text`, and a maximum length of 100,000 tokens for feature extraction. However, you can specify the model, language, text column, and maximum length of the text to process by passing the respective parameters to the Extractor class.
 
 .. code-block:: python
@@ -205,97 +297,6 @@ For example, you can extract features using the spacy backbone, in German, using
     print(extractor.data.head())
 
 For a full overview over available parameters in the custom configuration, check the :ref:`custom_configuration` section. 
-
-Normalizing extracted features
--------------------------------
-
-We provide the possibility to normalize extracted features in three different ways:
-
-- ``normalize``: Normalizes the extracted features such that they have a mean of 0 and a standard deviation of 1
-- ``ratio_normalize``: Normalizes the extracted features using a specific ratio (e.g. given features divided by the number of tokens)
-- ``rescale``: Rescales the extracted features using the min-max scaling method
-
-Normalize
-~~~~~~~~~
-
-.. code-block:: python
-
-    import polars as pl
-    from elfen.extractor import Extractor
-
-    # Load your dataset as a polars DataFrame
-    # example from csv
-    df = pl.read_csv("path/to/your/dataset.csv")
-
-    # Initialize the Extractor with your DataFrame
-    extractor = Extractor(data = df)
-
-    # Extract features
-    extractor.extract_feature_group(feature_group = "lexical_richness")
-    extractor.extract("avg_word_length")
-    extractor.extract("n_low_valence")
-
-    # Normalize extracted features
-    extractor.normalize("all") # Normalizes all extracted features
-    extractor.normalize("avg_word_length") # Normalizes specific feature
-    extractor.normalize(["avg_word_length", "n_low_valence"]) # Normalizes multiple specific features
-
-    print(extractor.data.head())
-
-Ratio Normalize
-~~~~~~~~~~~~~~~
-
-.. code-block:: python
-
-    import polars as pl
-    from elfen.extractor import Extractor
-
-    # Load your dataset as a polars DataFrame
-    # example from csv
-    df = pl.read_csv("path/to/your/dataset.csv")
-
-    # Initialize the Extractor with your DataFrame
-    extractor = Extractor(data = df)
-
-    # Extract features
-    extractor.extract_feature_group(feature_group = "lexical_richness")
-    extractor.extract("avg_word_length")
-    extractor.extract("n_low_valence")
-
-    # Ratio normalize extracted features
-    extractor.ratio_normalize("all", "tokens") # Ratio normalizes all extracted features
-    extractor.ratio_normalize("avg_word_length", "tokens") # Ratio normalizes specific feature
-    extractor.ratio_normalize(["avg_word_length", "n_low_valence"], "tokens") # Ratio normalizes multiple specific features
-
-    print(extractor.data.head())
-
-Rescale
-~~~~~~~
-
-.. code-block:: python
-
-    import polars as pl
-    from elfen.extractor import Extractor
-
-    # Load your dataset as a polars DataFrame
-    # example from csv
-    df = pl.read_csv("path/to/your/dataset.csv")
-
-    # Initialize the Extractor with your DataFrame
-    extractor = Extractor(data = df)
-
-    # Extract features
-    extractor.extract_feature_group(feature_group = "lexical_richness")
-    extractor.extract("avg_word_length")
-    extractor.extract("n_low_valence")
-
-    # Rescale extracted features to a range of 0 to 1
-    extractor.rescale("all") # Rescales all extracted features
-    extractor.rescale("avg_word_length") # Rescales specific feature
-    extractor.rescale(["avg_word_length", "n_low_valence"]) # Rescales multiple specific features
-
-    # Rescale extracted features to a custom range
-    extractor.rescale("all", minimum = 0, maximum = 10) # Rescales all extracted features
 
 Extracting custom lexicon-based features
 ----------------------------------------
