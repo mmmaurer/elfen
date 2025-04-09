@@ -409,7 +409,7 @@ class Extractor:
                             "multilingual_filepath"]
                 else:
                     print(f"Feature {feature} not (yet) "
-                          f"supported for {self.config["language"]}. "
+                          f"supported for {self.config['language']}. "
                           "Skipping...")
                     return None
                 if not os.path.exists(filepath):
