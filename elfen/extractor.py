@@ -104,7 +104,7 @@ class Extractor:
         if "max_length" in self.config:
             max_length = self.config["max_length"]
         else:
-            max_length = 1000000
+            max_length = 1_000_000
 
         self.data = preprocess_data(data=self.data,
                                     text_column=self.config["text_column"],
@@ -457,14 +457,16 @@ class Extractor:
             self.__remove_constant_cols()
     
     def extract(self,
-                feature_name: str,
+                features: Union[str|list[str]],
                 **kwargs,
                 ):
         """
         Extract a single feature from the data.
 
         Args:
-            feature_name (str): The feature to extract.
+            features (Union[str, list[str]]):
+                The feature to extract. Can be a single feature in str
+                format or a list of features.
             **kwargs:
                 Additional keyword arguments for the feature extraction.
                 Any lexicons or thresholds required for the feature, or
@@ -474,27 +476,30 @@ class Extractor:
         Returns:
             None
         """
-        if feature_name in FUNCTION_MAP:
-            # handle lexicon separately from other kwargs to ensure
-            # that the lexicon is loaded correctly if specified by 
-            # the user
-            if "lexicon" in kwargs:
-                lexicon = kwargs["lexicon"]
-                self.__apply_function(feature_name,
-                                      **kwargs)
-            elif feature_name in FEATURE_LEXICON_MAP and \
-                 "lexicon" not in kwargs:
-                lexicon = self.__gather_resource_from_featurename(
-                    language=self.config["language"],
-                    feature=feature_name,
-                    feature_lexicon_map=FEATURE_LEXICON_MAP)
-                self.__apply_function(feature_name,
-                                      lexicon=lexicon,
-                                      **kwargs)
+        if type(features) == str:
+            features = [features]
+        for feature_name in features:
+            if feature_name in FUNCTION_MAP:
+                # handle lexicon separately from other kwargs to ensure
+                # that the lexicon is loaded correctly if specified by 
+                # the user
+                if "lexicon" in kwargs:
+                    lexicon = kwargs["lexicon"]
+                    self.__apply_function(feature_name,
+                                        **kwargs)
+                elif feature_name in FEATURE_LEXICON_MAP and \
+                    "lexicon" not in kwargs:
+                    lexicon = self.__gather_resource_from_featurename(
+                        language=self.config["language"],
+                        feature=feature_name,
+                        feature_lexicon_map=FEATURE_LEXICON_MAP)
+                    self.__apply_function(feature_name,
+                                        lexicon=lexicon,
+                                        **kwargs)
+                else:
+                    self.__apply_function(feature_name)
             else:
-                self.__apply_function(feature_name)
-        else:
-            print(f"Feature {feature_name} not found. Check spelling.")
+                print(f"Feature {feature_name} not found. Check spelling.")
     
     def __cleanup_cols(self):
         """

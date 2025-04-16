@@ -59,7 +59,7 @@ You can pass these additional parameters such as custom lexicons and thresholds 
     # We are passing a custom lexicon and a threshold
     # Assuming the words in the lexicon are in the "word" column
     # and the valence ratings are in the "valence" column
-    extractor.extract(feature = "n_low_valence", lexicon = custom_lexicon, threshold = 0.5)
+    extractor.extract(features = "n_low_valence", lexicon = custom_lexicon, threshold = 0.5)
 
     print(extractor.data.head())
 

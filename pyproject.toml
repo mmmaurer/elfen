@@ -4,21 +4,21 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "elfen"
-version = "1.1.6"
+version = "1.1.7"
 authors = [
   { name="Maximilian Maurer", email="mmmaurer@pm.me" },
 ]
 dependencies = [
-    "numpy==1.26.4",
-    "polars==1.10.0",
-    "Requests==2.32.3",
-    "scipy==1.14.1",
-    "spacy==3.7.5",
-    "spacy_syllables==3.0.2",
-    "stanza==1.8.2",
-    "wn==0.9.5",
-    "fastexcel==0.12.0",
-    "spacy-transformers==1.3.5",
+    "polars>=1.10.0",
+    "numpy>=1.26.4",
+    "scipy>=1.14.1",
+    "spacy>=3.7.5",
+    "spacy_syllables>=3.0.2",
+    "stanza>=1.8.2",
+    "Requests>=2.32.3",
+    "wn>=0.9.5",
+    "fastexcel>=0.12.0",
+    "spacy-transformers>=1.3.5",
 ]
 description = "ELFEN - Efficient Linguistic Feature Extraction for Natural Language Datasets"
 readme = "README_pypi.md"
