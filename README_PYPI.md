@@ -12,6 +12,23 @@ If you want to use the spacy backbone, you will need to download the respective 
  ```
 
 ## Usage of third-party resources usable in this package
+For the full functionality, some external resources are necessary. While most of them are downloaded and located automatically, some have to be loaded manually.
+
+### WordNet features
+To use wordnet features, download open multilingual wordnet using:
+```bash
+python -m wn download omw:1.4
+```
+
+Note that for some languages, you will need to install another wordnet collection. For example, for German, you can use the following command:
+
+```bash
+python -m wn download odenet:1.4
+```
+
+For more information on the available wordnet collections, consult the [wn package documentation](https://wn.readthedocs.io/en/latest/guides/lexicons.html).
+
+### Lexicons
 The extraction of psycholinguistic, emotion/lexicon and semantic features relies on third-party resources such as lexicons.
 Please refer to the original author's licenses and conditions for usage, and cite them if you use the resources through this package in your analyses.
 

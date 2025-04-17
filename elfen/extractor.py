@@ -100,6 +100,9 @@ class Extractor:
             self.config["text_column"] = kwargs["text_column"]
         if "max_length" in kwargs:
             self.config["max_length"] = kwargs["max_length"]
+        if "remove_constant_cols" in kwargs:
+            self.config["remove_constant_cols"] = kwargs[
+                "remove_constant_cols"]
 
         if "max_length" in self.config:
             max_length = self.config["max_length"]
@@ -443,8 +446,9 @@ class Extractor:
                             feature=feature,
                             feature_lexicon_map=FEATURE_LEXICON_MAP
                         )
-                        self.__apply_function(feature,
-                                              lexicon=lexicon)
+                        if lexicon is not None:
+                            self.__apply_function(feature,
+                                                  lexicon=lexicon)
                     else:
                         self.__apply_function(feature)
                 else:

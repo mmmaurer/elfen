@@ -1020,13 +1020,18 @@ def get_simpsons_d(data: pl.DataFrame,
         """
         counts = Counter(x.values())
         n = sum(counts.values())
-        n_inv = 1 / n  # Precompute 1 / n
-        n_minus_1_inv = 1 / (n - 1)  # Precompute 1 / (n - 1)
+        if n > 1:
+            n_inv = 1 / n  # Precompute 1 / n
+            n_minus_1_inv = 1 / (n - 1)  # Precompute 1 / (n - 1)
 
-        d = sum(count * i * n_inv * (i - 1) * n_minus_1_inv for \
-                i, count in counts.items())
+            d = sum(count * i * n_inv * (i - 1) * n_minus_1_inv for \
+                    i, count in counts.items())
 
-        return d
+            return d
+        # if there is only one token or none, we apply the convention
+        # that the Simpson's D is 0.0 as there is no diversity in the text
+        else:
+            return 0.0
     if 'token_freqs' not in data.columns:
         data = get_token_freqs(data, backbone=backbone)
     

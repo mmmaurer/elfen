@@ -97,7 +97,7 @@ def get_tree_depth(data: pl.DataFrame,
             pl.col('nlp').map_elements(
                 lambda x: np.mean([walk_tree(sent.root, 0) for sent in
                                    x.sents]),
-            return_dtype=pl.UInt16
+            return_dtype=pl.Float64
             ).alias('tree_depth')
         )
     elif backbone == 'stanza':

@@ -29,6 +29,14 @@ To use wordnet features, download open multilingual wordnet using:
 python -m wn download omw:1.4
 ```
 
+Note that for some languages, you will need to install another wordnet collection. For example, for German, you can use the following command:
+
+```bash
+python -m wn download odenet:1.4
+```
+
+For more information on the available wordnet collections, consult the [wn package documentation](https://wn.readthedocs.io/en/latest/guides/lexicons.html).
+
 ## Multiprocessing and limiting the numbers of cores used
 The underlying dataframe library, polars, uses all available cores by default.
 If you are working on a shared server, you may want to consider limiting the resources available to polars.

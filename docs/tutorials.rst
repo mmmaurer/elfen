@@ -29,7 +29,7 @@ To extract a single feature, you will need to use the ``extract`` method and pas
 
     # Extract a single feature
     # In this case, we are extracting the "average_word_length" feature
-    extractor.extract(feature = "avg_word_length")
+    extractor.extract("avg_word_length")
 
     print(extractor.data.head())
 
@@ -59,7 +59,7 @@ You can pass these additional parameters such as custom lexicons and thresholds 
     # We are passing a custom lexicon and a threshold
     # Assuming the words in the lexicon are in the "word" column
     # and the valence ratings are in the "valence" column
-    extractor.extract(features = "n_low_valence", lexicon = custom_lexicon, threshold = 0.5)
+    extractor.extract("n_low_valence", lexicon = custom_lexicon, threshold = 0.5)
 
     print(extractor.data.head())
 

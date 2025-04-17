@@ -51,11 +51,19 @@ If you want to use the wordnet-based semantic features, you will need to downloa
 
 .. _wn package documentation: https://wn.readthedocs.io/en/latest/
 
-To install the full open multilingual wordnet database, you can use the following command:
+To install the open multilingual wordnet database, you can use the following command:
 
 .. code-block:: bash
 
     python -m wn download omw:1.4
+
+Note that for some languages, you will need to install another wordnet collection. For example, for German, you can use the following command:
+
+.. code-block:: bash
+
+    python -m wn download odenet:1.4
+
+For more information on the available wordnet collections, consult the `wn package documentation`_.
 
 Default norms and lexicons
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

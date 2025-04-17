@@ -50,6 +50,14 @@ To use wordnet features, download open multilingual wordnet using:
 python -m wn download omw:1.4
 ```
 
+Note that for some languages, you will need to install another wordnet collection. For example, for German, you can use the following command:
+
+```bash
+python -m wn download odenet:1.4
+```
+
+For more information on the available wordnet collections, consult the [wn package documentation](https://wn.readthedocs.io/en/latest/guides/lexicons.html).
+
 ## Input Data
 The input data is any textual data a user may want to extract linguistic features for.
 
