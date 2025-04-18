@@ -40,6 +40,9 @@ def get_num_entities(data: pl.DataFrame,
                                        return_dtype=pl.UInt16
                                        ).alias("n_entities"),
         )
+    else:
+        raise ValueError(f"Unsupported backbone '{backbone}'. "
+                         "Supported backbones are 'spacy' and 'stanza'.")
     
     return data
 
@@ -80,6 +83,9 @@ def get_num_per_entity_type(data: pl.DataFrame,
                     return_dtype=pl.UInt16
                     ).alias(f"n_{ent_type.lower()}"),
             )
+    else:
+        raise ValueError(f"Unsupported backbone '{backbone}'. "
+                         "Supported backbones are 'spacy' and 'stanza'.")
     
     return data
 

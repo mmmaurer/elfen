@@ -200,6 +200,9 @@ def get_synsets(data: pl.DataFrame,
                     return_dtype=pl.List(pl.Int64)). \
                         alias(f"synsets_{pos.lower()}")
             )
+    else:
+        raise ValueError(f"Unsupported backbone '{backbone}'. "
+                         "Supported backbones are 'spacy' and 'stanza'.")
 
     return data
 
@@ -289,6 +292,9 @@ def get_avg_num_synsets_per_pos(data: pl.DataFrame,
                 fill_nan(nan_value).fill_null(nan_value). \
                     alias(f"avg_n_synsets_{pos_tag.lower()}")
             )
+        else:
+            raise ValueError(f"Unsupported backbone '{backbone}'. "
+                             "Supported backbones are 'spacy' and 'stanza'.")
 
     return data
 

@@ -71,6 +71,9 @@ def get_morph_feats(
                             return_dtype=pl.UInt16
                             ).alias(f"n_{pos}_{feat}_{val}"),
                     )
+    else:
+        raise ValueError(f"Unsupported backbone '{backbone}'. "
+                         "Supported backbones are 'spacy' and 'stanza'.")
 
     return data
 

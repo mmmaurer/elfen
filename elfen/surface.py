@@ -81,6 +81,9 @@ def get_num_tokens(data: pl.DataFrame,
                                        return_dtype=pl.UInt16
                                        ).alias("n_tokens"),
         )
+    else:
+        raise ValueError(f"Unsupported backbone '{backbone}'. "
+                         "Supported backbones are 'spacy' and 'stanza'.")
     
     return data
 
@@ -114,6 +117,9 @@ def get_num_sentences(data: pl.DataFrame,
                                        return_dtype=pl.UInt16
                                        ).alias("n_sentences"),
         )
+    else:
+        raise ValueError(f"Unsupported backbone '{backbone}'. "
+                         "Supported backbones are 'spacy' and 'stanza'.")
     
     return data
 
@@ -183,6 +189,9 @@ def get_num_characters(data: pl.DataFrame,
                     return_dtype=pl.UInt16
                     ).alias("n_characters"),
             )
+        else:
+            raise ValueError(f"Unsupported backbone '{backbone}'. "
+                             "Supported backbones are 'spacy' and 'stanza'.")
         
         return data
 
@@ -319,6 +328,9 @@ def get_num_types(data: pl.DataFrame,
                          return_dtype=pl.UInt16
                          ).alias("n_types"),
         )
+    else:
+        raise ValueError(f"Unsupported backbone '{backbone}'. "
+                         "Supported backbones are 'spacy' and 'stanza'.")
         
     return data
 
@@ -362,6 +374,9 @@ def get_num_long_words(data: pl.DataFrame,
                              return_dtype=pl.UInt16
                              ).alias("n_long_words"),
         )
+    else:
+        raise ValueError(f"Unsupported backbone '{backbone}'. "
+                         "Supported backbones are 'spacy' and 'stanza'.")
         
     return data
 
@@ -398,7 +413,10 @@ def get_num_lemmas(data: pl.DataFrame,
                 return_dtype=pl.UInt16
                 ).alias("n_lemmas"),
         )
-    
+    else:
+        raise ValueError(f"Unsupported backbone '{backbone}'. "
+                         "Supported backbones are 'spacy' and 'stanza'.")
+        
     return data
 
 def get_token_freqs(data: pl.DataFrame,
@@ -434,6 +452,9 @@ def get_token_freqs(data: pl.DataFrame,
                 return_dtype=pl.Object
                 ).alias("token_freqs"),
         )
+    else:
+        raise ValueError(f"Unsupported backbone '{backbone}'. "
+                         "Supported backbones are 'spacy' and 'stanza'.")
     
     return data
 
@@ -464,6 +485,9 @@ def get_global_token_frequencies(data: pl.DataFrame,
                                     sent in text.sentences for 
                                     token in sent.tokens]
         ))
+    else:
+        raise ValueError(f"Unsupported backbone '{backbone}'. "
+                         "Supported backbones are 'spacy' and 'stanza'.")
 
     return token_freqs
 
@@ -494,6 +518,9 @@ def get_global_lemma_frequencies(data: pl.DataFrame,
                                     sent in text.sentences for
                                     token in sent.tokens]
         ))
+    else:
+        raise ValueError(f"Unsupported backbone '{backbone}'. "
+                         "Supported backbones are 'spacy' and 'stanza'.")
 
     return lemma_freqs
 

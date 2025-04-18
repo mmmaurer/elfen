@@ -63,6 +63,9 @@ def get_tree_width(data: pl.DataFrame,
     elif backbone == 'stanza':
         print('Dependency tree width extraction is not yet implemented'
               ' for Stanza.')
+    else:
+        raise ValueError(f"Unsupported NLP library: {backbone}. "
+                         "Please use 'spacy' or 'stanza'.")
 
     return data
 
@@ -103,6 +106,9 @@ def get_tree_depth(data: pl.DataFrame,
     elif backbone == 'stanza':
         print('Dependency tree depth extraction is not yet implemented '
               'for Stanza.')
+    else:
+        raise ValueError(f"Unsupported NLP library: {backbone}. "
+                         "Please use 'spacy' or 'stanza'.")
 
     return data
 
@@ -136,6 +142,9 @@ def get_tree_branching(data: pl.DataFrame,
     elif backbone == 'stanza':
          print('Dependency tree branching factor extraction is not yet'
                ' implemented for Stanza.')
+    else:
+        raise ValueError(f"Unsupported NLP library: {backbone}. "
+                         "Please use 'spacy' or 'stanza'.")
 
     return data
 
@@ -174,6 +183,9 @@ def get_ramification_factor(data: pl.DataFrame,
     elif backbone == 'stanza':
         print('Dependency tree ramification factor extraction is not yet'
               ' implemented for Stanza.')
+    else:
+        raise ValueError(f"Unsupported NLP library: {backbone}. "
+                         "Please use 'spacy' or 'stanza'.")
 
     return data
 
@@ -206,6 +218,9 @@ def get_n_noun_chunks(data: pl.DataFrame,
     elif backbone == 'stanza':
         print('Number of noun chunks extraction is not yet implemented'
               ' for Stanza.')
+    else:
+        raise ValueError(f"Unsupported NLP library: {backbone}. "
+                         "Please use 'spacy' or 'stanza'.")
 
     return data
 
@@ -255,6 +270,9 @@ def get_n_per_dependency_type(data: pl.DataFrame,
                 return_dtype=pl.UInt16
                 ).alias(f'n_dependency_{dep}')
             )
+    else:
+        raise ValueError(f"Unsupported NLP library: {backbone}. "
+                         "Please use 'spacy' or 'stanza'.")
     
     return data
 

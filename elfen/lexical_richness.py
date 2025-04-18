@@ -390,6 +390,9 @@ def get_n_hapax_legomena(data: pl.DataFrame,
                           return_counts=True)[1] == 1),
                           return_dtype=pl.UInt32).alias("n_hapax_legomena")
         )
+    else:
+        raise ValueError(f"Unsupported backbone '{backbone}'. "
+                         "Supported backbones are 'spacy' and 'stanza'.")
     
     return data
 
@@ -428,6 +431,9 @@ def get_n_global_token_hapax_legomena(data: pl.DataFrame,
                 return_dtype=pl.UInt32). \
                     alias("n_global_token_hapax_legomena")
         )
+    else:
+        raise ValueError(f"Unsupported backbone '{backbone}'. "
+                         "Supported backbones are 'spacy' and 'stanza'.")
 
     return data
 
@@ -468,6 +474,9 @@ def get_n_global_lemma_hapax_legomena(data: pl.DataFrame,
                 return_dtype=pl.UInt32). \
                     alias("n_global_lemma_hapax_legomena")
         )
+    else:
+        raise ValueError(f"Unsupported backbone '{backbone}'. "
+                         "Supported backbones are 'spacy' and 'stanza'.")
 
     return data
 
@@ -510,6 +519,9 @@ def get_n_hapax_dislegomena(data: pl.DataFrame,
                           return_dtype=pl.UInt32). \
                             alias("n_hapax_dislegomena")
         )
+    else:
+        raise ValueError(f"Unsupported backbone '{backbone}'. "
+                         "Supported backbones are 'spacy' and 'stanza'.")
     
     return data
 
@@ -550,6 +562,9 @@ def get_n_global_token_hapax_dislegomena(data: pl.DataFrame,
                 return_dtype=pl.UInt32). \
                     alias("n_global_token_hapax_dislegomena")
         )
+    else:
+        raise ValueError(f"Unsupported backbone '{backbone}'. "
+                         "Supported backbones are 'spacy' and 'stanza'.")
 
     return data
 
@@ -592,6 +607,9 @@ def get_n_global_lemma_hapax_dislegomena(data: pl.DataFrame,
                 return_dtype=pl.UInt32). \
                     alias("n_global_lemma_hapax_dislegomena")
         )
+    else:
+        raise ValueError(f"Unsupported backbone '{backbone}'. "
+                         "Supported backbones are 'spacy' and 'stanza'.")
 
     return data
 

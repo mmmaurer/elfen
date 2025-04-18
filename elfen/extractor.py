@@ -109,6 +109,10 @@ class Extractor:
         else:
             max_length = 1_000_000
 
+        # Check if the backbone is valid
+        if self.config["backbone"] not in ["spacy", "stanza"]:
+            raise ValueError("Backbone must be 'spacy' or 'stanza'.")
+
         self.data = preprocess_data(data=self.data,
                                     text_column=self.config["text_column"],
                                     backbone=self.config["backbone"],
