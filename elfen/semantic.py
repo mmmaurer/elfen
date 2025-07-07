@@ -151,6 +151,12 @@ def get_synsets(data: pl.DataFrame,
             Polars DataFrame with the numbers of synsets per text.
             The columns are named 'synsets' and 'synsets_{pos}'.
     """
+    # Check whether wn is available for the given language
+    try:
+        wn.synsets('dog', lang=language)
+    except:
+        pass
+    
     if backbone == 'spacy':
         data = data.with_columns(
             pl.col("nlp").map_elements(lambda x:

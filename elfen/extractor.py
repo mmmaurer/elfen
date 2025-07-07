@@ -263,6 +263,44 @@ class Extractor:
             print(f"Feature {featurename} not found. Skipping...")
             lexicon = None
         return lexicon
+    
+    def token_normalize(self,
+                        features: Union[list[str], str] = "all",
+                        **kwargs,
+                        ) -> None:
+        """
+        Normalize the occurence-based features with the number of tokens.
+
+        Args:
+            features (Union[list[str], str]):
+                The features to normalize. Default is "all".
+                Allows for a list of features or a single feature in str
+                format, or 'all' to normalize all occurence-based
+                features.
+        
+        Returns:
+            None
+        """
+        if type(features) == list:
+            for feature in features:
+                self.data = self.data.with_columns(
+                    (pl.col(feature) / pl.col("n_tokens")). \
+                        alias(feature)
+                )
+        elif features == "all":
+            # exclude n_tokens, n_types, and n_sentences
+            feats = [f for f in self.get_feature_names() if f not in
+                        ["n_tokens",
+                         "n_types",
+                         "n_sentences",
+                         "n_lemmas",
+                         "n_syllables"] and
+                        f.startswith("n_")]
+            for feature in feats:
+                self.data = self.data.with_columns(
+                    (pl.col(feature) / pl.col("n_tokens")). \
+                        alias(feature)
+                )
 
     def ratio_normalize(self,
                         features: Union[list[str], str] = "all",
@@ -462,7 +500,7 @@ class Extractor:
         # Remove constant columns if specified and if there is more than 
         # one row
         if self.config["remove_constant_cols"] and len(self.data) > 1:
-            self.__remove_constant_cols()
+            self.remove_constant_cols()
     
     def extract(self,
                 features: Union[str|list[str]],
@@ -501,9 +539,10 @@ class Extractor:
                         language=self.config["language"],
                         feature=feature_name,
                         feature_lexicon_map=FEATURE_LEXICON_MAP)
-                    self.__apply_function(feature_name,
-                                        lexicon=lexicon,
-                                        **kwargs)
+                    if lexicon is not None:
+                        self.__apply_function(feature_name,
+                                            lexicon=lexicon,
+                                            **kwargs)
                 else:
                     self.__apply_function(feature_name)
             else:
@@ -514,11 +553,11 @@ class Extractor:
         Helper function to remove helper columns from the data.
         """
         if self.config["remove_constant_cols"] and len(self.data) > 1:
-            self.__remove_constant_cols()
+            self.remove_constant_cols()
         self.data = self.data.drop(
             set(self.data.columns).intersection(set(self.helper_cols)))
 
-    def __remove_constant_cols(self):
+    def remove_constant_cols(self):
         """
         Helper function to remove constant columns from the data.
         Constant columns are columns with only one unique value.

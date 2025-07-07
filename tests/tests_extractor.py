@@ -70,7 +70,6 @@ def test_extraction_invalid_feature(sample_data):
                           model='en_core_web_sm')
     extractor.extract("invalid_feature")
     assert 'invalid_feature' not in extractor.data.columns
-    assert len(extractor.data['invalid_feature']) == len(sample_data)
 
 def test_initialization_invalid_backbone(sample_data):
     """
@@ -82,5 +81,22 @@ def test_initialization_invalid_backbone(sample_data):
                             text_column='text',
                             language='en',
                             model='en_core_web_sm')
-
+        
+def test_token_normalization(sample_data):
+    """
+    Test the token normalization feature.
+    """
+    extractor = Extractor(data=sample_data,
+                          backbone='spacy',
+                          text_column='text',
+                          language='en',
+                          model='en_core_web_sm')
+    extractor.extract(["n_tokens", "n_long_words"])
+    extractor.token_normalize()
+    first_ratio = extractor.data['n_long_words'][0]
+    max_tokens = extractor.data['n_tokens'].max()
+    # make sure the ratio works as expected
+    assert pytest.approx(first_ratio) == 1/6 
+    # make sure n_tokens is not normalized
+    assert max_tokens == 6
     

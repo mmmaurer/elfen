@@ -141,10 +141,11 @@ For more information on the available feature areas, check the :ref:`feature_ove
 Normalizing extracted features
 -------------------------------
 
-We provide the possibility to normalize extracted features in three different ways:
+We provide the possibility to normalize extracted features in four different ways:
 
 - ``normalize``: Normalizes the extracted features such that they have a mean of 0 and a standard deviation of 1
-- ``ratio_normalize``: Normalizes the extracted features using a specific ratio (e.g. given features divided by the number of tokens)
+- ``token_normalize``: Token-normalize occurence-based features (e.g. ``n_low_valence``) by dividing the feature value by the number of tokens in the text.
+- ``ratio_normalize``: Normalizes the extracted features using a specific ratio (e.g. given features divided by the number of tokens) with a new column being added (e.g. ``n_low_valence_token_ratio``)
 - ``rescale``: Rescales the extracted features using the min-max scaling method
 
 Normalize
@@ -171,6 +172,36 @@ Normalize
     extractor.normalize("all") # Normalizes all extracted features
     extractor.normalize("avg_word_length") # Normalizes specific feature
     extractor.normalize(["avg_word_length", "n_low_valence"]) # Normalizes multiple specific features
+
+    print(extractor.data.head())
+
+Token Normalize
+~~~~~~~~~~~~~~~~
+
+Whenever you extract features that are based on the occurrence of words in a text, such as the number of low-valence words, it is often useful to normalize these features by the number of tokens in the text. This is especially useful when comparing texts of different lengths.
+
+.. code-block:: python
+
+    import polars as pl
+    from elfen.extractor import Extractor
+
+    # Load your dataset as a polars DataFrame
+    # example from csv
+    df = pl.read_csv("path/to/your/dataset.csv")
+
+    # Initialize the Extractor with your DataFrame
+    extractor = Extractor(data = df)
+
+    # Extract features
+    extractor.extract("n_long_words")
+    extractor.extract("n_low_valence")
+
+    # Token normalize extracted features
+    extractor.token_normalize("all") # Token normalizes all extracted features starting with "n_" except for "n_tokens", "n_types" and "n_sentences", "n_lemmas" and "n_syllables"
+    # OR
+    extractor.token_normalize("n_low_valence") # Token normalizes specific feature
+    # OR
+    extractor.token_normalize(["n_long_words", "n_low_valence"]) # Token normalizes multiple specific features
 
     print(extractor.data.head())
 
