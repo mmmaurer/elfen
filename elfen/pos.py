@@ -57,6 +57,9 @@ def get_num_lexical_tokens(data: pl.DataFrame,
                 return_dtype=pl.UInt16
                 ).alias("n_lexical_tokens"),
         )
+    else:
+        raise ValueError(f"Unsupported backbone '{backbone}'. "
+                         "Supported backbones are 'spacy' and 'stanza'.")
     
     return data
 
@@ -99,7 +102,10 @@ def get_pos_variability(data: pl.DataFrame,
                 return_dtype=pl.UInt16) / 
             pl.col("n_tokens")).alias("pos_variability"),
         )
-
+    else:
+        raise ValueError(f"Unsupported backbone '{backbone}'. "
+                         "Supported backbones are 'spacy' and 'stanza'.")
+    
     return data
 
 def get_num_per_pos(data: pl.DataFrame,
@@ -142,6 +148,9 @@ def get_num_per_pos(data: pl.DataFrame,
                     return_dtype=pl.UInt16
                     ).alias(f"n_{pos.lower()}"),
             )
+    else:
+        raise ValueError(f"Unsupported backbone '{backbone}'. "
+                         "Supported backbones are 'spacy' and 'stanza'.")
     
     return data
 

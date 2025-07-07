@@ -63,6 +63,9 @@ def get_num_syllables(data: pl.DataFrame,
             raise NotImplementedError(
                 "Not supported for Stanza backbone."
             )
+        else:
+            raise ValueError(f"Unsupported backbone '{backbone}'. "
+                             "Supported backbones are 'spacy' and 'stanza'.")
         
         return data
 
@@ -105,6 +108,9 @@ def get_num_monosyllables(data: pl.DataFrame,
         raise NotImplementedError(
             "Not supported for Stanza backbone."
         )
+    else:
+        raise ValueError(f"Unsupported backbone '{backbone}'. "
+                         "Supported backbones are 'spacy' and 'stanza'.")
 
     return data
 
@@ -147,6 +153,9 @@ def get_num_polysyllables(data: pl.DataFrame,
         raise NotImplementedError(
             "Not supported for Stanza backbone."
         )
+    else:
+        raise ValueError(f"Unsupported backbone '{backbone}'. "
+                         "Supported backbones are 'spacy' and 'stanza'.")
 
     return data
 
