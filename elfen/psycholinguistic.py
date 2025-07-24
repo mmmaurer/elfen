@@ -6,40 +6,6 @@ If you are using this module, please cite the respective sources for the
 norms used in the functions. Consult them for more information on the
 norms, their collection, and their interpretation in your analyses.
 
-The norms used in this module are:
-
-- Concreteness norms: 
-    Brysbaert, M., Warriner, A. B., & Kuperman, V. (2014).
-    Concreteness ratings for 40 thousand generally known English word lemmas.
-    Behavior Research Methods, 46(3), 904-911.
-  
-- Age of acquisition norms:
-    Kuperman, V., Stadthagen-Gonzalez, H., & Brysbaert, M. (2012).
-    Age-of-acquisition ratings for 30,000 English words.
-    Behavior Research Methods, 45(4), 1191-1207.
-  
-- Word prevalence norms:
-    Brysbaert, M., Mandera, P., McCormick, S. F., & Keuleers, E. (2019).
-    Word prevalence norms for 62,000 English lemmas.
-    Behavior Research Methods, 51(2), 467-479.
-
-- Socialness Norms:
-    Diveica, V., Pexman, P.M., & Binney, R.J. (2023).
-    Quantifying Social Semantics: An Inclusive Definition of Socialness
-    and Ratings for 8,388 English Words.
-    Behavior Research Methods, 55, 461-473.
-
-- Iconicity norms:
-    Winter, B., Lupyan, G., Perry, L. K., Dingemanse, M., & Perlman, M. (2021).
-    Iconicity ratings for 14,000 English words.
-    Behavior Research Methods, 56, 1640-1655.
-
-- Sensorimotor norms:
-    Lynott, D., Connell, L., Brysbaert, M., Brand, J., & Carney, J. (2020).
-    The Lancaster Sensorimotor Norms: Multidimensional measures of
-    perceptual and action strength for 40,000 English words.
-    Behavior Research Methods, 52, 1269-1286.
-
 The psycholinguistic features implemented in this module are:
 
 - Abstractness/Concreteness:
@@ -84,6 +50,10 @@ The psycholinguistic features implemented in this module are:
 """
 import polars as pl
 
+from .resource_utils.psycholinguistics import (
+    SENSORIMOTOR_VARS
+)
+
 from .preprocess import (
     get_lemmas,
 )
@@ -97,6 +67,7 @@ from .util import (
 # ---------------------------------------------------- #
 
 def load_concreteness_norms(path: str,
+                            language: str = "en",
                             **kwargs: dict[str, str],
                             ) -> pl.DataFrame:
     """
@@ -109,7 +80,46 @@ def load_concreteness_norms(path: str,
         concreteness_norms (pl.DataFrame):
             A Polars DataFrame containing the concreteness norms dataset.
     """
-    concreteness_norms = pl.read_excel(path)
+    if language == "en":
+        concreteness_norms = pl.read_excel(path)
+    elif language == "fr":
+        concreteness_norms = pl.read_excel(path, sheet_name="Norms", 
+                                           read_options={
+                                               "header_row": 1})
+        concreteness_norms = concreteness_norms.rename({
+            "items": "Word",
+            "mean": "Conc.M",
+            "sd": "Conc.SD"
+        }).select(
+            ["Word", "Conc.M", "Conc.SD"]
+        )
+    elif language == "de":
+        concreteness_norms = pl.read_csv(path,
+                                         separator="\t",
+                                         skip_rows=7,
+                                         eol_char="\n",
+                                         encoding="latin-1",
+                                         ignore_errors=True
+                                         )
+        concreteness_norms = concreteness_norms.rename({
+            "word": "Word",
+            "concreteness_mean": "Conc.M",
+            "concreteness_sd": "Conc.SD"
+        }).select(
+            ["Word", "Conc.M", "Conc.SD"]
+        )
+    elif language == "it":
+        concreteness_norms = pl.read_excel(path,
+                                           read_options={
+                                               "header_row": 1
+                                           })
+        concreteness_norms = concreteness_norms.rename({
+            "Ita_Word": "Word",
+            "M_Con": "Conc.M",
+            "SD_Con": "Conc.SD"
+        }).select(
+            ["Word", "Conc.M", "Conc.SD"]
+        ).drop_nans()  # Drop last three empty rows
 
     return concreteness_norms
 
@@ -131,8 +141,8 @@ def filter_concreteness_norms(concreness_norms: pl.DataFrame,
             A Polars DataFrame containing the filtered concreteness norms
             dataset.
     """
-    filtered_concreteness_norms = concreness_norms.filter(pl.col("Word"). \
-                                                          is_in(words))
+    filtered_concreteness_norms = concreness_norms.filter(
+        pl.col("Word").is_in(words))
     return filtered_concreteness_norms
 
 def get_avg_concreteness(data: pl.DataFrame,
@@ -338,6 +348,7 @@ def get_n_controversial_concreteness(data: pl.DataFrame,
 # ---------------------------------------------------- #
 
 def load_aoa_norms(path: str,
+                   language: str = "en",
                    **kwargs: dict[str, str],
                    ) -> pl.DataFrame:
     """
@@ -351,8 +362,29 @@ def load_aoa_norms(path: str,
             A Polars DataFrame containing the age of acquisition norms
             dataset.
     """
-    aoa_norms = pl.read_excel(path)
-    
+    if language == "en":
+        aoa_norms = pl.read_excel(path)
+    elif language == "de":
+        aoa_norms = pl.read_excel(path,
+                                 read_options={"header_row": 1})
+        aoa_norms = aoa_norms.rename({
+            "GERMAN ": "Word",
+            "M _1": "Rating.Mean",
+            "SD ": "Rating.SD"
+        }).select(
+            ["Word", "Rating.Mean", "Rating.SD"]
+        )
+    elif language == "it":
+        aoa_norms = pl.read_excel(path,
+                                  sheet_name="Database")
+        aoa_norms = aoa_norms.rename({
+            "Ita_Word": "Word",
+            "M_AoA": "Rating.Mean",
+            "SD_AoA": "Rating.SD"
+        }).select(
+            ["Word", "Rating.Mean", "Rating.SD"]
+        )
+        
     return aoa_norms
 
 def get_avg_aoa(data: pl.DataFrame,
@@ -1122,21 +1154,9 @@ def get_n_controversial_iconicity(data: pl.DataFrame,
 #                   Sensorimotor                       #
 # ---------------------------------------------------- #
 
-SENSORIMOTOR_VARS = [
-    "Auditory",
-    "Gustatory",
-    "Haptic",
-    "Interoceptive",
-    "Olfactory",
-    "Visual",
-    "Foot_leg",
-    "Hand_arm",
-    "Head",
-    "Mouth",
-    "Torso",
-]
-
 def load_sensorimotor_norms(path: str,
+                            language: str = "en",
+                            sensorimotor_vars: list[str] = SENSORIMOTOR_VARS,
                             **kwargs: dict[str, str],
                             ) -> pl.DataFrame:
     """
@@ -1149,12 +1169,26 @@ def load_sensorimotor_norms(path: str,
         sensorimotor_norms (pl.DataFrame):
             A Polars DataFrame containing the sensorimotor norms dataset.
     """
-    sensorimotor_norms = pl.read_excel(path)
-    # the lancaster sensorimotor norms have all caps lemmas, so we con-
-    # vert them to lowercase for consistency
-    sensorimotor_norms = sensorimotor_norms.with_columns(
-        pl.col("Word").str.to_lowercase().alias("Word")
-    )
+    if language == "en":
+        sensorimotor_norms = pl.read_excel(path)
+        # the lancaster sensorimotor norms have all caps lemmas, so we con-
+        # vert them to lowercase for consistency
+        sensorimotor_norms = sensorimotor_norms.with_columns(
+            pl.col("Word").str.to_lowercase().alias("Word")
+        )
+    elif language == "it":
+        sensorimotor_norms = pl.read_csv(
+            path,
+            separator=" ",
+            quote_char='"',
+            encoding="latin-1"
+        ).rename({
+            "Ita_Word": "Word"
+        }).select(
+            ["Word"] + sensorimotor_vars[language]
+        )
+    elif language == "fr":
+        pass
 
     return sensorimotor_norms
 
@@ -1162,6 +1196,7 @@ def get_avg_sensorimotor(data: pl.DataFrame,
                          lexicon: pl.DataFrame,
                          backbone: str = 'spacy',
                          sensorimotor_vars: list[str] = SENSORIMOTOR_VARS,
+                         language: str = "en",
                          **kwargs: dict[str, str],
                          ) -> pl.DataFrame:
     """
@@ -1184,6 +1219,8 @@ def get_avg_sensorimotor(data: pl.DataFrame,
             The average sensorimotor score is stored in a new column named
             'avg_sensorimotor'.
     """
+    sensorimotor_vars = sensorimotor_vars[language]
+
     if "lemmas" not in data.columns:
         data = get_lemmas(data, backbone=backbone)
     for var in sensorimotor_vars:
@@ -1204,6 +1241,7 @@ def get_avg_sd_sensorimotor(data: pl.DataFrame,
                             backbone: str = 'spacy',
                             sensorimotor_vars: list[str] = \
                                 SENSORIMOTOR_VARS,
+                            language: str = "en",
                             **kwargs: dict[str, str],
                             ) -> pl.DataFrame:
     """
@@ -1227,20 +1265,36 @@ def get_avg_sd_sensorimotor(data: pl.DataFrame,
             score is stored in new columns named 'avg_sd_{var}' where
             {var} is the sensorimotor variable.
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-    
-    for var in sensorimotor_vars:
-        data = data.with_columns(
-            pl.col("lemmas").map_elements(
-                lambda x: filter_lexicon(lexicon=lexicon,
-                                         words=x,
-                                         word_column="Word"). \
-                    select(pl.col(f"{var}.SD")).mean().item(),
-                    return_dtype=pl.Float64
-                    ).alias(f"avg_sd_{var}_sensorimotor")
-        )
+    sensorimotor_vars = sensorimotor_vars[language]
 
+    if language == "en":
+        if "lemmas" not in data.columns:
+            data = get_lemmas(data, backbone=backbone)
+        
+        for var in sensorimotor_vars:
+            data = data.with_columns(
+                pl.col("lemmas").map_elements(
+                    lambda x: filter_lexicon(lexicon=lexicon,
+                                            words=x,
+                                            word_column="Word"). \
+                        select(pl.col(f"{var}.SD")).mean().item(),
+                        return_dtype=pl.Float64
+                        ).alias(f"avg_sd_{var}_sensorimotor")
+            )
+    else:
+        # warning, other languages do not have a standard deviation
+        # column in the sensorimotor norms, so we return the same
+        # dataframe without any changes
+        data = data.with_columns(
+            pl.lit(None).alias(f"avg_sd_{var}_sensorimotor")
+            for var in sensorimotor_vars
+        )
+        raise UserWarning(
+            "Sensorimotor norms for languages other than English do not "
+            "have a standard deviation column. Returning the same dataframe "
+            "without any changes."
+        )
+    
     return data
 
 def get_n_low_sensorimotor(data: pl.DataFrame,
@@ -1249,6 +1303,7 @@ def get_n_low_sensorimotor(data: pl.DataFrame,
                            backbone: str = 'spacy',
                            sensorimotor_vars: list[str] = \
                             SENSORIMOTOR_VARS,
+                           language: str = "en",
                            **kwargs: dict[str, str],
                            ) -> pl.DataFrame:
     """
@@ -1274,6 +1329,8 @@ def get_n_low_sensorimotor(data: pl.DataFrame,
             columns named 'n_low_{var}' where {var} is the sensorimotor
             variable.
     """
+    sensorimotor_vars = sensorimotor_vars[language]
+
     if "lemmas" not in data.columns:
         data = get_lemmas(data, backbone=backbone)
     
@@ -1298,6 +1355,7 @@ def get_n_high_sensorimotor(data: pl.DataFrame,
                             threshold: float = 3.66,
                             sensorimotor_vars: list[str] = \
                                 SENSORIMOTOR_VARS,
+                            language: str = "en",
                             **kwargs: dict[str, str],
                             ) -> pl.DataFrame:
     """
@@ -1324,6 +1382,8 @@ def get_n_high_sensorimotor(data: pl.DataFrame,
             columns named 'n_high_{var}' where {var} is the sensorimotor
             variable.
     """
+    sensorimotor_vars = sensorimotor_vars[language]
+
     if "lemmas" not in data.columns:
         data = get_lemmas(data, backbone=backbone)
     
@@ -1348,6 +1408,7 @@ def get_n_controversial_sensorimotor(data: pl.DataFrame,
                                      threshold: float = 2.0,
                                      sensorimotor_vars: list[str] = \
                                         SENSORIMOTOR_VARS,
+                                     language: str = "en",
                                      **kwargs: dict[str, str],
                                      ) -> pl.DataFrame:
     """
@@ -1374,20 +1435,36 @@ def get_n_controversial_sensorimotor(data: pl.DataFrame,
             new columns named 'n_controversial_{var}' where {var} is the
             sensorimotor variable.
     """
+    sensorimotor_vars = sensorimotor_vars[language]
+
     if "lemmas" not in data.columns:
         data = get_lemmas(data, backbone=backbone)
 
-    for var in sensorimotor_vars:
+    if language == "en":
+        for var in sensorimotor_vars:
+            data = data.with_columns(
+                pl.col("lemmas").map_elements(
+                    lambda x: filter_lexicon(lexicon=lexicon,
+                                            words=x,
+                                            word_column="Word"). \
+                        select(pl.col(f"{var}.SD")).filter(
+                            pl.col(f"{var}.SD") > threshold). \
+                            count().item(),
+                        return_dtype=pl.Int64).alias(f"n_controversial_{var}"
+                                                    "_sensorimotor")
+            )
+    else:
+        # warning, other languages do not have a standard deviation
+        # column in the sensorimotor norms, so we return the same
+        # dataframe without any changes
         data = data.with_columns(
-            pl.col("lemmas").map_elements(
-                lambda x: filter_lexicon(lexicon=lexicon,
-                                         words=x,
-                                         word_column="Word"). \
-                    select(pl.col(f"{var}.SD")).filter(
-                        pl.col(f"{var}.SD") > threshold). \
-                        count().item(),
-                    return_dtype=pl.Int64).alias(f"n_controversial_{var}"
-                                                 "_sensorimotor")
+            pl.lit(None).alias(f"n_controversial_{var}_sensorimotor")
+            for var in sensorimotor_vars
+        )
+        raise UserWarning(
+            "Sensorimotor norms for languages other than English do not "
+            "have a standard deviation column. Returning the same dataframe "
+            "without any changes."
         )
 
     return data

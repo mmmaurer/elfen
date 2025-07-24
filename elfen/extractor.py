@@ -234,11 +234,14 @@ class Extractor:
                 The lexicon to use for feature extraction.
         """
         if "aoa" in featurename:
-            lexicon = load_aoa_norms(filepath)
+            lexicon = load_aoa_norms(filepath, 
+                                     language=self.config["language"])
         elif "concreteness" in featurename:
-            lexicon = load_concreteness_norms(filepath)
+            lexicon = load_concreteness_norms(filepath,
+                                              language=self.config["language"])
         elif "prevalence" in featurename:
-            lexicon = load_prevalence_norms(filepath)
+            lexicon = load_prevalence_norms(filepath,
+                                            language=self.config["language"])
         elif re.search(r"(valence|arousal|dominance)",
                        featurename):
             lexicon = load_vad_lexicon(filepath,
@@ -252,13 +255,17 @@ class Extractor:
                                              language=self.config[
                                                  "language"])
         elif "hedges" in featurename:
-            lexicon = load_hedges(filepath)
+            lexicon = load_hedges(filepath,
+                                   language=self.config["language"])
         elif "socialness" in featurename:
-            lexicon = load_socialness_norms(filepath)
+            lexicon = load_socialness_norms(filepath,
+                                             language=self.config["language"])
         elif "sensorimotor" in featurename:
-            lexicon = load_sensorimotor_norms(filepath)
+            lexicon = load_sensorimotor_norms(filepath,
+                                               language=self.config["language"])
         elif "iconicity" in featurename:
-            lexicon = load_iconicity_norms(filepath)
+            lexicon = load_iconicity_norms(filepath,
+                                            language=self.config["language"])
         else:
             print(f"Feature {featurename} not found. Skipping...")
             lexicon = None
@@ -433,6 +440,9 @@ class Extractor:
         """
         Helper function to gather resources for feature extraction.
 
+        TODO:
+            - Add handling for languages other than English.
+
         Args:
             feature (str): The feature to extract.
             feature_lexicon_map (dict[str, str]):
@@ -444,13 +454,13 @@ class Extractor:
         """
         if feature in feature_lexicon_map:
             if feature_lexicon_map[feature] in RESOURCE_MAP:
-                if language == "en":
+                if language in feature_lexicon_map[feature].keys():
                     filepath = RESOURCE_MAP[
-                        feature_lexicon_map[feature]]["filepath"]
+                        feature_lexicon_map[feature][language]]["filepath"]
                 elif "multilingual_filepath" in RESOURCE_MAP[
                     feature_lexicon_map[feature]]:
                     filepath = RESOURCE_MAP[
-                        feature_lexicon_map[feature]][
+                        feature_lexicon_map[feature]["en"]][
                             "multilingual_filepath"]
                 else:
                     print(f"Feature {feature} not (yet) "
@@ -541,8 +551,8 @@ class Extractor:
                         feature_lexicon_map=FEATURE_LEXICON_MAP)
                     if lexicon is not None:
                         self.__apply_function(feature_name,
-                                            lexicon=lexicon,
-                                            **kwargs)
+                                              lexicon=lexicon,
+                                              **kwargs)
                 else:
                     self.__apply_function(feature_name)
             else:
