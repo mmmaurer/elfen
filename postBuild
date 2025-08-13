@@ -1,0 +1,32 @@
+#!/usr/bin/env -S bash -v
+
+# determine which version of Quarto to install
+QUARTO_VERSION=1.7.29
+
+echo
+echo Installing Quarto $QUARTO_VERSION
+echo
+
+# download and install the deb file
+curl -LO https://github.com/quarto-dev/quarto-cli/releases/download/v$QUARTO_VERSION/quarto-$QUARTO_VERSION-linux-amd64.deb
+dpkg -x quarto-$QUARTO_VERSION-linux-amd64.deb .quarto
+rm -rf quarto-$QUARTO_VERSION-linux-amd64.deb
+
+# get quarto in the path
+mkdir -p ~/.local/bin
+ln -s ~/.quarto/opt/quarto/bin/quarto ~/.local/bin/quarto
+
+# create the proper pandoc symlink to enable visual editor in Quarto extension
+ln -s ~/.quarto/opt/quarto/bin/tools/x86_64/pandoc ~/.quarto/opt/quarto/bin/tools/pandoc
+
+
+echo
+echo Installed Quarto
+echo
+
+# install required python packages
+python3 -m pip install jupyterlab-quarto
+
+echo
+echo Completed
+echo
