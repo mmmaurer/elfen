@@ -453,7 +453,8 @@ class Extractor:
                 The lexicon to use for feature extraction.
         """
         if feature in feature_lexicon_map:
-            if feature_lexicon_map[feature] in RESOURCE_MAP:
+            # So far, all resources are available
+            if feature_lexicon_map[feature][language] in RESOURCE_MAP:
                 if language in feature_lexicon_map[feature].keys():
                     filepath = RESOURCE_MAP[
                         feature_lexicon_map[feature][language]]["filepath"]
@@ -468,7 +469,7 @@ class Extractor:
                           "Skipping...")
                     return None
                 if not os.path.exists(filepath):
-                    get_resource(feature_lexicon_map[feature])
+                    get_resource(feature_lexicon_map[feature][language])
                 lexicon = self.__load_lexicon_from_featurename(
                     filepath, feature)
                 return lexicon

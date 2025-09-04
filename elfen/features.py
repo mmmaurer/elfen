@@ -425,7 +425,7 @@ FEATURE_AREA_MAP = {
 FEATURE_LEXICON_MAP = {
     "n_hedges": {"en": "hedges"},
     # nrc lexicons are multilingual, mapping mechanism in extractor.py
-    "sentiment_score": "sentiment_nrc",
+    "sentiment_score": {"en": "sentiment_nrc"},
     "n_positive_sentiment": {"en": "sentiment_nrc"},
     "n_negative_sentiment": {"en": "sentiment_nrc"},
     "avg_valence": {"en": "vad_nrc"},

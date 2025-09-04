@@ -37,7 +37,7 @@ RESOURCE_MAP = {
         }
         """
     },
-        # Mohammad, S. M. (2018).
+    # Mohammad, S. M. (2018).
     # Obtaining reliable human ratings of valence, arousal, and dominance for 
     # 20,000 English words.
     # In Proceedings of the 56th Annual Meeting of the Association for
