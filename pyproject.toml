@@ -36,4 +36,4 @@ Homepage = "https://github.com/mmmaurer/elfen"
 Issues = "https://github.com/mmmaurer/elfen/issues"
 
 [tool.setuptools]
-packages = ["elfen", "elfen.configs"]
+packages = ["elfen", "elfen.configs", "elfen.resource_utils"]

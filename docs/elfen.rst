@@ -1,6 +1,32 @@
 Module documentation
 ====================
 
+elfen.configs module
+--------------------
+
+.. automodule:: elfen.configs
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+~~~~~~~~~~
+
+.. automodule:: elfen.configs.dependency_config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: elfen.configs.extractor_config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: elfen.configs.morphological_config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 elfen.custom module
 -------------------
 
