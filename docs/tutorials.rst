@@ -309,7 +309,7 @@ For example, you can extract features using the spacy backbone, in German, using
 
     # Custom configuration
     custom_config = {
-        "backbone": "stanza", 
+        "backbone": "spacy", 
         "language": "de",
         "model": "de_dep_news_trf",
         "max_length": 10000,
