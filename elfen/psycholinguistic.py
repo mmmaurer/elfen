@@ -49,6 +49,7 @@ The psycholinguistic features implemented in this module are:
     - Number of controversial sensorimotor words
 """
 import polars as pl
+import warnings
 
 from .resource_utils.psycholinguistics import (
     SENSORIMOTOR_VARS
@@ -179,6 +180,12 @@ def get_avg_concreteness(data: pl.DataFrame,
                 return_dtype=pl.Float64
                 ).alias("avg_concreteness")
     )
+    if data.filter(pl.col("avg_concreteness").is_nan()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the concreteness "
+            "norms. The average concreteness for these texts is set to NaN."
+            "You may want to consider filling NaNs with a specific value."
+        )
 
     return data
 
@@ -218,6 +225,13 @@ def get_avg_sd_concreteness(data: pl.DataFrame,
                 return_dtype=pl.Float64
                 ).alias("avg_sd_concreteness")
     )
+    if data.filter(pl.col("avg_sd_concreteness").is_nan()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the concreteness "
+            "norms. The average standard deviation of concreteness for "
+            "these texts is set to NaN. You may want to consider filling "
+            "NaNs with a specific value."
+        )
 
     return data
 
@@ -422,6 +436,13 @@ def get_avg_aoa(data: pl.DataFrame,
                 return_dtype=pl.Float64
                 ).alias("avg_aoa")
     )
+    if data.filter(pl.col("avg_aoa").is_nan()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the age of "
+            "acquisition norms. The average age of acquisition for these "
+            "texts is set to NaN. You may want to consider filling NaNs "
+            "with a specific value."
+        )
 
     return data
 
@@ -461,6 +482,13 @@ def get_avg_sd_aoa(data: pl.DataFrame,
                 return_dtype=pl.Float64
                 ).alias("avg_sd_aoa")
     )
+    if data.filter(pl.col("avg_sd_aoa").is_nan()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the age of "
+            "acquisition norms. The average standard deviation of age of "
+            "acquisition for these texts is set to NaN. You may want to "
+            "consider filling NaNs with a specific value."
+        )
 
     return data
 
@@ -642,6 +670,12 @@ def get_avg_prevalence(data: pl.DataFrame,
                 return_dtype=pl.Float64
                 ).alias("avg_prevalence")
     )
+    if data.filter(pl.col("avg_prevalence").is_nan()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the prevalence "
+            "norms. The average prevalence for these texts is set to NaN."
+            "You may want to consider filling NaNs with a specific value."
+        )
 
     return data              
 
@@ -773,6 +807,12 @@ def get_avg_socialness(data: pl.DataFrame,
                 return_dtype=pl.Float64
                 ).alias("avg_socialness")
     )
+    if data.filter(pl.col("avg_socialness").is_nan()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the socialness "
+            "norms. The average socialness for these texts is set to NaN."
+            "You may want to consider filling NaNs with a specific value."
+        )
 
     return data
 
@@ -812,6 +852,13 @@ def get_avg_sd_socialness(data: pl.DataFrame,
                 return_dtype=pl.Float64
                 ).alias("avg_sd_socialness")
     )
+    if data.filter(pl.col("avg_sd_socialness").is_nan()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the socialness "
+            "norms. The average standard deviation of socialness for these "
+            "texts is set to NaN. You may want to consider filling NaNs "
+            "with a specific value."
+        )
 
     return data
 
@@ -987,6 +1034,12 @@ def get_avg_iconicity(data: pl.DataFrame,
                 return_dtype=pl.Float64
                 ).alias("avg_iconicity")
     )
+    if data.filter(pl.col("avg_iconicity").is_nan()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the iconicity "
+            "norms. The average iconicity for these texts is set to NaN."
+            "You may want to consider filling NaNs with a specific value."
+        )
 
     return data
 
@@ -1026,6 +1079,12 @@ def get_avg_sd_iconicity(data: pl.DataFrame,
                 return_dtype=pl.Float64
                 ).alias("avg_sd_iconicity")
     )
+    if data.filter(pl.col("avg_sd_iconicity").is_nan()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the iconicity "
+            "norms. The average standard deviation of iconicity for these "
+            "texts is set to NaN."
+        )
 
     return data
 
@@ -1233,6 +1292,13 @@ def get_avg_sensorimotor(data: pl.DataFrame,
                     return_dtype=pl.Float64
                     ).alias(f"avg_{var}_sensorimotor")
         )
+    for var in sensorimotor_vars:
+        if data.filter(pl.col(f"avg_{var}_sensorimotor").is_nan()).shape[0] > 0:
+            warnings.warn(
+                f"Some texts do not contain any words from the {var} "
+                "sensorimotor norms. The average sensorimotor score for "
+                "these texts is set to NaN."
+            )
 
     return data
 
@@ -1281,6 +1347,15 @@ def get_avg_sd_sensorimotor(data: pl.DataFrame,
                         return_dtype=pl.Float64
                         ).alias(f"avg_sd_{var}_sensorimotor")
             )
+            if data.filter(
+                pl.col(f"avg_sd_{var}_sensorimotor").is_nan()
+                           ).shape[0] > 0:
+                warnings.warn(
+                    f"Some texts do not contain any words from the {var} "
+                    "sensorimotor norms. The average standard deviation "
+                    f"of {var} for these texts is set to NaN. You may want "
+                    "to consider filling NaNs with a specific value."
+                )
     else:
         # warning, other languages do not have a standard deviation
         # column in the sensorimotor norms, so we return the same

@@ -5,6 +5,7 @@ class in the ELFEN package and is used to extract features from text data.
 import os
 import re
 from typing import Union
+import warnings
 
 import polars as pl
 
@@ -48,6 +49,7 @@ from .semantic import (
 from .surface import (
     get_global_lemma_frequencies,
     get_global_token_frequencies,
+    get_raw_sequence_length,
 )
 
 from .util import (
@@ -132,7 +134,14 @@ class Extractor:
             'synsets_adv',
         ]
         self.initial_cols = self.data.columns
-    
+
+        # Warning if there are empty texts
+        if get_raw_sequence_length(self.data).filter(
+            pl.col("length") == 0
+        ).shape[0] > 0:
+            warnings.warn("Some texts are empty. This can affect the "
+                          "results. You may want to remove these rows.")
+
     def __apply_function(self,
                          feature,
                          function_map = FUNCTION_MAP,
