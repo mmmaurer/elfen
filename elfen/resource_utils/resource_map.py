@@ -355,11 +355,11 @@ RESOURCE_MAP = {
                 "esm/art%3A10.3758%2Fs13428-011-0164-y/"
                 "MediaObjects/13428_2011_164_MOESM1_ESM.xls",
         "area": "Psycholinguistics",
-        "subarea": "Age of Acquisition",
+        "subarea": "AgeofAcquisition",
         "filename": "SchroederAoANorms.xls",
         "filepath": os.path.join(PROJECT_PATH, "elfen_resources",
                                  "Psycholinguistics",
-                                 "Age of Acquisition", "SchroederAoANorms.xls"),
+                                 "AgeofAcquisition", "SchroederAoANorms.xls"),
         "bibtex": rb"""
         @article{aoa_schroeder,
         title={German norms for semantic typicality, age of acquisition, and concept familiarity},
@@ -443,7 +443,7 @@ RESOURCE_MAP = {
     "aoa_montefinese": {
         "link": "https://osf.io/download/3nvh6/",
         "area": "Psycholinguistics",
-        "subarea": "Age of Acquisition",
+        "subarea": "AgeofAcquisition",
         "filename": "ItAoA.xlsx",
         "filepath": os.path.join(PROJECT_PATH, "elfen_resources",
                                  "Psycholinguistics", "Age of Acquisition",
@@ -459,25 +459,28 @@ RESOURCE_MAP = {
         }
         """
     },
-    "perceptual_chedid": { # TODO: Has two sheets, one for visual and one for auditory
-        # https://lingualab.ca/en/project/norms-familiarity-perceptual-strength/
-        "link": "",
-        "area": "Psycholinguistics",
-        "subarea": "Sensorimotor",
-        "filename": "ChedidPerceptualNorms.xlsx",
-        "filepath": os.path.join(PROJECT_PATH, "elfen_resources",
-                                 "Psycholinguistics", "Sensorimotor",
-                                 "ChedidPerceptualNorms.xlsx"),
-        "bibtex": rb"""
-        @article{perceptual_chedid,
-        title={Visual and auditory perceptual strength norms for 3,596 French nouns and their relationship with other psycholinguistic variables},
-        author={Chedid, Georges and Brambati, Simona Maria and Bedetti, Christophe and Rey, Amandine E. and Wilson, Maximiliano A. and Vallet, Guillaume T.},
-        journal={Behavior Research Methods},
-        volume={51},
-        pages={2094--2105},
-        year={2019},
-        publisher={Springer}
-        }
-        """
-    }
+    # "perceptual_chedid": {
+    # # TODO: Has two sheets, one for visual and one for auditory
+    # # TBD how to handle this
+    #     # https://lingualab.ca/en/project/norms-familiarity-perceptual-strength/
+    #     "link": "",
+    #     "area": "Psycholinguistics",
+    #     "subarea": "Sensorimotor",
+    #     "filename": "ChedidPerceptualNorms.xlsx",
+    #     "filepath": os.path.join(PROJECT_PATH, "elfen_resources",
+    #                              "Psycholinguistics", "Sensorimotor",
+    #                              "ChedidPerceptualNorms.xlsx"),
+    #     "bibtex": rb"""
+    #     @article{perceptual_chedid,
+    #     title={Visual and auditory perceptual strength norms for 3,596 French nouns and their relationship with other psycholinguistic variables},
+    #     author={Chedid, Georges and Brambati, Simona Maria and Bedetti, Christophe and Rey, Amandine E. and Wilson, Maximiliano A. and Vallet, Guillaume T.},
+    #     journal={Behavior Research Methods},
+    #     volume={51},
+    #     pages={2094--2105},
+    #     year={2019},
+    #     publisher={Springer}
+    #     }
+    #     """
+    # }
 }
+
