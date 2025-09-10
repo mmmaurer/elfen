@@ -158,10 +158,14 @@ def get_synsets(data: pl.DataFrame,
     """
     # Check whether wn is available for the given language
     try:
-        wn.synsets('dog', lang=language)
-    except:
-        pass
-    
+        wn.synsets('dog', lang="cn")
+    except Exception as e:
+        raise ValueError(f"WordNet not found for 'cn'. "
+                         "Please download the appropriate WordNet.\n"
+                         "Check download instructions at "
+                         "https://elfen.readthedocs.io/en/latest/installation.html#third-party-resources\n"
+                         f"Original error message from the 'wn' package: {e}")
+
     if backbone == 'spacy':
         data = data.with_columns(
             pl.col("nlp").map_elements(lambda x:
