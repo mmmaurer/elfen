@@ -379,7 +379,7 @@ RESOURCE_MAP = {
                 "MediaObjects/Kanske-BRM-2010.zip",
         "area": "Psycholinguistics",
         "subarea": "Concreteness",
-        "filename": "LANG_database.txt",
+        "filename": "Kanske-BRM-2010/LANG_database.txt",
         "filepath": os.path.join(PROJECT_PATH, "elfen_resources",
                                  "Psycholinguistics",
                                  "Concreteness", 
