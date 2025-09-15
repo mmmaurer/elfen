@@ -212,7 +212,7 @@ def get_avg_valence(data: pl.DataFrame,
                                      word_column=word_column). \
                select("valence").mean().item(),
                return_dtype=pl.Float64
-        )
+        ).alias("avg_valence")
     )
     
     # raise warning: if no words from the lexicon are found in the text
@@ -265,7 +265,7 @@ def get_avg_arousal(data: pl.DataFrame,
                                       word_column=word_column). \
                select("arousal").mean().item(),
                return_dtype=pl.Float64
-        )
+        ).alias("avg_arousal")
     )
     # raise warning: if no words from the lexicon are found in the text
     if data.filter(pl.col("avg_arousal").is_nan()).shape[0] > 0:
@@ -296,8 +296,8 @@ def get_avg_dominance(data: pl.DataFrame,
             produced by the NLP backbone.
         lexicon (pl.DataFrame): The VAD lexicon.
         backbone (str): The NLP backbone to use.
-        nan_value (float): The value to use for NaNs.
-                         Defaults to 0.0.
+        language (str): The language of the text and lexicon.
+                        Defaults to "en".
 
     Returns:
         data (pl.DataFrame):
@@ -319,7 +319,7 @@ def get_avg_dominance(data: pl.DataFrame,
                                    word_column=word_column). \
                 select("dominance").mean().item(),
                 return_dtype=pl.Float64
-        )
+        ).alias("avg_dominance")
     )
     # raise warning: if no words from the lexicon are found in the text
     if data.filter(pl.col("avg_dominance").is_nan()).shape[0] > 0:
@@ -731,7 +731,7 @@ def get_avg_emotion_intensity(data: pl.DataFrame,
                     x, emotion, word_column=word_column). \
                     select("emotion_intensity").mean().item(),
                 return_dtype=pl.Float64
-        )
+        ).alias(f"avg_intensity_{emotion}")
     )
     # raise warning: if no words from the lexicon are found in the text
     for emotion in emotions:

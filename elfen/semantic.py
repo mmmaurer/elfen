@@ -158,7 +158,7 @@ def get_synsets(data: pl.DataFrame,
     """
     # Check whether wn is available for the given language
     try:
-        wn.synsets('dog', lang="cn")
+        wn.synsets('dog', lang=language)
     except Exception as e:
         raise ValueError(f"WordNet not found for 'cn'. "
                          "Please download the appropriate WordNet.\n"
