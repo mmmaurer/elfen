@@ -136,7 +136,9 @@ class Extractor:
         self.initial_cols = self.data.columns
 
         # Warning if there are empty texts
-        if get_raw_sequence_length(self.data).filter(
+        if get_raw_sequence_length(self.data,
+                                   text_column=self.config["text_column"]
+                                   ).filter(
             pl.col("raw_sequence_length") == 0
         ).shape[0] > 0:
             warnings.warn("Some texts are empty. This can affect the "
