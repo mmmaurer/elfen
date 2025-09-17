@@ -36,7 +36,7 @@ The README template comes with text templates for each section (after each comme
 6. It should also discuss the decisions and parameters controlling the behavior of the method.
 -->
 
-A python package to efficiently extract linguistic features at scale for text datasets.
+A Python package to efficiently extract linguistic features at scale for text datasets.
 
 ## Keywords
 
@@ -158,7 +158,7 @@ For more information on the available wordnet collections, consult the [wn packa
 
 ## Repository structure
 
-The repo follows the usual structure of a python package.
+The repo follows the usual structure of a Python package.
 
 It contains two main directories: ``elfen/docs`` and ``elfen/elfen``.
 
@@ -166,7 +166,7 @@ The top-level directory ``elfen`` contains files to define the package (`pyproje
 
 ``elfen/docs`` contains the reStructuredText files and configuration code for creating and rendering the documentation for the package.
 
-``elfen/elfen`` contains the package's code structured in python files per feature area, the main extractor class, and utilities. 
+``elfen/elfen`` contains the package's code structured in Python files per feature area, the main extractor class, and utilities. 
 ```
 elfen
 ├── docs
@@ -205,9 +205,9 @@ See the official [documentation](https://elfen.readthedocs.io/en/latest/index.ht
 2. The acknowledgments section should list expressions of gratitude to people or organizations who contributed, supported or guided.
 -->
 
-While all feature extraction functions in this package are written from scratch, the choice of features in the readability and lexical richness feature areas (partially) follows the [`readability`](https://github.com/andreasvc/readability) and [`lexicalrichness`](https://github.com/LSYS/LexicalRichness) python packages.
+While all feature extraction functions in this package are written from scratch, the choice of features in the readability and lexical richness feature areas (partially) follows the [`readability`](https://github.com/andreasvc/readability) and [`lexicalrichness`](https://github.com/LSYS/LexicalRichness) Python packages.
 
-We use the [`wn`](https://github.com/goodmami/wn) python package to extract Open  Multilingual Wordnet synsets.
+We use the [`wn`](https://github.com/goodmami/wn) Python package to extract Open  Multilingual Wordnet synsets.
 
 ## Disclaimer
 <!--

@@ -1,6 +1,6 @@
 # ELFEN - Efficient Linguistic Feature Extraction for Natural Language Datasets
 
-This python package provides efficient linguistic feature extraction for text datasets (i.e. datasets with N text instances, in a tabular structure). 
+This Python package provides efficient linguistic feature extraction for text datasets (i.e. datasets with N text instances, in a tabular structure). 
 
 For a full overview of the features available, check the [overview table](features.md), for further details and tutorials check the
 [documentation](https://elfen.readthedocs.io).
@@ -9,7 +9,7 @@ The multilingual support is documented in the [multilingual support table](multi
 
 
 ## Installation
-Install this package using the current pypi version
+Install this package using the current PyPI version
 ```bash
 python -m pip install elfen
 ```
@@ -54,9 +54,9 @@ For an overview which features use which resource, and how to export all third-p
 
 ## Acknowledgements
 
-While all feature extraction functions in this package are written from scratch, the choice of features in the readability and lexical richness feature areas (partially) follows the [`readability`](https://github.com/andreasvc/readability) and [`lexicalrichness`](https://github.com/LSYS/LexicalRichness) python packages.
+While all feature extraction functions in this package are written from scratch, the choice of features in the readability and lexical richness feature areas (partially) follows the [`readability`](https://github.com/andreasvc/readability) and [`lexicalrichness`](https://github.com/LSYS/LexicalRichness) Python packages.
 
-We use the [`wn`](https://github.com/goodmami/wn) python package to extract Open  Multilingual Wordnet synsets.
+We use the [`wn`](https://github.com/goodmami/wn) Python package to extract Open  Multilingual Wordnet synsets.
 
 ## Citation
 If you use this package in your work, for now, please cite
