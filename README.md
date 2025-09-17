@@ -9,7 +9,7 @@ The multilingual support is documented in the [multilingual support table](multi
 
 
 ## Installation
-Install this package using the current pypi version
+Install this package using the current PyPI version
 ```bash
 python -m pip install elfen
 ```
