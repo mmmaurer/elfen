@@ -1245,9 +1245,11 @@ def load_sensorimotor_norms(path: str,
             "Ita_Word": "Word"
         }).select(
             ["Word"] + sensorimotor_vars[language]
-        )
+        ).rename({ # rename columns to match the English norms
+            var: f"{var}.mean" for var in sensorimotor_vars[language]
+        })
     elif language == "fr":
-        pass
+        pass # TODO: add French sensorimotor norms
 
     return sensorimotor_norms
 
@@ -1364,7 +1366,7 @@ def get_avg_sd_sensorimotor(data: pl.DataFrame,
             pl.lit(None).alias(f"avg_sd_{var}_sensorimotor")
             for var in sensorimotor_vars
         )
-        raise UserWarning(
+        warnings.warn(
             "Sensorimotor norms for languages other than English do not "
             "have a standard deviation column. Returning the same dataframe "
             "without any changes."
@@ -1536,7 +1538,7 @@ def get_n_controversial_sensorimotor(data: pl.DataFrame,
             pl.lit(None).alias(f"n_controversial_{var}_sensorimotor")
             for var in sensorimotor_vars
         )
-        raise UserWarning(
+        warnings.warn(
             "Sensorimotor norms for languages other than English do not "
             "have a standard deviation column. Returning the same dataframe "
             "without any changes."
