@@ -86,6 +86,7 @@ The following functions are implemented in this module:
         Calculates the number of words with negative sentiment.
 """
 import polars as pl
+import warnings
 
 from .preprocess import (
     get_lemmas,
@@ -175,7 +176,6 @@ def get_avg_valence(data: pl.DataFrame,
                     lexicon: pl.DataFrame,
                     backbone: str = "spacy",
                     language: str = "en",
-                    nan_value: float = 0.0,
                     **kwargs: dict[str, str],
                     ) -> pl.DataFrame:
     """
@@ -185,16 +185,12 @@ def get_avg_valence(data: pl.DataFrame,
     The valence of the text is calculated as the mean of the valence
     values of the words in the text.
 
-    NaN/Null values are filled with 0 as the valence is in the range [0,1]
-    and 0 is the neutral value in the NRC-VAD lexicon.
-
     Args:
         data (pl.DataFrame):
             The preprocessed input data. Contains the "nlp" column
             produced by the NLP backbone.
         lexicon (pl.DataFrame): The VAD lexicon.
         backbone (str): The NLP backbone to use.
-        nan_value (float): The value to use for NaNs. Defaults to 0.0.
 
     Returns:
         data (pl.DataFrame):
@@ -216,17 +212,22 @@ def get_avg_valence(data: pl.DataFrame,
                                      word_column=word_column). \
                select("valence").mean().item(),
                return_dtype=pl.Float64
-        ).fill_nan(nan_value).fill_null(nan_value).alias("avg_valence")
-        # convention to fill NaNs with 0 as valence is in [0,1]
-        # and 0 is the neutral value for the NRC-VAD lexicon
+        ).alias("avg_valence")
     )
+    
+    # raise warning: if no words from the lexicon are found in the text
+    if data.filter(pl.col("avg_valence").is_nan()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the VAD lexicon. "
+            f"The average valence for these texts is set to NaN."
+            "You may want to consider filling NaNs with a specific value."
+        )
     
     return data
 
 def get_avg_arousal(data: pl.DataFrame,
                     lexicon: pl.DataFrame,
                     backbone: str = "spacy",
-                    nan_value: float = 0.0,
                     language: str = "en",
                     **kwargs: dict[str, str],
                     ) -> pl.DataFrame:
@@ -237,17 +238,12 @@ def get_avg_arousal(data: pl.DataFrame,
     The arousal of the text is calculated as the mean of the arousal
     values of the words in the text.
 
-    NaN/Null values are filled with 0 as the arousal is in the range [0,1]
-    and 0 is the neutral value in the NRC-VAD lexicon.
-
     Args:
         data (pl.DataFrame):
             The preprocessed input data. Contains the "nlp" column
             produced by the NLP backbone.
         lexicon (pl.DataFrame): The VAD lexicon.
         backbone (str): The NLP backbone to use.
-        nan_value (float): The value to use for NaNs.
-                         Defaults to 0.0.
     
     Returns:
         data (pl.DataFrame):
@@ -269,17 +265,21 @@ def get_avg_arousal(data: pl.DataFrame,
                                       word_column=word_column). \
                select("arousal").mean().item(),
                return_dtype=pl.Float64
-        ).fill_nan(nan_value).fill_null(nan_value).alias("avg_arousal")
-        # convention to fill NaNs with 0 as arousal is in [0,1]
-        # and 0 is the neutral value for the NRC-VAD lexicon
+        ).alias("avg_arousal")
     )
+    # raise warning: if no words from the lexicon are found in the text
+    if data.filter(pl.col("avg_arousal").is_nan()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the VAD lexicon. "
+            f"The average arousal for these texts is set to NaN."
+            "You may want to consider filling NaNs with a specific value."
+        )
     
     return data
 
 def get_avg_dominance(data: pl.DataFrame,
                       lexicon: pl.DataFrame,
                       backbone: str = "spacy",
-                      nan_value: float = 0.0,
                       language: str = "en",
                       **kwargs: dict[str, str],
                       ) -> pl.DataFrame:
@@ -290,17 +290,14 @@ def get_avg_dominance(data: pl.DataFrame,
     The dominance of the text is calculated as the mean of the dominance
     values of the words in the text.
 
-    NaN/Null values are filled with 0 as the dominance is in the range
-    [0,1] and 0 is the neutral value in the NRC-VAD lexicon.
-
     Args:
         data (pl.DataFrame):
             The preprocessed input data. Contains the "nlp" column
             produced by the NLP backbone.
         lexicon (pl.DataFrame): The VAD lexicon.
         backbone (str): The NLP backbone to use.
-        nan_value (float): The value to use for NaNs.
-                         Defaults to 0.0.
+        language (str): The language of the text and lexicon.
+                        Defaults to "en".
 
     Returns:
         data (pl.DataFrame):
@@ -322,10 +319,15 @@ def get_avg_dominance(data: pl.DataFrame,
                                    word_column=word_column). \
                 select("dominance").mean().item(),
                 return_dtype=pl.Float64
-         ).fill_nan(nan_value).fill_null(nan_value).alias("avg_dominance")
-         # convention to fill NaNs with 0 as dominance is in [0,1]
-         # and 0 is the neutral value for the NRC-VAD lexicon
+        ).alias("avg_dominance")
     )
+    # raise warning: if no words from the lexicon are found in the text
+    if data.filter(pl.col("avg_dominance").is_nan()).shape[0] > 0:
+        warnings.warn(
+            f"Some texts do not contain any words from the VAD lexicon. "
+            f"The average dominance for these texts is set to NaN."
+            "You may want to consider filling NaNs with a specific value."
+        )
 
     return data
 
@@ -686,7 +688,6 @@ def get_avg_emotion_intensity(data: pl.DataFrame,
                               lexicon: pl.DataFrame,
                               backbone: str = "spacy",
                               emotions: list = EMOTIONS,
-                              nan_value: float = 0.0,
                               language: str = "en",
                               **kwargs: dict[str, str],
                               ) -> pl.DataFrame:
@@ -710,8 +711,6 @@ def get_avg_emotion_intensity(data: pl.DataFrame,
         backbone (str): The NLP backbone to use.
         emotions (list): The list of emotions to consider.
                        Defaults to the Plutchik emotions.
-        nan_value (float): The value to use for NaNs.
-                            Defaults to 0.0.
 
     Returns:
         data (pl.DataFrame):
@@ -732,9 +731,17 @@ def get_avg_emotion_intensity(data: pl.DataFrame,
                     x, emotion, word_column=word_column). \
                     select("emotion_intensity").mean().item(),
                 return_dtype=pl.Float64
-            ).fill_nan(nan_value).fill_null(nan_value). \
-                alias(f"avg_intensity_{emotion}")
-        )
+        ).alias(f"avg_intensity_{emotion}")
+    )
+    # raise warning: if no words from the lexicon are found in the text
+    for emotion in emotions:
+        if data.filter(pl.col(f"avg_intensity_{emotion}").is_nan()).shape[0] > 0:
+            warnings.warn(
+                f"Some texts do not contain any words from the "
+                f"emotion intensity lexicon for the emotion '{emotion}'. "
+                f"The average intensity for these texts is set to NaN."
+                f"You may want to consider filling NaNs with a specific value."
+            )
 
     return data
 

@@ -63,10 +63,14 @@ def preprocess_data(data: pl.DataFrame,
     # Process the text data to retrieve nlp objects
     processed = pl.Series("nlp", [nlp(text) for text in data[text_column]])
 
+    # Create a new DataFrame to output to ensure the original data is
+    # preserved unaltered
+    out = data.clone()
+
     # Insert the processed data into the DataFrame as the last column
-    data = data.insert_column(len(data.columns), processed)
-    
-    return data
+    out = out.insert_column(len(data.columns), processed)
+
+    return out
 
 def get_lemmas(data: pl.DataFrame,
                backbone: str = 'spacy',

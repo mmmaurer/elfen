@@ -4,7 +4,7 @@ CONFIG_ALL = {
     "model": "en_core_web_sm",
     "text_column": "text",
     "max_length": 1000000,
-    "remove_constant_cols": True,
+    "remove_constant_cols": False,
     "features": {
         "surface": [
             "raw_sequence_length",

@@ -32,7 +32,8 @@ from .util import (
 #                            Hedges                                   #
 # ------------------------------------------------------------------- #
 
-def load_hedges(hedges_file: str) -> list[str]:
+def load_hedges(hedges_file: str,
+                language: str) -> list[str]:
     """
     Loads the hedges from the given file.
 
@@ -43,13 +44,17 @@ def load_hedges(hedges_file: str) -> list[str]:
         hedges (list[str]):
             List of hedge words.
     """
-    with open(hedges_file, 'r') as f:
-        raw = f.readlines()
-        hedges = []
-        for line in raw:
-            if not line.startswith("%") and line.strip() != "\n" and \
-                line.strip() != "":
-                hedges.append(line.strip())
+    if language == 'en':
+        with open(hedges_file, 'r') as f:
+            raw = f.readlines()
+            hedges = []
+            for line in raw:
+                if not line.startswith("%") and line.strip() != "\n" and \
+                    line.strip() != "":
+                    hedges.append(line.strip())
+    else:
+        raise NotImplementedError(
+            "Hedge lexicon is currently only available for English.")
     
     return hedges
 
@@ -154,9 +159,13 @@ def get_synsets(data: pl.DataFrame,
     # Check whether wn is available for the given language
     try:
         wn.synsets('dog', lang=language)
-    except:
-        pass
-    
+    except Exception as e:
+        raise ValueError(f"WordNet not found for 'cn'. "
+                         "Please download the appropriate WordNet.\n"
+                         "Check download instructions at "
+                         "https://elfen.readthedocs.io/en/latest/installation.html#third-party-resources\n"
+                         f"Original error message from the 'wn' package: {e}")
+
     if backbone == 'spacy':
         data = data.with_columns(
             pl.col("nlp").map_elements(lambda x:

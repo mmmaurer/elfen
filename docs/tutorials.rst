@@ -208,6 +208,10 @@ Whenever you extract features that are based on the occurrence of words in a tex
 Ratio Normalize
 ~~~~~~~~~~~~~~~
 
+Ratio-normalization allows you to normalize extracted features using a specific ratio, such as the number of tokens or the number of sentences. This is useful when you want to compare features that are not directly comparable, such as the number of low-valence words and the average word length.
+While the functionality is exactly the same for token-normalization, ratio-normalization will create a new column with the suffix of the used ratio (e.g. ``_token_ratio``) instead of overwriting the original feature column.
+This allows for the comparison of the original and the normalized feature.
+
 .. code-block:: python
 
     import polars as pl
@@ -309,7 +313,7 @@ For example, you can extract features using the spacy backbone, in German, using
 
     # Custom configuration
     custom_config = {
-        "backbone": "stanza", 
+        "backbone": "spacy", 
         "language": "de",
         "model": "de_dep_news_trf",
         "max_length": 10000,

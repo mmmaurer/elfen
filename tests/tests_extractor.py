@@ -99,4 +99,26 @@ def test_token_normalization(sample_data):
     assert pytest.approx(first_ratio) == 1/6 
     # make sure n_tokens is not normalized
     assert max_tokens == 6
-    
+
+def test_empty_text_warning():
+    """
+    Test whether a warning is raised for empty texts.
+    """
+    data = {
+        'text': [
+            "This is a test sentence.",
+            "",
+            "Yet another test sentence."
+        ]
+    }
+    df = pl.DataFrame(data)
+    with pytest.warns(UserWarning, match="Some texts are empty. "
+                      "This can affect the results. "
+                      "You may want to remove these rows."):
+        extractor = Extractor(data=df,
+                              backbone='spacy',
+                              text_column='text',
+                              language='en',
+                              model='en_core_web_sm')
+        
+        

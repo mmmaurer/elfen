@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "elfen"
-version = "1.1.9"
+version = "1.2.0"
 authors = [
   { name="Maximilian Maurer", email="mmmaurer@pm.me" },
 ]
@@ -22,7 +22,7 @@ dependencies = [
 ]
 description = "ELFEN - Efficient Linguistic Feature Extraction for Natural Language Datasets"
 readme = "README_pypi.md"
-requires-python = ">=3.10, <=3.12.9"
+requires-python = ">=3.10, <=3.12.11"
 classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -36,4 +36,4 @@ Homepage = "https://github.com/mmmaurer/elfen"
 Issues = "https://github.com/mmmaurer/elfen/issues"
 
 [tool.setuptools]
-packages = ["elfen", "elfen.configs"]
+packages = ["elfen", "elfen.configs", "elfen.resource_utils"]
