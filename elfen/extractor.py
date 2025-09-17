@@ -465,18 +465,21 @@ class Extractor:
         """
         if feature in feature_lexicon_map:
             # So far, all resources are available
-            if feature_lexicon_map[feature][language] in RESOURCE_MAP:
-                if language in feature_lexicon_map[feature].keys():
+            if language in feature_lexicon_map[feature].keys():
+                if feature_lexicon_map[feature][language] in  \
+                    RESOURCE_MAP and "multilingual_filepath" not in \
+                    RESOURCE_MAP[
+                        feature_lexicon_map[feature][language]]:
                     filepath = RESOURCE_MAP[
                         feature_lexicon_map[feature][language]]["filepath"]
                 elif "multilingual_filepath" in RESOURCE_MAP[
-                    feature_lexicon_map[feature]]:
+                    feature_lexicon_map[feature][language]]:
                     filepath = RESOURCE_MAP[
-                        feature_lexicon_map[feature]["en"]][
+                        feature_lexicon_map[feature][language]][
                             "multilingual_filepath"]
                 else:
                     print(f"Feature {feature} not (yet) "
-                          f"supported for {self.config['language']}. "
+                          f"supported for {language}. "
                           "Skipping...")
                     return None
                 if not os.path.exists(filepath):
@@ -485,8 +488,8 @@ class Extractor:
                     filepath, feature)
                 return lexicon
             else:
-                print(f"Resource {feature_lexicon_map[feature]} not "
-                      "found. Skipping...")
+                print(f"Feature {feature} not (yet) supported for "
+                      f"{language}. Skipping...")
                 return None
         else:
             print(f"Feature {feature} not found. Skipping...")

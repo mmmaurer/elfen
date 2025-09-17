@@ -130,6 +130,7 @@ from .readability import (
     get_num_polysyllables,
     get_num_syllables,
 )
+from .resource_utils.langs import LANGUAGES_NRC
 from .semantic import (
     get_num_hedges,
     get_avg_num_synsets,
@@ -424,22 +425,22 @@ FEATURE_AREA_MAP = {
 # TODO: transform into language-specific mappings
 FEATURE_LEXICON_MAP = {
     "n_hedges": {"en": "hedges"},
-    # nrc lexicons are multilingual, mapping mechanism in extractor.py
-    "sentiment_score": {"en": "sentiment_nrc"},
-    "n_positive_sentiment": {"en": "sentiment_nrc"},
-    "n_negative_sentiment": {"en": "sentiment_nrc"},
-    "avg_valence": {"en": "vad_nrc"},
-    "avg_arousal": {"en": "vad_nrc"},
-    "avg_dominance": {"en": "vad_nrc"},
-    "n_low_valence": {"en": "vad_nrc"},
-    "n_high_valence": {"en": "vad_nrc"},
-    "n_low_arousal": {"en": "vad_nrc"},
-    "n_high_arousal": {"en": "vad_nrc"},
-    "n_low_dominance": {"en": "vad_nrc"},
-    "n_high_dominance": {"en": "vad_nrc"},
-    "avg_emotion_intensity": {"en": "intensity_nrc"},
-    "n_low_intensity": {"en": "intensity_nrc"},
-    "n_high_intensity": {"en": "intensity_nrc"},
+    # nrc lexicons are multilingual
+    "sentiment_score": {key: "sentiment_nrc" for key in LANGUAGES_NRC},
+    "n_positive_sentiment": {key: "sentiment_nrc" for key in LANGUAGES_NRC},
+    "n_negative_sentiment": {key: "sentiment_nrc" for key in LANGUAGES_NRC},
+    "avg_valence": {key: "vad_nrc" for key in LANGUAGES_NRC},
+    "avg_arousal": {key: "vad_nrc" for key in LANGUAGES_NRC},
+    "avg_dominance": {key: "vad_nrc" for key in LANGUAGES_NRC},
+    "n_low_valence": {key: "vad_nrc" for key in LANGUAGES_NRC},
+    "n_high_valence": {key: "vad_nrc" for key in LANGUAGES_NRC},
+    "n_low_arousal": {key: "vad_nrc" for key in LANGUAGES_NRC},
+    "n_high_arousal": {key: "vad_nrc" for key in LANGUAGES_NRC},
+    "n_low_dominance": {key: "vad_nrc" for key in LANGUAGES_NRC},
+    "n_high_dominance": {key: "vad_nrc" for key in LANGUAGES_NRC},
+    "avg_emotion_intensity": {key: "intensity_nrc" for key in LANGUAGES_NRC},
+    "n_low_intensity": {key: "intensity_nrc" for key in LANGUAGES_NRC},
+    "n_high_intensity": {key: "intensity_nrc" for key in LANGUAGES_NRC},
     # language-specific psycholinguistic features
     "avg_concreteness": {"en": "concreteness_brysbaert",
                          "fr": "concreteness_bonin",

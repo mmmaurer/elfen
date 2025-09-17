@@ -914,6 +914,7 @@ def load_sentiment_nrc_lexicon(path: str = SENTIMENT_NRC_PATH,
                                has_header=has_header,
                                schema=schema,
                                separator=separator)
+    
     return sentiment_nrc
 
 def filter_sentiment_lexicon(lexicon: pl.DataFrame,
@@ -1078,11 +1079,6 @@ def get_sentiment_score(data: pl.DataFrame,
             The input data with the sentiment score column. The column
             name is "sentiment_score".
     """
-    if language != "en":
-        word_column = LANGUAGES_NRC[language]
-    else:
-        word_column = "word"
-
     if "n_positive_sentiment" not in data.columns:
         data = get_n_positive_sentiment(data,
                                         lexicon=lexicon,
