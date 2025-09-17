@@ -427,7 +427,7 @@ RESOURCE_MAP = {
         "filename": "2014-Montefinese_Database.xlsx",
         "filepath": os.path.join(PROJECT_PATH, "elfen_resources",
                                  "Psycholinguistics", "Concreteness",
-                                 "2014-Montefinese_Database‰.xlsx"),
+                                 "2014-Montefinese_Database.xlsx"),
         "bibtex": rb"""
         @article{affective_norms_montefinese,
         title={The adaptation of the Affective Norms for English Words (ANEW) in Italian},
