@@ -120,7 +120,7 @@ extractor.write_csv("path/to/csv/")
 2. If the method requires a GPU, the hardware requirements section must list the minimal GPU requirements (especially VRAM).
 -->
 
-Elfen is compatible with Python versions ≥ 3.10 and ≤ 3.12.9, on any supported hardware.
+Elfen is compatible with Python versions ≥ 3.10 and ≤ 3.12.11, on any supported hardware.
 
 ## Environment Setup
 <!--
@@ -152,6 +152,12 @@ Note that for some languages, you will need to install another wordnet collectio
 
 ```bash
 python -m wn download odenet:1.4
+```
+
+If you are running this in a Jupyter notebook on a binder instance, you can use `%%bash` magic commands to run the commands in a cell:
+```bash
+%%bash
+python -m wn download omw:1.4
 ```
 
 For more information on the available wordnet collections, consult the [wn package documentation](https://wn.readthedocs.io/en/latest/guides/lexicons.html).
