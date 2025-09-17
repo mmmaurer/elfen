@@ -1,5 +1,9 @@
 #!/usr/bin/env -S bash -v
 
+# Because this repository is a Python package,
+# we can install it using
+python -m pip install --editable .
+
 # determine which version of Quarto to install
 QUARTO_VERSION=1.7.29
 
