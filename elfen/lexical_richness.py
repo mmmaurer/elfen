@@ -62,6 +62,7 @@ The lexical richness metrics implemented in this module are:
 - Herdan's Vm
 """
 from collections import Counter
+import warnings
 
 import numpy as np
 import polars as pl
@@ -80,6 +81,9 @@ from .pos import (
 )
 from .preprocess import (
     get_tokens,
+)
+from .util import (
+    zero_token_warning_nan,
 )
 
 def get_lemma_token_ratio(data: pl.DataFrame,
@@ -111,6 +115,9 @@ def get_lemma_token_ratio(data: pl.DataFrame,
         (pl.col("n_lemmas") / pl.col("n_tokens")
          ).alias("lemma_token_ratio"),
     )
+    # Warn if there are any NaN values in the lemma/token ratio column
+    if data.filter(pl.col("lemma_token_ratio").is_nan()).height > 0:
+        zero_token_warning_nan("lemma/token ratio")
 
     return data
 
@@ -142,6 +149,10 @@ def get_ttr(data: pl.DataFrame,
     data = data.with_columns(
         (pl.col("n_types") / pl.col("n_tokens")).alias("ttr"),
     )
+
+    # Warn if there are any NaN values in the type-token ratio column
+    if data.filter(pl.col("ttr").is_nan()).height > 0:
+        zero_token_warning_nan("type/token ratio")
 
     return data
 
@@ -175,6 +186,10 @@ def get_rttr(data: pl.DataFrame,
          ).alias("rttr"),
     )
 
+    # Warn if there are any NaN values in the root type-token ratio column
+    if data.filter(pl.col("rttr").is_nan()).height > 0:
+        zero_token_warning_nan("root type/token ratio")
+
     return data
 
 def get_cttr(data: pl.DataFrame,
@@ -206,6 +221,10 @@ def get_cttr(data: pl.DataFrame,
             pl.col("n_types") / ((2 * pl.col("n_tokens")) ** 0.5)
         ).alias("cttr"),
     )
+
+    # Warn if there are any NaN values in the corrected type-token ratio column
+    if data.filter(pl.col("cttr").is_nan()).height > 0:
+        zero_token_warning_nan("corrected type/token ratio")
 
     return data
 
@@ -641,6 +660,10 @@ def get_sichel_s(data: pl.DataFrame,
          ).alias("sichel_s"),
     )
 
+    # Warn if there are any NaN values in the Sichel's S column
+    if data.filter(pl.col("sichel_s").is_nan()).height > 0:
+        zero_token_warning_nan("Sichel's S")
+
     return data
 
 def get_global_sichel_s(data: pl.DataFrame,
@@ -672,6 +695,10 @@ def get_global_sichel_s(data: pl.DataFrame,
         (pl.col("n_global_token_hapax_dislegomena") / pl.col("n_types")
          ).alias("global_sichel_s"),
     )
+
+    # Warn if there are any NaN values in the global Sichel's S column
+    if data.filter(pl.col("global_sichel_s").is_nan()).height > 0:
+        zero_token_warning_nan("global Sichel's S")
 
     return data
 
@@ -705,6 +732,10 @@ def get_lexical_density(data: pl.DataFrame,
          ).alias("lexical_density"),
     )
 
+    # Warn if there are any NaN values in the lexical density column
+    if data.filter(pl.col("lexical_density").is_nan()).height > 0:
+        zero_token_warning_nan("lexical density")
+
     return data
 
 def get_giroud_index(data: pl.DataFrame,
@@ -735,6 +766,10 @@ def get_giroud_index(data: pl.DataFrame,
         (pl.col("n_types") / pl.col("n_tokens").sqrt()
          ).alias("giroud_index"),
     )
+
+    # Warn if there are any NaN values in the Giroud's index column
+    if data.filter(pl.col("giroud_index").is_nan()).height > 0:
+        zero_token_warning_nan("Giroud's index")
 
     return data
 
@@ -896,9 +931,17 @@ def get_mattr(data: pl.DataFrame,
     data = data.with_columns(
         pl.col("tokens").map_elements(
             lambda x: mattr(x,
-                            window_size=window_size),
+                            window_size=window_size) if len(x) > 0 else \
+                                # empty texts will yield NaN,
+                                # as it is not possible to
+                                # calculate MATTR for them
+                                np.nan,
                             return_dtype=pl.Float32).alias("mattr")
     )
+
+    # Warn if there are any NaN values in the MATTR column
+    if data.filter(pl.col("mattr").is_nan()).height > 0:
+        zero_token_warning_nan("MATTR")
 
     return data
 
@@ -953,10 +996,18 @@ def get_msttr(data: pl.DataFrame,
         pl.col("tokens"). \
             map_elements(lambda x: msttr(x,
                                          window_size=window_size,
-                                         discard=discard),
+                                         discard=discard) if  \
+                                            # empty texts will yield NaN,
+                                            # as it is not possible to
+                                            # calculate MSTTR for them
+                                            len(x) > 0 else np.nan,
                                          return_dtype=pl.Float32). \
                                             alias("msttr")
     )
+
+    # Warn if there are any NaN values in the MSTTR column
+    if data.filter(pl.col("msttr").is_nan()).height > 0:
+        zero_token_warning_nan("MSTTR")
 
     return data
 
@@ -1009,6 +1060,11 @@ def get_yule_k(data: pl.DataFrame,
                                            return_dtype=pl.Float32) - \
         (1 / pl.col("n_tokens"))).alias("yule_k")
     )
+
+    # Warn if there are any -inf values in the Yule's K column
+    if data.filter(pl.col("yule_k") == -np.inf).height > 0:
+        warnings.warn("Some texts have 0 tokens resulting in Yule's K of -inf. "
+                      "Consider removing these texts from the analysis.")
 
     return data
 
@@ -1099,6 +1155,10 @@ def get_herdan_v(data: pl.DataFrame,
          (1 / pl.col("n_types")).sqrt()
         ).alias("herdan_v")
     )
+
+    # Warn if there are any NaN values in the Herdan's V column
+    if data.filter(pl.col("herdan_v").is_nan()).height > 0:
+        zero_token_warning_nan("Herdan's Vm")
 
     return data
 

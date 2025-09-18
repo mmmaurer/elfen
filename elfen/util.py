@@ -1,6 +1,7 @@
 """
 This module contains utility functions for working with Polars DataFrames.
 """
+import warnings
 import polars as pl
 
 def rescale_column(data: pl.DataFrame,
@@ -105,4 +106,38 @@ def upos_to_wn(upos_tag: str) -> str:
         return "a"
     else:
         return None
+    
+def zero_token_warning_nan(feature: str) -> None:
+    """
+    Generates a warning message for features that cannot be calculated
+    for texts with zero tokens. Warning is to be issued if any NaN values
+    are present in the feature.
 
+    Args:
+        feature (str): The name of the feature.
+
+    Returns:
+        None
+    """
+    warnings.warn(f"Some texts have 0 tokens, resulting in NaN "
+                  f"values for the {feature}. Consider filtering "
+                  f"these texts or filling NaN values using "
+                  f"`fill_nan()` or removing them for further analysis.")
+
+def zero_token_warning_null(feature: str) -> None:
+    """
+    Generates a warning message for features that cannot be calculated
+    for texts with zero tokens. Warning is to be issued if any Null values
+    are present in the feature.
+
+    Args:
+        feature (str): The name of the feature.
+
+    Returns:
+        None
+    """
+    warnings.warn(f"Some texts have 0 tokens, resulting in Null "
+                  f"values for the {feature}. Consider filtering "
+                  f"these texts or filling Null values using "
+                  f"`fill_null()` or removing them for further analysis.")
+    

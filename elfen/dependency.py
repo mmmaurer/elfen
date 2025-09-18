@@ -52,6 +52,8 @@ def get_tree_width(data: pl.DataFrame,
             column named 'tree_width'.
     """
     def get_width(nlp):
+        if len(nlp) == 0:  # empty input
+            return 0
         return max([len(list(token.children)) for token in nlp])
     if backbone == 'spacy':
         data = data.with_columns(
@@ -99,7 +101,7 @@ def get_tree_depth(data: pl.DataFrame,
         data = data.with_columns(
             pl.col('nlp').map_elements(
                 lambda x: np.mean([walk_tree(sent.root, 0) for sent in
-                                   x.sents]),
+                                   x.sents]) if len(list(x.sents)) > 0 else 0,
             return_dtype=pl.Float64
             ).alias('tree_depth')
         )
@@ -131,6 +133,8 @@ def get_tree_branching(data: pl.DataFrame,
             stored in a new column named 'tree_branching'.
     """
     def get_branching(nlp):
+        if len(nlp) == 0:  # empty input
+            return 0
         return sum([len(list(token.children)) for token in nlp]) / len(nlp)
     if backbone == 'spacy':
          data = data.with_columns(
@@ -167,6 +171,8 @@ def get_ramification_factor(data: pl.DataFrame,
             stored in a new column named 'ramification_factor'.
     """
     def get_ramification(nlp):
+        if len(nlp) == 0:  # empty input
+            return 0
         levels = {}
         for token in nlp:
             if token.dep not in levels:

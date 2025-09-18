@@ -38,7 +38,10 @@ def get_compressibility(data: pl.DataFrame,
     """
     data = data.with_columns(
         pl.col(text_column).map_elements(
-            lambda x: len(bz2.compress(x.encode('utf-8'))) / len(x),
+            lambda x: len(bz2.compress(x.encode('utf-8'))) / len(x) if \
+                # Handle empty strings; lower bound is 0 which maps to
+                # basically no information, no complexity
+                len(x) > 0 else 0,
             return_dtype=pl.Float64
             ).alias("compressibility"),
     )

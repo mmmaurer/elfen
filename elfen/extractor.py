@@ -212,6 +212,7 @@ class Extractor:
         for group in feature_group:
             if group in feature_area_map:
                 for feature in feature_area_map[group]:
+                    print(f"Extracting {feature}...")
                     if feature in FEATURE_LEXICON_MAP:
                         lexicon = self.__gather_resource_from_featurename(
                             language=self.config["language"],

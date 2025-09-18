@@ -257,8 +257,7 @@ def get_avg_num_synsets(data: pl.DataFrame,
     
     data = data.with_columns(
         pl.col("synsets").list.mean().alias("avg_n_synsets")
-    )
-    
+    ).fill_null(0)
     
     return data
 

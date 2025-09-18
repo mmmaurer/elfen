@@ -271,7 +271,7 @@ def get_n_low_concreteness(data: pl.DataFrame,
                     pl.col("Conc.M") < threshold). \
                     count().item(),
                 return_dtype=pl.Int64).alias("n_low_concreteness")
-    )
+    ).fill_null(0) # If no words are found, set count to 0
 
     return data
 
@@ -311,7 +311,7 @@ def get_n_high_concreteness(data: pl.DataFrame,
                     pl.col("Conc.M") > threshold). \
                     count().item(),
                 return_dtype=pl.Int64).alias("n_high_concreteness")
-    )
+    ).fill_null(0) # If no words are found, set count to 0
 
     return data
 
@@ -353,7 +353,7 @@ def get_n_controversial_concreteness(data: pl.DataFrame,
                     pl.col("Conc.SD") > threshold). \
                     count().item(),
                 return_dtype=pl.Int64).alias("n_controversial_concreteness")
-    )
+    ).fill_null(0) # If no words are found, set count to 0
 
     return data
 
@@ -529,7 +529,7 @@ def get_n_low_aoa(data: pl.DataFrame,
                            ).filter(pl.col("Rating.Mean") < threshold). \
                         count().item(),
                     return_dtype=pl.Int64).alias("n_low_aoa")
-        )
+        ).fill_null(0) # If no words are found, set count to 0
     
         return data
 
@@ -567,7 +567,7 @@ def get_n_high_aoa(data: pl.DataFrame,
                         pl.col("Rating.Mean") > threshold
                         ).count().item(),
                     return_dtype=pl.Int64).alias("n_high_aoa")
-        )
+        ).fill_null(0) # If no words are found, set count to 0
     
         return data
 
@@ -609,7 +609,7 @@ def get_n_controversial_aoa(data: pl.DataFrame,
                     pl.col("Rating.SD") > threshold). \
                     count().item(),
                 return_dtype=pl.Int64).alias("n_controversial_aoa")
-    )
+    ).fill_null(0) # If no words are found, set count to 0
 
     return data
 
@@ -710,7 +710,7 @@ def get_n_low_prevalence(data: pl.DataFrame,
                     pl.col("Prevalence") < threshold). \
                     count().item(),
                 return_dtype=pl.Int64).alias("n_low_prevalence")
-    )
+    ).fill_null(0) # If no words are found, set count to 0
 
     return data
 
@@ -749,7 +749,7 @@ def get_n_high_prevalence(data: pl.DataFrame,
                     pl.col("Prevalence") > threshold). \
                     count().item(),
                 return_dtype=pl.Int64).alias("n_high_prevalence")
-    )
+    ).fill_null(0) # If no words are found, set count to 0
 
     return data
 
@@ -897,7 +897,7 @@ def get_n_low_socialness(data: pl.DataFrame,
                     pl.col("Mean") < threshold). \
                     count().item(),
                 return_dtype=pl.Int64).alias("n_low_socialness")
-    )
+    ).fill_null(0) # If no words are found, set count to 0
 
     return data
 
@@ -936,7 +936,7 @@ def get_n_high_socialness(data: pl.DataFrame,
                     pl.col("Mean") > threshold). \
                     count().item(),
                 return_dtype=pl.Int64).alias("n_high_socialness")
-    )
+    ).fill_null(0) # If no words are found, set count to 0
 
     return data
 
@@ -977,7 +977,7 @@ def get_n_controversial_socialness(data: pl.DataFrame,
                 select(pl.col("SD")).filter(pl.col("SD") > threshold). \
                     count().item(),
                 return_dtype=pl.Int64).alias("n_controversial_socialness")
-    )
+    ).fill_null(0) # If no words are found, set count to 0
 
     return data
 
@@ -1123,7 +1123,7 @@ def get_n_low_iconicity(data: pl.DataFrame,
                     pl.col("rating") < threshold). \
                     count().item(),
                 return_dtype=pl.Int64).alias("n_low_iconicity")
-    )
+    ).fill_null(0) # If no words are found, set count to 0
 
     return data
 
@@ -1163,7 +1163,7 @@ def get_n_high_iconicity(data: pl.DataFrame,
                     pl.col("rating") > threshold). \
                     count().item(),
                 return_dtype=pl.Int64).alias("n_high_iconicity")
-    )
+    ).fill_null(0) # If no words are found, set count to 0
 
     return data
 
@@ -1205,7 +1205,7 @@ def get_n_controversial_iconicity(data: pl.DataFrame,
                     pl.col("rating_sd") > threshold). \
                     count().item(),
                 return_dtype=pl.Int64).alias("n_controversial_iconicity")
-    )
+    ).fill_null(0) # If no words are found, set count to 0
 
     return data
 
@@ -1362,10 +1362,6 @@ def get_avg_sd_sensorimotor(data: pl.DataFrame,
         # warning, other languages do not have a standard deviation
         # column in the sensorimotor norms, so we return the same
         # dataframe without any changes
-        data = data.with_columns(
-            pl.lit(None).alias(f"avg_sd_{var}_sensorimotor")
-            for var in sensorimotor_vars
-        )
         warnings.warn(
             "Sensorimotor norms for languages other than English do not "
             "have a standard deviation column. Returning the same dataframe "
@@ -1422,7 +1418,7 @@ def get_n_low_sensorimotor(data: pl.DataFrame,
                         count().item(),
                     return_dtype=pl.Int64).alias(f"n_low_{var}"
                                                  "_sensorimotor")
-        )
+        ).fill_null(0) # If no words are found, set count to 0
 
     return data
 
@@ -1475,7 +1471,7 @@ def get_n_high_sensorimotor(data: pl.DataFrame,
                         count().item(),
                     return_dtype=pl.Int64).alias(f"n_high_{var}"
                                                  "_sensorimotor")
-        )
+        ).fill_null(0) # If no words are found, set count to 0
 
     return data
 
@@ -1534,10 +1530,6 @@ def get_n_controversial_sensorimotor(data: pl.DataFrame,
         # warning, other languages do not have a standard deviation
         # column in the sensorimotor norms, so we return the same
         # dataframe without any changes
-        data = data.with_columns(
-            pl.lit(None).alias(f"n_controversial_{var}_sensorimotor")
-            for var in sensorimotor_vars
-        )
         warnings.warn(
             "Sensorimotor norms for languages other than English do not "
             "have a standard deviation column. Returning the same dataframe "

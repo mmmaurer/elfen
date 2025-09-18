@@ -25,6 +25,9 @@ from .surface import (
     get_num_characters,
     get_num_long_words
 )
+from .util import (
+    zero_token_warning_nan
+)
 
 def get_num_syllables(data: pl.DataFrame,
                       backbone: str = 'spacy',
@@ -192,6 +195,8 @@ def get_flesch_reading_ease(data: pl.DataFrame,
          (84.6 * (pl.col("n_syllables") / pl.col("n_sentences")))
          ).alias("flesch_reading_ease"),
     )
+    if data.filter(pl.col("n_tokens") == 0).shape[0] > 0:
+        zero_token_warning_nan("flesch_reading_ease")
 
     return data
 
@@ -227,6 +232,8 @@ def get_flesch_kincaid_grade(data: pl.DataFrame,
          11.8 * (pl.col("n_syllables") / pl.col("n_sentences")) - 15.59
          ).alias("flesch_kincaid_grade"),
     )
+    if data.filter(pl.col("n_tokens") == 0).shape[0] > 0:
+        zero_token_warning_nan("flesch_kincaid_grade")
 
     return data
 
@@ -262,6 +269,8 @@ def get_ari(data: pl.DataFrame,
          0.5 * (pl.col("n_tokens") / pl.col("n_sentences")) - 21.43
          ).alias("ari"),
     )
+    if data.filter(pl.col("n_tokens") == 0).shape[0] > 0:
+        zero_token_warning_nan("ari")
 
     return data
 
@@ -294,6 +303,8 @@ def get_smog(data: pl.DataFrame,
                    pl.col("n_sentences"))**0.5 + 3.1291
          ).alias("smog"),
     )
+    if data.filter(pl.col("n_sentences") == 0).shape[0] > 0:
+        zero_token_warning_nan("smog")
 
     return data
 
@@ -329,6 +340,8 @@ def get_cli(data: pl.DataFrame,
          0.296 * (pl.col("n_sentences") / pl.col("n_tokens") * 100) - 15.8
          ).alias("cli"),
     )
+    if data.filter(pl.col("n_tokens") == 0).shape[0] > 0:
+        zero_token_warning_nan("cli")
 
     return data
 
@@ -364,6 +377,8 @@ def get_gunning_fog(data: pl.DataFrame,
                 100 * (pl.col("n_polysyllables") / pl.col("n_tokens")))
                 ).alias("gunning_fog"),
     )
+    if data.filter(pl.col("n_tokens") == 0).shape[0] > 0:
+        zero_token_warning_nan("gunning_fog")
 
     return data
 
@@ -397,6 +412,8 @@ def get_lix(data: pl.DataFrame,
          100 * pl.col("n_long_words") / pl.col("n_tokens")
          ).alias("lix"),
     )
+    if data.filter(pl.col("n_tokens") == 0).shape[0] > 0:
+        zero_token_warning_nan("lix")
 
     return data
 
@@ -428,6 +445,8 @@ def get_rix(data: pl.DataFrame,
         (pl.col("n_long_words") / pl.col("n_sentences")
          ).alias("rix"),
     )
+    if data.filter(pl.col("n_tokens") == 0).shape[0] > 0:
+        zero_token_warning_nan("rix")
 
     return data
 
