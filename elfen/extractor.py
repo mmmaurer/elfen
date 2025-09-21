@@ -465,7 +465,6 @@ class Extractor:
                 The lexicon to use for feature extraction.
         """
         if feature in feature_lexicon_map:
-            # So far, all resources are available
             if language in feature_lexicon_map[feature].keys():
                 if feature_lexicon_map[feature][language] in  \
                     RESOURCE_MAP and "multilingual_filepath" not in \
@@ -475,9 +474,14 @@ class Extractor:
                         feature_lexicon_map[feature][language]]["filepath"]
                 elif "multilingual_filepath" in RESOURCE_MAP[
                     feature_lexicon_map[feature][language]]:
-                    filepath = RESOURCE_MAP[
-                        feature_lexicon_map[feature][language]][
-                            "multilingual_filepath"]
+                    if language != "en":
+                        filepath = RESOURCE_MAP[
+                            feature_lexicon_map[feature][language]][
+                                "multilingual_filepath"]
+                    elif language == "en":
+                        filepath = RESOURCE_MAP[
+                            feature_lexicon_map[feature][language]][
+                                "filepath"]
                 else:
                     print(f"Feature {feature} not (yet) "
                           f"supported for {language}. "
