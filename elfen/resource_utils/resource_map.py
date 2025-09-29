@@ -437,6 +437,7 @@ RESOURCE_MAP = {
         pages={887--903},
         year={2014},
         publisher={Springer}
+        }
         """
     },
     # age of acquisition norms for italian
