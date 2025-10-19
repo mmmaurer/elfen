@@ -447,7 +447,7 @@ RESOURCE_MAP = {
         "subarea": "AgeofAcquisition",
         "filename": "ItAoA.xlsx",
         "filepath": os.path.join(PROJECT_PATH, "elfen_resources",
-                                 "Psycholinguistics", "Age of Acquisition",
+                                 "Psycholinguistics", "AgeofAcquisition",
                                  "ItAoA.xlsx"),
         "bibtex": rb"""
         @article{aoa_montefinese,
