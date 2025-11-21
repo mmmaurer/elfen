@@ -204,3 +204,95 @@ def get_n_controversial(data: pl.DataFrame,
 
     return data
 
+def get_max(data: pl.DataFrame,
+            lexicon: pl.DataFrame,
+            lexicon_word_col: str,
+            lexicon_rating_col: str,
+            new_col_name: str,
+            backbone: str = "spacy",
+            **kwargs: dict[str, str]
+            ) -> pl.DataFrame:
+    """
+    Generic function to compute maximum psycholinguistic or emotion/
+    sentiment ratings.
+
+    Args:
+        data (pl.DataFrame):
+            Input DataFrame containing text data.
+        lexicon (pl.DataFrame):
+            Lexicon DataFrame with word ratings.
+        lexicon_word_col (str):
+            Column name in lexicon for words.
+        lexicon_rating_col (str):
+            Column name in lexicon for ratings.
+        new_col_name (str):
+            Name for the new column to store maximum ratings.
+        backbone (str, optional):
+            NLP backbone to use. Defaults to "spacy".
+
+    Returns:
+        pl.DataFrame:
+            DataFrame with new column for maximum ratings.
+            Named as specified by `new_col_name`.
+    """
+    if "lemmas" not in data.columns:
+        data = get_lemmas(data, backbone=backbone)
+
+    data = data.with_columns(
+        pl.col("lemmas").map_elements(
+            lambda x: filter_lexicon(lexicon=lexicon,
+                                     words=x,
+                                     word_column=lexicon_word_col). \
+                select(pl.col(lexicon_rating_col)).max().item(),
+                return_dtype=pl.Float64
+                ).alias(new_col_name)
+    )
+
+    return data
+
+def get_min(data: pl.DataFrame,
+            lexicon: pl.DataFrame,
+            lexicon_word_col: str,
+            lexicon_rating_col: str,
+            new_col_name: str,
+            backbone: str = "spacy",
+            **kwargs: dict[str, str]
+            ) -> pl.DataFrame:
+    """
+    Generic function to compute minimum psycholinguistic or emotion/
+    sentiment ratings.
+
+    Args:
+        data (pl.DataFrame):
+            Input DataFrame containing text data.
+        lexicon (pl.DataFrame):
+            Lexicon DataFrame with word ratings.
+        lexicon_word_col (str):
+            Column name in lexicon for words.
+        lexicon_rating_col (str):
+            Column name in lexicon for ratings.
+        new_col_name (str):
+            Name for the new column to store minimum ratings.
+        backbone (str, optional):
+            NLP backbone to use. Defaults to "spacy".
+
+    Returns:
+        pl.DataFrame:
+            DataFrame with new column for minimum ratings.
+            Named as specified by `new_col_name`.
+    """
+    if "lemmas" not in data.columns:
+        data = get_lemmas(data, backbone=backbone)
+
+    data = data.with_columns(
+        pl.col("lemmas").map_elements(
+            lambda x: filter_lexicon(lexicon=lexicon,
+                                     words=x,
+                                     word_column=lexicon_word_col). \
+                select(pl.col(lexicon_rating_col)).min().item(),
+                return_dtype=pl.Float64
+                ).alias(new_col_name)
+    )
+
+    return data
+
