@@ -437,6 +437,7 @@ RESOURCE_MAP = {
         pages={887--903},
         year={2014},
         publisher={Springer}
+        }
         """
     },
     # age of acquisition norms for italian
@@ -446,7 +447,7 @@ RESOURCE_MAP = {
         "subarea": "AgeofAcquisition",
         "filename": "ItAoA.xlsx",
         "filepath": os.path.join(PROJECT_PATH, "elfen_resources",
-                                 "Psycholinguistics", "Age of Acquisition",
+                                 "Psycholinguistics", "AgeofAcquisition",
                                  "ItAoA.xlsx"),
         "bibtex": rb"""
         @article{aoa_montefinese,
