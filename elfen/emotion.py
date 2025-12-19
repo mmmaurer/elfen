@@ -62,6 +62,24 @@ The following functions are implemented in this module:
     - get_n_high_dominance:
         Calculates the number of words with dominance higher than the
         threshold.
+    - get_max_valence:
+        Calculates the maximum valence of the text.
+    - get_min_valence:
+        Calculates the minimum valence of the text.
+    - get_sd_valence:
+        Calculates the standard deviation of valence of the text.
+    - get_max_arousal:
+        Calculates the maximum arousal of the text.
+    - get_min_arousal:
+        Calculates the minimum arousal of the text.
+    - get_sd_arousal:
+        Calculates the standard deviation of arousal of the text.
+    - get_max_dominance:
+        Calculates the maximum dominance of the text.
+    - get_min_dominance:
+        Calculates the minimum dominance of the text.
+    - get_sd_dominance:
+        Calculates the standard deviation of dominance of the text.
 
 - Emotion Intensity:
 
@@ -75,6 +93,12 @@ The following functions are implemented in this module:
     - get_n_high_intensity:
         Calculates the number of words with emotion intensity higher than
         the threshold.
+    - get_max_emotion_intensity:
+        Calculates the maximum emotion intensity of the text.
+    - get_min_emotion_intensity:
+        Calculates the minimum emotion intensity of the text.
+    - get_sd_emotion_intensity:
+        Calculates the standard deviation of emotion intensity of the text.
     
 - Sentiment Analysis:
 
@@ -92,6 +116,9 @@ from .generic import (
     get_avg,
     get_n_low,
     get_n_high,
+    get_max,
+    get_min,
+    get_sd,
 )
 from .preprocess import (
     get_lemmas,
@@ -110,9 +137,6 @@ from .schemas import (
 )
 from .surface import (
     get_num_tokens,
-)
-from .util import (
-    filter_lexicon,
 )
 
 EMOTIONS = [
@@ -591,6 +615,457 @@ def get_n_high_dominance(data: pl.DataFrame,
     
     return data
 
+def get_max_valence(data: pl.DataFrame,
+                    lexicon: pl.DataFrame,
+                    backbone: str = "spacy",
+                    language: str = "en",
+                    **kwargs: dict[str, str],
+                    ) -> pl.DataFrame:
+    """
+    Calculates the maximum valence of the text. Only takes into account
+    words in the text that are present in the VAD lexicon.
+
+    The valence of the text is calculated as the maximum of the valence
+    values of the words in the text.
+
+    Args:
+        data (pl.DataFrame):
+            The preprocessed input data. Contains the "nlp" column
+            produced by the NLP backbone.
+        lexicon (pl.DataFrame): The VAD lexicon.
+        backbone (str): The NLP backbone to use.
+        language (str):
+            The language of the text and lexicon.
+            Defaults to "en".
+    
+    Returns:
+        data (pl.DataFrame):
+            The input data with the maximum valence columns,
+            named "max_valence".
+    """
+    if language != "en":
+        word_column = LANGUAGES_NRC[language]
+    else:
+        word_column = "word"
+    
+    data = get_max(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col=word_column,
+                   lexicon_rating_col="valence",
+                   new_col_name="max_valence",
+                   backbone=backbone,
+                   **kwargs
+    )
+
+    if data.filter(pl.col("max_valence").is_null()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the VAD lexicon. "
+            f"The maximum valence for these texts is set to None/null. "
+            "You may want to consider filling nulls with a specific value."
+        )
+
+    return data
+
+def get_min_valence(data: pl.DataFrame,
+                    lexicon: pl.DataFrame,
+                    backbone: str = "spacy",
+                    language: str = "en",
+                    **kwargs: dict[str, str],
+                    ) -> pl.DataFrame:
+    """
+    Calculates the minimum valence of the text. Only takes into account
+    words in the text that are present in the VAD lexicon.
+    The valence of the text is calculated as the minimum of the valence
+    values of the words in the text.
+
+    Args:
+        data (pl.DataFrame):
+            The preprocessed input data. Contains the "nlp" column
+            produced by the NLP backbone.
+        lexicon (pl.DataFrame): The VAD lexicon.
+        backbone (str): The NLP backbone to use.
+        language (str):
+        The language of the text and lexicon.
+            Defaults to "en".
+
+    Returns:
+        data (pl.DataFrame):
+            The input data with the minimum valence columns,
+            named "min_valence".
+    """
+    if language != "en":
+        word_column = LANGUAGES_NRC[language]
+    else:
+        word_column = "word"
+    
+    data = get_min(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col=word_column,
+                   lexicon_rating_col="valence",
+                   new_col_name="min_valence",
+                   backbone=backbone,
+                   **kwargs
+    )
+
+    if data.filter(pl.col("min_valence").is_null()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the VAD lexicon. "
+            f"The minimum valence for these texts is set to None/null. "
+            "You may want to consider filling nulls with a specific value."
+        )
+
+    return data
+
+def get_sd_valence(data: pl.DataFrame,
+                   lexicon: pl.DataFrame,
+                   backbone: str = "spacy",
+                   language: str = "en",
+                   **kwargs: dict[str, str],
+                   ) -> pl.DataFrame:
+    """
+    Calculates the standard deviation of valence of the text. Only takes
+    into account words in the text that are present in the VAD lexicon.
+    The valence of the text is calculated as the standard deviation of
+    the valence values of the words in the text.
+
+    Args:
+        data (pl.DataFrame):
+            The preprocessed input data. Contains the "nlp" column
+            produced by the NLP backbone.
+        lexicon (pl.DataFrame): The VAD lexicon.
+        backbone (str): The NLP backbone to use.
+        language (str):
+            The language of the text and lexicon.
+            Defaults to "en".
+    
+    Returns:
+        data (pl.DataFrame):
+            The input data with the standard deviation of valence columns,
+            named "sd_valence".
+    """
+    if language != "en":
+        word_column = LANGUAGES_NRC[language]
+    else:
+        word_column = "word"
+    
+    data = get_sd(data=data,
+                  lexicon=lexicon,
+                  lexicon_word_col=word_column,
+                  lexicon_rating_col="valence",
+                  new_col_name="sd_valence",
+                  backbone=backbone,
+                  **kwargs
+    )
+
+    if data.filter(pl.col("sd_valence").is_null()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the VAD lexicon. "
+            f"The standard deviation of valence for these texts is set "
+            "to None/null. "
+            "You may want to consider filling nulls with a specific value."
+        )
+
+    return data
+
+def get_max_arousal(data: pl.DataFrame,
+                    lexicon: pl.DataFrame,
+                    backbone: str = "spacy",
+                    language: str = "en",
+                    **kwargs: dict[str, str],
+                    ) -> pl.DataFrame:
+    """
+    Calculates the maximum arousal of the text. Only takes into account
+    words in the text that are present in the VAD lexicon.
+    The arousal of the text is calculated as the maximum of the arousal
+    values of the words in the text.
+
+    Args:
+        data (pl.DataFrame):
+            The preprocessed input data. Contains the "nlp" column
+            produced by the NLP backbone.
+        lexicon (pl.DataFrame): The VAD lexicon.
+        backbone (str): The NLP backbone to use.
+        language (str):
+            The language of the text and lexicon.
+            Defaults to "en".
+    
+    Returns:
+        data (pl.DataFrame):
+            The input data with the maximum arousal columns,
+            named "max_arousal".
+    """
+    if language != "en":
+        word_column = LANGUAGES_NRC[language]
+    else:
+        word_column = "word"
+    
+    data = get_max(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col=word_column,
+                   lexicon_rating_col="arousal",
+                   new_col_name="max_arousal",
+                   backbone=backbone,
+                   **kwargs
+    )
+
+    if data.filter(pl.col("max_arousal").is_null()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the VAD lexicon. "
+            f"The maximum arousal for these texts is set to None/null. "
+            "You may want to consider filling nulls with a specific value."
+        )
+
+    return data
+
+def get_min_arousal(data: pl.DataFrame,
+                    lexicon: pl.DataFrame,
+                    backbone: str = "spacy",
+                    language: str = "en",
+                    **kwargs: dict[str, str],
+                    ) -> pl.DataFrame:
+    """
+    Calculates the minimum arousal of the text. Only takes into account
+    words in the text that are present in the VAD lexicon.
+    The arousal of the text is calculated as the minimum of the arousal
+    values of the words in the text.
+
+    Args:
+        data (pl.DataFrame):
+            The preprocessed input data. Contains the "nlp" column
+            produced by the NLP backbone.
+        lexicon (pl.DataFrame): The VAD lexicon.
+        backbone (str): The NLP backbone to use.
+        language (str):
+            The language of the text and lexicon.
+            Defaults to "en".
+
+    Returns:
+        data (pl.DataFrame):
+            The input data with the minimum arousal columns,
+            named "min_arousal".
+    """
+    if language != "en":
+        word_column = LANGUAGES_NRC[language]
+    else:
+        word_column = "word"
+    data = get_min(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col=word_column,
+                   lexicon_rating_col="arousal",
+                   new_col_name="min_arousal",
+                   backbone=backbone,
+                   **kwargs
+    )
+
+    if data.filter(pl.col("min_arousal").is_null()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the VAD lexicon. "
+            f"The minimum arousal for these texts is set to None/null. "
+            "You may want to consider filling nulls with a specific value."
+        )
+
+    return data
+
+def get_sd_arousal(data: pl.DataFrame,
+                   lexicon: pl.DataFrame,
+                   backbone: str = "spacy",
+                   language: str = "en",
+                   **kwargs: dict[str, str],
+                   ) -> pl.DataFrame:
+    """
+    Calculates the standard deviation of arousal of the text. Only takes
+    into account words in the text that are present in the VAD lexicon.
+    The arousal of the text is calculated as the standard deviation of
+    the arousal values of the words in the text.
+
+    Args:
+        data (pl.DataFrame):
+            The preprocessed input data. Contains the "nlp" column
+            produced by the NLP backbone.
+        lexicon (pl.DataFrame): The VAD lexicon.
+        backbone (str): The NLP backbone to use.
+        language (str):
+            The language of the text and lexicon.
+            Defaults to "en".
+
+    Returns:
+        data (pl.DataFrame):
+            The input data with the standard deviation of arousal columns,
+            named "sd_arousal".
+    """
+    if language != "en":
+        word_column = LANGUAGES_NRC[language]
+    else:
+        word_column = "word"
+    
+    data = get_sd(data=data,
+                  lexicon=lexicon,
+                  lexicon_word_col=word_column,
+                  lexicon_rating_col="arousal",
+                  new_col_name="sd_arousal",
+                  backbone=backbone,
+                  **kwargs
+    )
+
+    if data.filter(pl.col("sd_arousal").is_null()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the VAD lexicon. "
+            f"The standard deviation of arousal for these texts is set "
+            "to None/null. "
+            "You may want to consider filling nulls with a specific value."
+        )
+
+    return data
+
+def get_max_dominance(data: pl.DataFrame,
+                      lexicon: pl.DataFrame,
+                      backbone: str = "spacy",
+                      language: str = "en",
+                      **kwargs: dict[str, str],
+                      ) -> pl.DataFrame:
+    """
+    Calculates the maximum dominance of the text. Only takes into account
+    words in the text that are present in the VAD lexicon.
+    The dominance of the text is calculated as the maximum of the
+    dominance values of the words in the text.
+
+    Args:
+        data (pl.DataFrame):
+            The preprocessed input data. Contains the "nlp" column
+            produced by the NLP backbone.
+        lexicon (pl.DataFrame): The VAD lexicon.
+        backbone (str): The NLP backbone to use.
+        language (str):
+            The language of the text and lexicon.
+            Defaults to "en".
+
+    Returns:
+        data (pl.DataFrame):
+            The input data with the maximum dominance columns,
+            named "max_dominance".
+    """
+    if language != "en":
+        word_column = LANGUAGES_NRC[language]
+    else:
+        word_column = "word"
+    data = get_max(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col=word_column,
+                   lexicon_rating_col="dominance",
+                   new_col_name="max_dominance",
+                   backbone=backbone,
+                   **kwargs
+    )
+
+    if data.filter(pl.col("max_dominance").is_null()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the VAD lexicon. "
+            f"The maximum dominance for these texts is set to None/null. "
+            "You may want to consider filling nulls with a specific value."
+        )
+
+    return data
+
+def get_min_dominance(data: pl.DataFrame,
+                      lexicon: pl.DataFrame,
+                      backbone: str = "spacy",
+                      language: str = "en",
+                      **kwargs: dict[str, str],
+                      ) -> pl.DataFrame:
+    """
+    Calculates the minimum dominance of the text. Only takes into account
+    words in the text that are present in the VAD lexicon.
+    The dominance of the text is calculated as the minimum of the
+    dominance values of the words in the text.
+
+    Args:
+        data (pl.DataFrame):
+            The preprocessed input data. Contains the "nlp" column
+            produced by the NLP backbone.
+        lexicon (pl.DataFrame): The VAD lexicon.
+        backbone (str): The NLP backbone to use.
+        language (str):
+            The language of the text and lexicon.
+            Defaults to "en".
+    
+    Returns:
+        data (pl.DataFrame):
+            The input data with the minimum dominance columns,
+            named "min_dominance".
+    """
+    if language != "en":
+        word_column = LANGUAGES_NRC[language]
+    else:
+        word_column = "word"
+    data = get_min(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col=word_column,
+                   lexicon_rating_col="dominance",
+                   new_col_name="min_dominance",
+                   backbone=backbone,
+                   **kwargs
+    )
+
+    if data.filter(pl.col("min_dominance").is_null()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the VAD lexicon. "
+            f"The minimum dominance for these texts is set to None/null. "
+            "You may want to consider filling nulls with a specific value."
+        )
+
+    return data
+
+def get_sd_dominance(data: pl.DataFrame,
+                     lexicon: pl.DataFrame,
+                     backbone: str = "spacy",
+                     language: str = "en",
+                     **kwargs: dict[str, str],
+                     ) -> pl.DataFrame:
+    """
+    Calculates the standard deviation of dominance of the text. Only takes
+    into account words in the text that are present in the VAD lexicon.
+    The dominance of the text is calculated as the standard deviation of
+    the dominance values of the words in the text.
+
+    Args:
+        data (pl.DataFrame):
+            The preprocessed input data. Contains the "nlp" column
+            produced by the NLP backbone.
+        lexicon (pl.DataFrame): The VAD lexicon.
+        backbone (str): The NLP backbone to use.
+        language (str):
+            The language of the text and lexicon.
+            Defaults to "en".
+
+    Returns:
+        data (pl.DataFrame):
+            The input data with the standard deviation of dominance columns,
+            named "sd_dominance".
+    """
+    if language != "en":
+        word_column = LANGUAGES_NRC[language]
+    else:
+        word_column = "word"
+    
+    data = get_sd(data=data,
+                  lexicon=lexicon,
+                  lexicon_word_col=word_column,
+                  lexicon_rating_col="dominance",
+                  new_col_name="sd_dominance",
+                  backbone=backbone,
+                  **kwargs
+    )
+
+    if data.filter(pl.col("sd_dominance").is_null()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the VAD lexicon. "
+            f"The standard deviation of dominance for these texts is set "
+            "to None/null. "
+            "You may want to consider filling nulls with a specific value."
+        )
+
+    return data
+
 # --------------------------------------------------------------------- #
 #                           EMOTION INTENSITY                           #
 # --------------------------------------------------------------------- #
@@ -827,11 +1302,183 @@ def get_n_high_intensity(data: pl.DataFrame,
 
     return data
 
+def get_max_emotion_intensity(data: pl.DataFrame,
+                              lexicon: pl.DataFrame,
+                              backbone: str = "spacy",
+                              emotions: list = EMOTIONS,
+                              language: str = "en",
+                              **kwargs: dict[str, str],
+                              ) -> pl.DataFrame:
+    """
+    Calculates the maximum emotion intensity of the text. Only takes into
+    account words in the text that are present in the emotion intensity
+    lexicon.
+    The emotion intensity of the text is calculated as the maximum of the
+    emotion intensity values of the words in the text.
+
+    Args:
+        data (pl.DataFrame):
+            The preprocessed input data. Contains the "nlp" column
+            produced by the NLP backbone.
+        lexicon (pl.DataFrame): The emotion intensity lexicon.
+        backbone (str): The NLP backbone to use.
+        emotions (list): The list of emotions to consider.
+
+    Returns:
+        data (pl.DataFrame):
+            The input data with the maximum emotion intensity columns for
+            each emotion. The column names are in the format
+            "max_intensity_{emotion}".
+    """
+    if language != "en":
+        word_column = LANGUAGES_NRC[language]
+    else:
+        word_column = "word"
+
+    # Keeping custom implementation instead of using get_max to
+    # handle multiple emotions
+    for emotion in emotions:
+        data = data.with_columns(
+            pl.col("lemmas").map_elements(
+                lambda x: filter_intensity_lexicon(
+                    lexicon, x, emotion, word_column=word_column). \
+                    select("emotion_intensity"). \
+                    max().item(),
+                return_dtype=pl.Float64
+            ).alias(f"max_intensity_{emotion}")
+        )
+
+        if data.filter(pl.col(f"max_intensity_{emotion}").is_null()).shape[0] > 0:
+            warnings.warn(
+                "Some texts do not contain any words from the "
+                f"emotion intensity lexicon for the emotion '{emotion}'. "
+                "The maximum intensity for these texts is set to None/null. "
+                "You may want to consider filling nulls with a specific "
+                "value."
+            )
+
+    return data
+
+def get_min_emotion_intensity(data: pl.DataFrame,
+                              lexicon: pl.DataFrame,
+                              backbone: str = "spacy",
+                              emotions: list = EMOTIONS,
+                              language: str = "en",
+                              **kwargs: dict[str, str],
+                              ) -> pl.DataFrame:
+    """
+    Calculates the minimum emotion intensity of the text. Only takes into
+    account words in the text that are present in the emotion intensity
+    lexicon.
+    The emotion intensity of the text is calculated as the minimum of the
+    emotion intensity values of the words in the text.
+
+    Args:
+        data (pl.DataFrame):
+            The preprocessed input data. Contains the "nlp" column
+            produced by the NLP backbone.
+        lexicon (pl.DataFrame): The emotion intensity lexicon.
+        backbone (str): The NLP backbone to use.
+        emotions (list): The list of emotions to consider.
+
+    Returns:
+        data (pl.DataFrame):
+            The input data with the minimum emotion intensity columns for
+            each emotion. The column names are in the format
+            "min_intensity_{emotion}".
+    """
+    if language != "en":
+        word_column = LANGUAGES_NRC[language]
+    else:
+        word_column = "word"
+
+    # Keeping custom implementation instead of using get_min to
+    # handle multiple emotions
+    for emotion in emotions:
+        data = data.with_columns(
+            pl.col("lemmas").map_elements(
+                lambda x: filter_intensity_lexicon(
+                    lexicon, x, emotion, word_column=word_column). \
+                    select("emotion_intensity"). \
+                    min().item(),
+                return_dtype=pl.Float64
+            ).alias(f"min_intensity_{emotion}")
+        )
+
+        if data.filter(pl.col(f"min_intensity_{emotion}").is_null()).shape[0] > 0:
+            warnings.warn(
+                "Some texts do not contain any words from the "
+                f"emotion intensity lexicon for the emotion '{emotion}'. "
+                "The minimum intensity for these texts is set to None/null. "
+                "You may want to consider filling nulls with a specific "
+                "value."
+            )
+
+    return data
+
+def get_sd_emotion_intensity(data: pl.DataFrame,
+                             lexicon: pl.DataFrame,
+                             backbone: str = "spacy",
+                             emotions: list = EMOTIONS,
+                             language: str = "en",
+                             **kwargs: dict[str, str],
+                             ) -> pl.DataFrame:
+    """
+    Calculates the standard deviation of emotion intensity of the text. Only
+    takes into account words in the text that are present in the emotion
+    intensity lexicon.
+    The emotion intensity of the text is calculated as the standard
+    deviation of the emotion intensity values of the words in the text.
+
+    Args:
+        data (pl.DataFrame):
+            The preprocessed input data. Contains the "nlp" column
+            produced by the NLP backbone.
+        lexicon (pl.DataFrame): The emotion intensity lexicon.
+        backbone (str): The NLP backbone to use.
+        emotions (list): The list of emotions to consider.
+
+    Returns:
+        data (pl.DataFrame):
+            The input data with the standard deviation of emotion intensity
+            columns for each emotion. The column names are in the format
+            "sd_intensity_{emotion}".
+    """
+    if language != "en":
+        word_column = LANGUAGES_NRC[language]
+    else:
+        word_column = "word"
+
+    # Keeping custom implementation instead of using get_sd to
+    # handle multiple emotions
+    for emotion in emotions:
+        data = data.with_columns(
+            pl.col("lemmas").map_elements(
+                lambda x: filter_intensity_lexicon(
+                    lexicon, x, emotion, word_column=word_column). \
+                    select("emotion_intensity"). \
+                    std().item(),
+                return_dtype=pl.Float64
+            ).alias(f"sd_intensity_{emotion}")
+        )
+
+        if data.filter(pl.col(f"sd_intensity_{emotion}").is_null()).shape[0] > 0:
+            warnings.warn(
+                "Some texts do not contain any words from the "
+                f"emotion intensity lexicon for the emotion '{emotion}'. "
+                "The standard deviation of intensity for these texts is set "
+                "to None/null. "
+                "You may want to consider filling nulls with a specific "
+                "value."
+            )
+
+    return data
+
 # --------------------------------------------------------------------- #
 #                           SENTIMENT ANALYSIS                          #
 # --------------------------------------------------------------------- #
 
-# ---------------------------- Sentiment NRC -------------------------- #
+# ------------------------ Sentiment Lexicons ------------------------- #
 
 def load_sentiment_nrc_lexicon(path: str = SENTIMENT_NRC_PATH,
                                language: str = "en",
