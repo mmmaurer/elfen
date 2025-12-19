@@ -4,7 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "elfen"
-version = "1.2.5"
+version = "1.2.6"
+
 authors = [
   { name="Maximilian Maurer", email="mmmaurer@pm.me" },
 ]

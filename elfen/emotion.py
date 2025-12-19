@@ -88,6 +88,11 @@ The following functions are implemented in this module:
 import polars as pl
 import warnings
 
+from .generic import (
+    get_avg,
+    get_n_low,
+    get_n_high,
+)
 from .preprocess import (
     get_lemmas,
 )
@@ -197,22 +202,17 @@ def get_avg_valence(data: pl.DataFrame,
             The input data with the average valence columns,
             named "avg_valence".
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-
     if language != "en":
         word_column = LANGUAGES_NRC[language]
     else:
         word_column = "word"
     
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=lexicon,
-                                     words=x,
-                                     word_column=word_column). \
-               select("valence").mean().item(),
-               return_dtype=pl.Float64
-        ).alias("avg_valence")
+    data = get_avg(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col=word_column,
+                   lexicon_rating_col="valence",
+                   new_col_name="avg_valence",
+                   backbone=backbone
     )
     
     # raise warning: if no words from the lexicon are found in the text
@@ -250,23 +250,19 @@ def get_avg_arousal(data: pl.DataFrame,
             The input data with the average arousal columns,
             named "avg_arousal".
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-
     if language != "en":
         word_column = LANGUAGES_NRC[language]
     else:
         word_column = "word"
-    
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-             lambda x: filter_lexicon(lexicon=lexicon,
-                                      words=x,
-                                      word_column=word_column). \
-               select("arousal").mean().item(),
-               return_dtype=pl.Float64
-        ).alias("avg_arousal")
+
+    data = get_avg(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col=word_column,
+                   lexicon_rating_col="arousal",
+                   new_col_name="avg_arousal",
+                   backbone=backbone
     )
+
     # raise warning: if no words from the lexicon are found in the text
     if data.filter(pl.col("avg_arousal").is_nan()).shape[0] > 0:
         warnings.warn(
@@ -304,23 +300,19 @@ def get_avg_dominance(data: pl.DataFrame,
             The input data with the average dominance columns,
             named "avg_dominance".
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-
     if language != "en":
         word_column = LANGUAGES_NRC[language]
     else:
         word_column = "word"
     
-    data = data.with_columns(
-         pl.col("lemmas").map_elements(
-          lambda x: filter_lexicon(lexicon=lexicon,
-                                   words=x,
-                                   word_column=word_column). \
-                select("dominance").mean().item(),
-                return_dtype=pl.Float64
-        ).alias("avg_dominance")
+    data = get_avg(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col=word_column,
+                   lexicon_rating_col="dominance",
+                   new_col_name="avg_dominance",
+                   backbone=backbone
     )
+
     # raise warning: if no words from the lexicon are found in the text
     if data.filter(pl.col("avg_dominance").is_nan()).shape[0] > 0:
         warnings.warn(
@@ -358,23 +350,19 @@ def get_n_low_valence(data: pl.DataFrame,
             The input data with the low valence count column,
             named "n_low_valence".
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-
     if language != "en":
         word_column = LANGUAGES_NRC[language]
     else:
         word_column = "word"
-    
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-             lambda x: filter_lexicon(lexicon=lexicon,
-                                      words=x,
-                                      word_column=word_column). \
-               select("valence").filter(
-                   pl.col("valence") < threshold).shape[0],
-               return_dtype=pl.UInt32
-        ).fill_nan(nan_value).fill_null(nan_value).alias("n_low_valence")
+
+    data = get_n_low(data=data,
+                     lexicon=lexicon,
+                     lexicon_word_col=word_column,
+                     lexicon_rating_col="valence",
+                     threshold=threshold,
+                     new_col_name="n_low_valence",
+                     backbone=backbone,
+                     **kwargs
     )
     
     return data
@@ -406,23 +394,19 @@ def get_n_high_valence(data: pl.DataFrame,
             The input data with the high valence count column,
             named "n_high_valence".
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-
     if language != "en":
         word_column = LANGUAGES_NRC[language]
     else:
         word_column = "word"
     
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=lexicon,
-                                      words=x,
-                                      word_column=word_column). \
-               select("valence").filter(
-                   pl.col("valence") > threshold).shape[0],
-               return_dtype=pl.UInt32
-        ).fill_nan(nan_value).fill_null(nan_value).alias("n_high_valence")
+    data = get_n_high(data=data,
+                      lexicon=lexicon,
+                      lexicon_word_col=word_column,
+                      lexicon_rating_col="valence",
+                      threshold=threshold,
+                      new_col_name="n_high_valence",
+                      backbone=backbone,
+                      **kwargs
     )
     
     return data
@@ -454,23 +438,19 @@ def get_n_low_arousal(data: pl.DataFrame,
             The input data with the low arousal count column, named
             "n_low_arousal".
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-        
     if language != "en":
         word_column = LANGUAGES_NRC[language]
     else:
         word_column = "word"
-    
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-             lambda x: filter_lexicon(lexicon=lexicon,
-                                      words=x,
-                                      word_column=word_column). \
-               select("arousal").filter(
-                   pl.col("arousal") < threshold).shape[0],
-               return_dtype=pl.UInt32
-        ).fill_nan(nan_value).fill_null(nan_value).alias("n_low_arousal")
+
+    data = get_n_low(data=data,
+                     lexicon=lexicon,
+                     lexicon_word_col=word_column,
+                     lexicon_rating_col="arousal",
+                     threshold=threshold,
+                     new_col_name="n_low_arousal",
+                     backbone=backbone,
+                     **kwargs
     )
     
     return data
@@ -502,23 +482,19 @@ def get_n_high_arousal(data: pl.DataFrame,
             The input data with the high arousal count column. The
             column name is "n_high_arousal".
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-        
     if language != "en":
         word_column = LANGUAGES_NRC[language]
     else:
         word_column = "word"
     
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-             lambda x: filter_lexicon(lexicon=lexicon,
-                                      words=x,
-                                      word_column=word_column). \
-               select("arousal").filter(
-                   pl.col("arousal") > threshold).shape[0],
-               return_dtype=pl.UInt32
-        ).fill_nan(nan_value).fill_null(nan_value).alias("n_high_arousal")
+    data = get_n_high(data=data,
+                      lexicon=lexicon,
+                      lexicon_word_col=word_column,
+                      lexicon_rating_col="arousal",
+                      threshold=threshold,
+                      new_col_name="n_high_arousal",
+                      backbone=backbone,
+                      **kwargs
     )
     
     return data
@@ -550,23 +526,19 @@ def get_n_low_dominance(data: pl.DataFrame,
             The input data with the low dominance count column. The
             column name is "n_low_dominance".
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-        
     if language != "en":
         word_column = LANGUAGES_NRC[language]
     else:
         word_column = "word"
     
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-             lambda x: filter_lexicon(lexicon=lexicon,
-                                      words=x,
-                                      word_column=word_column). \
-               select("dominance").filter(
-                   pl.col("dominance") < threshold).shape[0],
-               return_dtype=pl.UInt32
-        ).fill_nan(nan_value).fill_null(nan_value).alias("n_low_dominance")
+    data = get_n_low(data=data,
+                     lexicon=lexicon,
+                     lexicon_word_col=word_column,
+                     lexicon_rating_col="dominance",
+                     threshold=threshold,
+                     new_col_name="n_low_dominance",
+                     backbone=backbone,
+                     **kwargs
     )
     
     return data
@@ -607,15 +579,14 @@ def get_n_high_dominance(data: pl.DataFrame,
     else:
         word_column = "word"
     
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-             lambda x: filter_lexicon(lexicon=lexicon,
-                                      words=x,
-                                      word_column=word_column). \
-               select("dominance").filter(
-                   pl.col("dominance") > threshold).shape[0],
-               return_dtype=pl.UInt32
-        ).fill_nan(nan_value).fill_null(nan_value).alias("n_high_dominance")
+    data = get_n_high(data=data,
+                      lexicon=lexicon,
+                      lexicon_word_col=word_column,
+                      lexicon_rating_col="dominance",
+                      threshold=threshold,
+                      new_col_name="n_high_dominance",
+                      backbone=backbone,
+                      **kwargs
     )
     
     return data
@@ -716,31 +687,33 @@ def get_avg_emotion_intensity(data: pl.DataFrame,
         data (pl.DataFrame):
             The input data with the average emotion intensity columns
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-        
     if language != "en":
         word_column = LANGUAGES_NRC[language]
     else:
         word_column = "word"
     
+    # Keeping custom implementation instead of using get_avg to
+    # handle multiple emotions
     for emotion in emotions:
         data = data.with_columns(
             pl.col("lemmas").map_elements(
-                lambda x: filter_intensity_lexicon(lexicon,
-                    x, emotion, word_column=word_column). \
-                    select("emotion_intensity").mean().item(),
+                lambda x: filter_intensity_lexicon(
+                    lexicon, x, emotion, word_column=word_column). \
+                    select("emotion_intensity"). \
+                    mean().item(),
                 return_dtype=pl.Float64
-        ).alias(f"avg_intensity_{emotion}")
-    )
-    # raise warning: if no words from the lexicon are found in the text
-    for emotion in emotions:
-        if data.filter(pl.col(f"avg_intensity_{emotion}").is_nan()).shape[0] > 0:
+            ).alias(f"avg_intensity_{emotion}")
+        )
+    
+        # raise warning: if no words from the lexicon are found in the text
+        if data.filter(
+            pl.col(f"avg_intensity_{emotion}").is_nan()).shape[0] > 0:
             warnings.warn(
-                f"Some texts do not contain any words from the "
+                "Some texts do not contain any words from the "
                 f"emotion intensity lexicon for the emotion '{emotion}'. "
-                f"The average intensity for these texts is set to NaN."
-                f"You may want to consider filling NaNs with a specific value."
+                "The average intensity for these texts is set to NaN."
+                "You may want to consider filling NaNs with a specific "
+                "value."
             )
 
     return data
@@ -783,6 +756,8 @@ def get_n_low_intensity(data: pl.DataFrame,
     else:
         word_column = "word"
     
+    # Keeping custom implementation instead of using get_n_low_intensity
+    # to handle multiple emotions
     for emotion in emotions:
         data = data.with_columns(
             pl.col("lemmas").map_elements(
@@ -836,6 +811,8 @@ def get_n_high_intensity(data: pl.DataFrame,
     else:
         word_column = "word"
     
+    # Keeping custom implementation instead of using get_n_high_intensity
+    # to handle multiple emotions
     for emotion in emotions:
         data = data.with_columns(
             pl.col("lemmas").map_elements(
@@ -854,37 +831,7 @@ def get_n_high_intensity(data: pl.DataFrame,
 #                           SENTIMENT ANALYSIS                          #
 # --------------------------------------------------------------------- #
 
-# ---------------------------- SentiWordNet --------------------------- #
-# NOTE: SentiWordNet is not used in the current implementation
-
-# def load_sentiwordnet(path: str = SENTIWORDNET_PATH,
-#                       schema: dict = SENTIWORDNET_SCHEMA,
-#                       has_header: bool = False,
-#                       separator: str = "\t",
-#                       **kwargs: dict[str, str],
-#                       ) -> pl.DataFrame:
-#     """
-#     Loads the SentiWordNet lexicon as a polars DataFrame.
-
-#     Args:
-#         path (str): The path to the SentiWordNet lexicon.
-#         schema (dict): The schema for the SentiWordNet lexicon.
-#         has_header (bool): Whether the lexicon has a header.
-#         separator (str): The separator used in the lexicon.
-
-#     Returns:
-#         sentiwordnet (pl.DataFrame):
-#           The SentiWordNet lexicon as a polars DataFrame.
-#     """
-#     sentiwordnet = pl.read_csv(path,
-#                               has_header=has_header,
-#                               schema=schema,
-#                               separator=separator,
-#                               # First 26 rows are comments/documentation
-#                               skip_rows=27)
-#     return sentiwordnet
-
-# ---------------------------- Sentiment NRC --------------------------- #
+# ---------------------------- Sentiment NRC -------------------------- #
 
 def load_sentiment_nrc_lexicon(path: str = SENTIMENT_NRC_PATH,
                                language: str = "en",

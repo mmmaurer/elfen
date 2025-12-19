@@ -14,6 +14,8 @@ The psycholinguistic features implemented in this module are:
     - Number of low concreteness words
     - Number of high concreteness words
     - Number of controversial concreteness words
+    - Minimum concreteness score
+    - Maximum concreteness score
 
 - Age of Acquisition:
     - Average age of acquisition score
@@ -21,11 +23,15 @@ The psycholinguistic features implemented in this module are:
     - Number of low age of acquisition words
     - Number of high age of acquisition words
     - Number of controversial age of acquisition words
+    - Minimum age of acquisition score
+    - Maximum age of acquisition score
 
 - Word Prevalence:
     - Average prevalence score
     - Number of low prevalence words
     - Number of high prevalence words
+    - Minimum prevalence score
+    - Maximum prevalence score
 
 - Socialness:
     - Average socialness score
@@ -33,6 +39,8 @@ The psycholinguistic features implemented in this module are:
     - Number of low socialness words
     - Number of high socialness words
     - Number of controversial socialness words
+    - Minimum socialness score
+    - Maximum socialness score
 
 - Iconicity:
     - Average iconicity score
@@ -40,13 +48,17 @@ The psycholinguistic features implemented in this module are:
     - Number of low iconicity words
     - Number of high iconicity words
     - Number of controversial iconicity words
+    - Minimum iconicity score
+    - Maximum iconicity score
 
-- Sensorimotor:
+- Sensorimotor; per dimension (e.g., Auditory, Gustatory, Haptic, etc.):
     - Average sensorimotor score
     - Average standard deviation of the sensorimotor score
     - Number of low sensorimotor words
     - Number of high sensorimotor words
     - Number of controversial sensorimotor words
+    - Minimum sensorimotor score
+    - Maximum sensorimotor score
 """
 import polars as pl
 import warnings
@@ -55,6 +67,14 @@ from .resource_utils.psycholinguistics import (
     SENSORIMOTOR_VARS
 )
 
+from .generic import (
+    get_avg,
+    get_n_low,
+    get_n_high,
+    get_n_controversial,
+    get_max,
+    get_min,
+)
 from .preprocess import (
     get_lemmas,
 )
@@ -159,8 +179,9 @@ def get_avg_concreteness(data: pl.DataFrame,
         data (pl.DataFrame): A Polars DataFrame containing the text data.
         lexicon (pl.DataFrame): 
             A Polars DataFrame containing the concreteness norms.
-        backbone (str): The NLP library used to process the text data.
-                Either 'spacy' or 'stanza'.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
 
     Returns:
         data (pl.DataFrame):
@@ -168,18 +189,15 @@ def get_avg_concreteness(data: pl.DataFrame,
             of the text data. The average concreteness score is stored in
             a new column named 'avg_concreteness'.
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-    
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=lexicon,
-                                     words=x,
-                                     word_column="Word"). \
-                select(pl.col("Conc.M")).mean().item(),
-                return_dtype=pl.Float64
-                ).alias("avg_concreteness")
-    )
+    data = get_avg(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col="Word",
+                   lexicon_rating_col="Conc.M",
+                   new_col_name="avg_concreteness",
+                   backbone=backbone,
+                   **kwargs
+                   )
+
     if data.filter(pl.col("avg_concreteness").is_nan()).shape[0] > 0:
         warnings.warn(
             "Some texts do not contain any words from the concreteness "
@@ -203,8 +221,9 @@ def get_avg_sd_concreteness(data: pl.DataFrame,
         data (pl.DataFrame): A Polars DataFrame containing the text data.
         lexicon (pl.DataFrame): 
             A Polars DataFrame containing the concreteness norms.
-        backbone (str): The NLP library used to process the text data.
-                Either 'spacy' or 'stanza'.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
     
     Returns:
         data (pl.DataFrame):
@@ -213,18 +232,15 @@ def get_avg_sd_concreteness(data: pl.DataFrame,
             The average standard deviation of concreteness score is stored
             in a new column named 'avg_sd_concreteness'.
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=lexicon,
-                                     words=x,
-                                     word_column="Word"). \
-                select(pl.col("Conc.SD")).mean().item(),
-                return_dtype=pl.Float64
-                ).alias("avg_sd_concreteness")
-    )
+    data = get_avg(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col="Word",
+                   lexicon_rating_col="Conc.SD",
+                   new_col_name="avg_sd_concreteness",
+                   backbone=backbone,
+                   **kwargs
+                   )
+    
     if data.filter(pl.col("avg_sd_concreteness").is_nan()).shape[0] > 0:
         warnings.warn(
             "Some texts do not contain any words from the concreteness "
@@ -248,10 +264,12 @@ def get_n_low_concreteness(data: pl.DataFrame,
         data (pl.DataFrame): A Polars DataFrame containing the text data.
         lexicon (pl.DataFrame):
             A Polars DataFrame containing the concreteness norms.
-        threshold (float): The threshold for the low concreteness words.
-                    Defaults to 1.66.
-        backbone (str): The NLP library used to process the text data.
-                Either 'spacy' or 'stanza'.
+        threshold (float):
+            The threshold for the low concreteness words.
+            Defaults to 1.66.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
 
     Returns:
         data (pl.DataFrame):
@@ -260,18 +278,15 @@ def get_n_low_concreteness(data: pl.DataFrame,
             The number of low concreteness words is stored in a new column
             named 'n_low_concreteness'.
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=lexicon,
-                                     words=x,
-                                     word_column="Word"). \
-                select(pl.col("Conc.M")).filter(
-                    pl.col("Conc.M") < threshold). \
-                    count().item(),
-                return_dtype=pl.Int64).alias("n_low_concreteness")
-    ).fill_null(0) # If no words are found, set count to 0
+    data = get_n_low(data=data,
+                     lexicon=lexicon,
+                     lexicon_word_col="Word",
+                     lexicon_rating_col="Conc.M",
+                     threshold=threshold,
+                     new_col_name="n_low_concreteness",
+                     backbone=backbone,
+                     **kwargs
+                     )
 
     return data
 
@@ -288,10 +303,12 @@ def get_n_high_concreteness(data: pl.DataFrame,
         data (pl.DataFrame): A Polars DataFrame containing the text data.
         lexicon (pl.DataFrame):
             A Polars DataFrame containing the concreteness norms.
-        threshold (float): The threshold for the high concreteness words.
-                    Defaults to 3.33.
-        backbone (str): The NLP library used to process the text data.
-                Either 'spacy' or 'stanza'.
+        threshold (float):
+            The threshold for the high concreteness words.
+            Defaults to 3.33.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
 
     Returns:
         data (pl.DataFrame):
@@ -300,18 +317,15 @@ def get_n_high_concreteness(data: pl.DataFrame,
             The number of high concreteness words is stored in a new
             column named 'n_high_concreteness'.
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=lexicon,
-                                     words=x,
-                                     word_column="Word"). \
-                select(pl.col("Conc.M")).filter(
-                    pl.col("Conc.M") > threshold). \
-                    count().item(),
-                return_dtype=pl.Int64).alias("n_high_concreteness")
-    ).fill_null(0) # If no words are found, set count to 0
+    data = get_n_high(data=data,
+                      lexicon=lexicon,
+                      lexicon_word_col="Word",
+                      lexicon_rating_col="Conc.M",
+                      threshold=threshold,
+                      new_col_name="n_high_concreteness",
+                      backbone=backbone,
+                      **kwargs
+                      )
 
     return data
 
@@ -329,10 +343,12 @@ def get_n_controversial_concreteness(data: pl.DataFrame,
         data (pl.DataFrame): A Polars DataFrame containing the text data.
         lexicon (pl.DataFrame):
             A Polars DataFrame containing the concreteness norms.
-        threshold (float): The threshold for the standard deviation.
-                 Defaults to 2.5.
-        backbone (str): The NLP library used to process the text data.
-                Either 'spacy' or 'stanza'.
+        threshold (float):
+            The threshold for the standard deviation.
+                Defaults to 2.5.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
 
     Returns:
         data (pl.DataFrame):
@@ -341,19 +357,83 @@ def get_n_controversial_concreteness(data: pl.DataFrame,
             The number of controversial concreteness words is stored in a
             new column named 'n_controversial_concreteness'.
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-    
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=lexicon,
-                                     words=x,
-                                     word_column="Word"). \
-                select(pl.col("Conc.SD")).filter(
-                    pl.col("Conc.SD") > threshold). \
-                    count().item(),
-                return_dtype=pl.Int64).alias("n_controversial_concreteness")
-    ).fill_null(0) # If no words are found, set count to 0
+    data = get_n_controversial(data=data,
+                               lexicon=lexicon,
+                               lexicon_word_col="Word",
+                               lexicon_sd_col="Conc.SD",
+                               threshold=threshold,
+                               new_col_name="n_controversial_concreteness",
+                               backbone=backbone,
+                               **kwargs
+    )
+
+    return data
+
+def get_min_concreteness(data: pl.DataFrame,
+                         lexicon: pl.DataFrame,
+                         backbone: str = 'spacy',
+                         **kwargs: dict[str, str],
+                         ) -> pl.DataFrame:
+    """
+    Calculates the minimum concreteness score of a text.
+
+    Args:
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        lexicon (pl.DataFrame):
+            A Polars DataFrame containing the concreteness norms.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
+
+    Returns:
+        data (pl.DataFrame):
+            A Polars DataFrame containing the minimum concreteness score
+            of the text data.
+            The minimum concreteness score is stored in a new column named
+            'min_concreteness'.
+    """
+    data = get_min(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col="Word",
+                   lexicon_rating_col="Conc.M",
+                   new_col_name="min_concreteness",
+                   backbone=backbone,
+                   **kwargs
+    )
+
+    return data
+
+def get_max_concreteness(data: pl.DataFrame,
+                         lexicon: pl.DataFrame,
+                         backbone: str = 'spacy',
+                         **kwargs: dict[str, str],
+                         ) -> pl.DataFrame:
+    """
+    Calculates the maximum concreteness score of a text.
+
+    Args:
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        lexicon (pl.DataFrame):
+            A Polars DataFrame containing the concreteness norms.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
+
+    Returns:
+        data (pl.DataFrame):
+            A Polars DataFrame containing the maximum concreteness score
+            of the text data.
+            The maximum concreteness score is stored in a new column named
+            'max_concreteness'.
+    """
+    data = get_max(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col="Word",
+                   lexicon_rating_col="Conc.M",
+                   new_col_name="max_concreteness",
+                   backbone=backbone,
+                   **kwargs
+    )
 
     return data
 
@@ -415,8 +495,9 @@ def get_avg_aoa(data: pl.DataFrame,
         data (pl.DataFrame): A Polars DataFrame containing the text data.
         lexicon (pl.DataFrame):
             A Polars DataFrame containing the age of acquisition norms.
-        backbone (str): The NLP library used to process the text data.
-                Either 'spacy' or 'stanza'.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
 
     Returns:
         data (pl.DataFrame):
@@ -425,17 +506,14 @@ def get_avg_aoa(data: pl.DataFrame,
             The average age of acquisition score is stored in a new column
             named 'avg_aoa'.
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=lexicon,
-                                     words=x,
-                                     word_column="Word"). \
-                select(pl.col("Rating.Mean")).mean().item(),
-                return_dtype=pl.Float64
-                ).alias("avg_aoa")
+    data = get_avg(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col="Word",
+                   lexicon_rating_col="Rating.Mean",
+                   new_col_name="avg_aoa",
+                   backbone=backbone
     )
+
     if data.filter(pl.col("avg_aoa").is_nan()).shape[0] > 0:
         warnings.warn(
             "Some texts do not contain any words from the age of "
@@ -460,9 +538,9 @@ def get_avg_sd_aoa(data: pl.DataFrame,
         data (pl.DataFrame): A Polars DataFrame containing the text data.
         lexicon (pl.DataFrame):
             A Polars DataFrame containing the age of acquisition norms.
-        backbone (str): The NLP library used to process the text data.
-                Either 'spacy' or 'stanza'.
-    
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.    
     Returns:
         data (pl.DataFrame):
             A Polars DataFrame containing the average standard deviation
@@ -470,18 +548,14 @@ def get_avg_sd_aoa(data: pl.DataFrame,
             The average standard deviation of age of acquisition score is 
             stored in a new column named 'avg_sd_aoa'.
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=lexicon,
-                                     words=x,
-                                     word_column="Word"). \
-                select(pl.col("Rating.SD")).mean().item(),
-                return_dtype=pl.Float64
-                ).alias("avg_sd_aoa")
+    data = get_avg(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col="Word",
+                   lexicon_rating_col="Rating.SD",
+                   new_col_name="avg_sd_aoa",
+                   backbone=backbone
     )
+
     if data.filter(pl.col("avg_sd_aoa").is_nan()).shape[0] > 0:
         warnings.warn(
             "Some texts do not contain any words from the age of "
@@ -506,10 +580,12 @@ def get_n_low_aoa(data: pl.DataFrame,
                 A Polars DataFrame containing the text data.
             aoa_norms (pl.DataFrame): 
                 A Polars DataFrame containing the age of acquisition norms.
-            backbone (str): The NLP library used to process the text data.
-                    Either 'spacy' or 'stanza'. 
-            threshold (float): The threshold for the low age of acquisition words.
-                    Defaults to 10.0.
+            backbone (str):
+                The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'. 
+            threshold (float):
+                The threshold for the low age of acquisition words.
+                Defaults to 10.0.
 
         Returns:
             data (pl.DataFrame):
@@ -518,18 +594,15 @@ def get_n_low_aoa(data: pl.DataFrame,
                 The number of low age of acquisition words is stored in a
                 new column named 'n_low_aoa'.
         """
-        if "lemmas" not in data.columns:
-            data = get_lemmas(data, backbone=backbone)
-        data = data.with_columns(
-            pl.col("lemmas").map_elements(
-                lambda x: filter_lexicon(lexicon=lexicon,
-                                         words=x,
-                                         word_column="Word"). \
-                    select(pl.col("Rating.Mean")
-                           ).filter(pl.col("Rating.Mean") < threshold). \
-                        count().item(),
-                    return_dtype=pl.Int64).alias("n_low_aoa")
-        ).fill_null(0) # If no words are found, set count to 0
+        data = get_n_low(data=data,
+                         lexicon=lexicon,
+                         lexicon_word_col="Word",
+                         lexicon_rating_col="Rating.Mean",
+                         threshold=threshold,
+                         new_col_name="n_low_aoa",
+                         backbone=backbone,
+                         **kwargs
+        )
     
         return data
 
@@ -543,11 +616,13 @@ def get_n_high_aoa(data: pl.DataFrame,
         Calculates the number of high age of acquisition words in a text.
 
         Args:
-            data (pl.DataFrame): A Polars DataFrame containing the text data.
+            data (pl.DataFrame):
+                A Polars DataFrame containing the text data.
             lexicon (pl.DataFrame):
                 A Polars DataFrame containing the age of acquisition norms.
-            threshold (float): The threshold for the high age of acquisition words.
-                    Defaults to 10.0.
+            threshold (float):
+                The threshold for the high age of acquisition words.
+                Defaults to 10.0.
 
         Returns:
             data (pl.DataFrame):
@@ -556,18 +631,15 @@ def get_n_high_aoa(data: pl.DataFrame,
                 The number of high age of acquisition words is stored in a new
                 column named 'n_high_aoa'.
         """
-        if "lemmas" not in data.columns:
-            data = get_lemmas(data, backbone=backbone)
-        data = data.with_columns(
-            pl.col("lemmas").map_elements(
-                lambda x: filter_lexicon(lexicon=lexicon,
-                                         words=x,
-                                         word_column="Word"). \
-                    select(pl.col("Rating.Mean")).filter(
-                        pl.col("Rating.Mean") > threshold
-                        ).count().item(),
-                    return_dtype=pl.Int64).alias("n_high_aoa")
-        ).fill_null(0) # If no words are found, set count to 0
+        data = get_n_high(data=data,
+                          lexicon=lexicon,
+                          lexicon_word_col="Word",
+                          lexicon_rating_col="Rating.Mean",
+                          threshold=threshold,
+                          new_col_name="n_high_aoa",
+                          backbone=backbone,
+                          **kwargs
+        )
     
         return data
 
@@ -587,8 +659,9 @@ def get_n_controversial_aoa(data: pl.DataFrame,
             A Polars DataFrame containing the age of acquisition norms.
         threshold (float): The threshold for the standard deviation.
                  Defaults to 4.5.
-        backbone (str): The NLP library used to process the text data.
-                Either 'spacy' or 'stanza'.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
     
     Returns:
         data (pl.DataFrame): 
@@ -597,19 +670,83 @@ def get_n_controversial_aoa(data: pl.DataFrame,
             The number of controversial age of acquisition words is stored
             in a new column named 'n_controversial_aoa'.
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
+    data = get_n_controversial(data=data,
+                              lexicon=lexicon,
+                              lexicon_word_col="Word",
+                              lexicon_sd_col="Rating.SD",
+                              threshold=threshold,
+                              new_col_name="n_controversial_aoa",
+                              backbone=backbone,
+                              **kwargs
+    )
 
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=lexicon,
-                                     words=x,
-                                     word_column="Word"). \
-                select(pl.col("Rating.SD")).filter(
-                    pl.col("Rating.SD") > threshold). \
-                    count().item(),
-                return_dtype=pl.Int64).alias("n_controversial_aoa")
-    ).fill_null(0) # If no words are found, set count to 0
+    return data
+
+def get_min_aoa(data: pl.DataFrame,
+                lexicon: pl.DataFrame,
+                backbone: str = 'spacy',
+                **kwargs: dict[str, str],
+                ) -> pl.DataFrame:
+    """
+    Calculates the minimum age of acquisition score of a text.
+
+    Args:
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        lexicon (pl.DataFrame):
+            A Polars DataFrame containing the age of acquisition norms.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
+
+    Returns:
+        data (pl.DataFrame):
+            A Polars DataFrame containing the minimum age of acquisition
+            score of the text data.
+            The minimum age of acquisition score is stored in a new column
+            named 'min_aoa'.
+    """
+    data = get_min(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col="Word",
+                   lexicon_rating_col="Rating.Mean",
+                   new_col_name="min_aoa",
+                   backbone=backbone,
+                   **kwargs
+    )
+
+    return data
+
+def get_max_aoa(data: pl.DataFrame,
+                lexicon: pl.DataFrame,
+                backbone: str = 'spacy',
+                **kwargs: dict[str, str],
+                ) -> pl.DataFrame:
+    """
+    Calculates the maximum age of acquisition score of a text.
+
+    Args:
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        lexicon (pl.DataFrame):
+            A Polars DataFrame containing the age of acquisition norms.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
+
+    Returns:
+        data (pl.DataFrame):
+            A Polars DataFrame containing the maximum age of acquisition
+            score of the text data.
+            The maximum age of acquisition score is stored in a new column
+            named 'max_aoa'.
+    """
+    data = get_max(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col="Word",
+                   lexicon_rating_col="Rating.Mean",
+                   new_col_name="max_aoa",
+                   backbone=backbone,
+                   **kwargs
+    )
 
     return data
 
@@ -659,17 +796,15 @@ def get_avg_prevalence(data: pl.DataFrame,
             of the text data. The average prevalence score is stored in a 
             new column named 'avg_prevalence'.
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=lexicon,
-                                     words=x,
-                                     word_column="Word"). \
-                select(pl.col("Prevalence")).mean().item(),
-                return_dtype=pl.Float64
-                ).alias("avg_prevalence")
-    )
+    data = get_avg(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col="Word",
+                   lexicon_rating_col="Prevalence",
+                   new_col_name="avg_prevalence",
+                   backbone=backbone,
+                   **kwargs
+                   )
+
     if data.filter(pl.col("avg_prevalence").is_nan()).shape[0] > 0:
         warnings.warn(
             "Some texts do not contain any words from the prevalence "
@@ -699,18 +834,15 @@ def get_n_low_prevalence(data: pl.DataFrame,
             words in the text data. The number of low prevalence words is 
             stored in a new column named 'n_low_prevalence'.
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=lexicon,
-                                     words=x,
-                                     word_column="Word"). \
-                select(pl.col("Prevalence")).filter(
-                    pl.col("Prevalence") < threshold). \
-                    count().item(),
-                return_dtype=pl.Int64).alias("n_low_prevalence")
-    ).fill_null(0) # If no words are found, set count to 0
+    data = get_n_low(data=data,
+                     lexicon=lexicon,
+                     lexicon_word_col="Word",
+                     lexicon_rating_col="Prevalence",
+                     threshold=threshold,
+                     new_col_name="n_low_prevalence",
+                     backbone=backbone,
+                     **kwargs
+    )
 
     return data
 
@@ -738,18 +870,83 @@ def get_n_high_prevalence(data: pl.DataFrame,
             The number of high prevalence words is stored in a new column 
             named 'n_high_prevalence'.
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=lexicon,
-                                     words=x,
-                                     word_column="Word"). \
-                select(pl.col("Prevalence")).filter(
-                    pl.col("Prevalence") > threshold). \
-                    count().item(),
-                return_dtype=pl.Int64).alias("n_high_prevalence")
-    ).fill_null(0) # If no words are found, set count to 0
+    data = get_n_high(data=data,
+                      lexicon=lexicon,
+                      lexicon_word_col="Word",
+                      lexicon_rating_col="Prevalence",
+                      threshold=threshold,
+                      new_col_name="n_high_prevalence",
+                      backbone=backbone,
+                      **kwargs
+    )
+
+    return data
+
+def get_min_prevalence(data: pl.DataFrame,
+                       lexicon: pl.DataFrame,
+                       backbone: str = 'spacy',
+                       **kwargs: dict[str, str],
+                       ) -> pl.DataFrame:
+    """
+    Calculates the minimum prevalence score of a text.
+
+    Args:
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        lexicon (pl.DataFrame):
+            A Polars DataFrame containing the word prevalence norms.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
+    
+    Returns:
+        data (pl.DataFrame):
+            A Polars DataFrame containing the minimum prevalence score
+            of the text data.
+            The minimum prevalence score is stored in a new column named
+            'min_prevalence'.
+    """
+    data = get_min(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col="Word",
+                   lexicon_rating_col="Prevalence",
+                   new_col_name="min_prevalence",
+                   backbone=backbone,
+                   **kwargs
+    )
+
+    return data
+
+def get_max_prevalence(data: pl.DataFrame,
+                       lexicon: pl.DataFrame,
+                       backbone: str = 'spacy',
+                       **kwargs: dict[str, str],
+                       ) -> pl.DataFrame:
+    """
+    Calculates the maximum prevalence score of a text.
+
+    Args:
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        lexicon (pl.DataFrame):
+            A Polars DataFrame containing the word prevalence norms.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
+    
+    Returns:
+        data (pl.DataFrame):
+            A Polars DataFrame containing the maximum prevalence score
+            of the text data.
+            The maximum prevalence score is stored in a new column named
+            'max_prevalence'.
+    """
+    data = get_max(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col="Word",
+                   lexicon_rating_col="Prevalence",
+                   new_col_name="max_prevalence",
+                   backbone=backbone,
+                   **kwargs
+    )
 
     return data
 
@@ -796,17 +993,15 @@ def get_avg_socialness(data: pl.DataFrame,
             of the text data. The average socialness score is stored in a 
             new column named 'avg_socialness'.
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=lexicon,
-                                     words=x,
-                                     word_column="Word"). \
-                select(pl.col("Mean")).mean().item(),
-                return_dtype=pl.Float64
-                ).alias("avg_socialness")
-    )
+    data = get_avg(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col="Word",
+                   lexicon_rating_col="Mean",
+                   new_col_name="avg_socialness",
+                   backbone=backbone,
+                   **kwargs
+                   )
+
     if data.filter(pl.col("avg_socialness").is_nan()).shape[0] > 0:
         warnings.warn(
             "Some texts do not contain any words from the socialness "
@@ -840,18 +1035,15 @@ def get_avg_sd_socialness(data: pl.DataFrame,
             The average standard deviation of socialness score is stored
             in a new column named 'avg_sd_socialness'.
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=lexicon,
-                                     words=x,
-                                     word_column="Word"). \
-                select(pl.col("SD")).mean().item(),
-                return_dtype=pl.Float64
-                ).alias("avg_sd_socialness")
-    )
+    data = get_avg(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col="Word",
+                   lexicon_rating_col="SD",
+                   new_col_name="avg_sd_socialness",
+                   backbone=backbone,
+                   **kwargs
+                   )
+    
     if data.filter(pl.col("avg_sd_socialness").is_nan()).shape[0] > 0:
         warnings.warn(
             "Some texts do not contain any words from the socialness "
@@ -886,18 +1078,15 @@ def get_n_low_socialness(data: pl.DataFrame,
             words in the text data. The number of low socialness words is 
             stored in a new column named 'n_low_socialness'.
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=lexicon,
-                                     words=x,
-                                     word_column="Word"). \
-                select(pl.col("Mean")).filter(
-                    pl.col("Mean") < threshold). \
-                    count().item(),
-                return_dtype=pl.Int64).alias("n_low_socialness")
-    ).fill_null(0) # If no words are found, set count to 0
+    data = get_n_low(data=data,
+                     lexicon=lexicon,
+                     lexicon_word_col="Word",
+                     lexicon_rating_col="Mean",
+                     threshold=threshold,
+                     new_col_name="n_low_socialness",
+                     backbone=backbone,
+                     **kwargs
+    )
 
     return data
 
@@ -925,18 +1114,15 @@ def get_n_high_socialness(data: pl.DataFrame,
             words in the text data. The number of high socialness words is
             stored in a new column named 'n_high_socialness'.
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=lexicon,
-                                     words=x,
-                                     word_column="Word"). \
-                select(pl.col("Mean")).filter(
-                    pl.col("Mean") > threshold). \
-                    count().item(),
-                return_dtype=pl.Int64).alias("n_high_socialness")
-    ).fill_null(0) # If no words are found, set count to 0
+    data = get_n_high(data=data,
+                      lexicon=lexicon,
+                      lexicon_word_col="Word",
+                      lexicon_rating_col="Mean",
+                      threshold=threshold,
+                      new_col_name="n_high_socialness",
+                      backbone=backbone,
+                      **kwargs
+    )
 
     return data
 
@@ -966,18 +1152,83 @@ def get_n_controversial_socialness(data: pl.DataFrame,
             The number of controversial socialness words is stored in a
             new column named 'n_controversial_socialness'.
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
+    data = get_n_controversial(data=data,
+                              lexicon=lexicon,
+                              lexicon_word_col="Word",
+                              lexicon_sd_col="SD",
+                              threshold=threshold,
+                              new_col_name="n_controversial_socialness",
+                              backbone=backbone,
+                              **kwargs
+    )
 
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=lexicon,
-                                     words=x,
-                                     word_column="Word"). \
-                select(pl.col("SD")).filter(pl.col("SD") > threshold). \
-                    count().item(),
-                return_dtype=pl.Int64).alias("n_controversial_socialness")
-    ).fill_null(0) # If no words are found, set count to 0
+    return data
+
+def get_min_socialness(data: pl.DataFrame,
+                       lexicon: pl.DataFrame,
+                       backbone: str = 'spacy',
+                       **kwargs: dict[str, str],
+                       ) -> pl.DataFrame:
+    """
+    Calculates the minimum socialness score of a text.
+
+    Args:
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        lexicon (pl.DataFrame):
+            A Polars DataFrame containing the socialness norms.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
+
+    Returns:
+        data (pl.DataFrame):
+            A Polars DataFrame containing the minimum socialness score
+            of the text data.
+            The minimum socialness score is stored in a new column named
+            'min_socialness'.
+    """
+    data = get_min(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col="Word",
+                   lexicon_rating_col="Mean",
+                   new_col_name="min_socialness",
+                   backbone=backbone,
+                   **kwargs
+    )
+
+    return data
+
+def get_max_socialness(data: pl.DataFrame,
+                       lexicon: pl.DataFrame,
+                       backbone: str = 'spacy',
+                       **kwargs: dict[str, str],
+                       ) -> pl.DataFrame:
+    """
+    Calculates the maximum socialness score of a text.
+
+    Args:
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        lexicon (pl.DataFrame):
+            A Polars DataFrame containing the socialness norms.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
+    
+    Returns:
+        data (pl.DataFrame):
+            A Polars DataFrame containing the maximum socialness score
+            of the text data.
+            The maximum socialness score is stored in a new column named
+            'max_socialness'.
+    """
+    data = get_max(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col="Word",
+                   lexicon_rating_col="Mean",
+                   new_col_name="max_socialness",
+                   backbone=backbone,
+                   **kwargs
+    )
 
     return data
 
@@ -1014,8 +1265,9 @@ def get_avg_iconicity(data: pl.DataFrame,
         data (pl.DataFrame): A Polars DataFrame containing the text data.
         lexicon (pl.DataFrame):
             A Polars DataFrame containing the iconicity norms.
-        backbone (str): The NLP library used to process the text data.
-                Either 'spacy' or 'stanza'.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
 
     Returns:
         data (pl.DataFrame):
@@ -1023,17 +1275,15 @@ def get_avg_iconicity(data: pl.DataFrame,
             of the text data. The average iconicity score is stored in a
             new column named 'avg_iconicity'.
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=lexicon,
-                                     words=x,
-                                     word_column="word"). \
-                select(pl.col("rating")).mean().item(),
-                return_dtype=pl.Float64
-                ).alias("avg_iconicity")
-    )
+    data = get_avg(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col="word",
+                   lexicon_rating_col="rating",
+                   new_col_name="avg_iconicity",
+                   backbone=backbone,
+                   **kwargs
+                   )
+    
     if data.filter(pl.col("avg_iconicity").is_nan()).shape[0] > 0:
         warnings.warn(
             "Some texts do not contain any words from the iconicity "
@@ -1057,8 +1307,9 @@ def get_avg_sd_iconicity(data: pl.DataFrame,
         data (pl.DataFrame): A Polars DataFrame containing the text data.
         lexicon (pl.DataFrame):
             A Polars DataFrame containing the iconicity norms.
-        backbone (str): The NLP library used to process the text data.
-                Either 'spacy' or 'stanza'.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
 
     Returns:
         data (pl.DataFrame):
@@ -1067,18 +1318,15 @@ def get_avg_sd_iconicity(data: pl.DataFrame,
             The average standard deviation of iconicity score is stored in
             a new column named 'avg_sd_iconicity'.
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=lexicon,
-                                     words=x,
-                                     word_column="word"). \
-                select(pl.col("rating_sd")).mean().item(),
-                return_dtype=pl.Float64
-                ).alias("avg_sd_iconicity")
-    )
+    data = get_avg(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col="word",
+                   lexicon_rating_col="rating_sd",
+                   new_col_name="avg_sd_iconicity",
+                   backbone=backbone,
+                   **kwargs
+                   )
+    
     if data.filter(pl.col("avg_sd_iconicity").is_nan()).shape[0] > 0:
         warnings.warn(
             "Some texts do not contain any words from the iconicity "
@@ -1101,10 +1349,12 @@ def get_n_low_iconicity(data: pl.DataFrame,
         data (pl.DataFrame): A Polars DataFrame containing the text data.
         lexicon (pl.DataFrame):
             A Polars DataFrame containing the iconicity norms.
-        threshold (float): The threshold for the low iconicity words.
-                    Defaults to 2.33.
-        backbone (str): The NLP library used to process the text data.
-                Either 'spacy' or 'stanza'.
+        threshold (float):
+            The threshold for the low iconicity words.
+            Defaults to 2.33.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
 
     Returns:
         data (pl.DataFrame):
@@ -1112,18 +1362,15 @@ def get_n_low_iconicity(data: pl.DataFrame,
             words in the text data. The number of low iconicity words is
             stored in a new column named 'n_low_iconicity'.
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=lexicon,
-                                     words=x,
-                                     word_column="word"). \
-                select(pl.col("rating")).filter(
-                    pl.col("rating") < threshold). \
-                    count().item(),
-                return_dtype=pl.Int64).alias("n_low_iconicity")
-    ).fill_null(0) # If no words are found, set count to 0
+    data = get_n_low(data=data,
+                     lexicon=lexicon,
+                     lexicon_word_col="word",
+                     lexicon_rating_col="rating",
+                     threshold=threshold,
+                     new_col_name="n_low_iconicity",
+                     backbone=backbone,
+                     **kwargs
+    )
 
     return data
 
@@ -1140,10 +1387,12 @@ def get_n_high_iconicity(data: pl.DataFrame,
         data (pl.DataFrame): A Polars DataFrame containing the text data.
         lexicon (pl.DataFrame):
             A Polars DataFrame containing the iconicity norms.
-        threshold (float): The threshold for the high iconicity words.
-                    Defaults to 3.66.
-        backbone (str): The NLP library used to process the text data.
-                Either 'spacy' or 'stanza'.
+        threshold (float):
+            The threshold for the high iconicity words.
+            Defaults to 3.66.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
 
     Returns:
         data (pl.DataFrame):
@@ -1152,18 +1401,15 @@ def get_n_high_iconicity(data: pl.DataFrame,
             The number of high iconicity words is stored in a new column
             named 'n_high_iconicity'.
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=lexicon,
-                                     words=x,
-                                     word_column="word"). \
-                select(pl.col("rating")).filter(
-                    pl.col("rating") > threshold). \
-                    count().item(),
-                return_dtype=pl.Int64).alias("n_high_iconicity")
-    ).fill_null(0) # If no words are found, set count to 0
+    data = get_n_high(data=data,
+                      lexicon=lexicon,
+                      lexicon_word_col="word",
+                      lexicon_rating_col="rating",
+                      threshold=threshold,
+                      new_col_name="n_high_iconicity",
+                      backbone=backbone,
+                      **kwargs
+    )
 
     return data
 
@@ -1181,10 +1427,12 @@ def get_n_controversial_iconicity(data: pl.DataFrame,
         data (pl.DataFrame): A Polars DataFrame containing the text data.
         lexicon (pl.DataFrame):
             A Polars DataFrame containing the iconicity norms.
-        threshold (float): The threshold for the standard deviation.
-                 Defaults to 2.5.
-        backbone (str): The NLP library used to process the text data.
-                Either 'spacy' or 'stanza'.
+        threshold (float):
+            The threshold for the standard deviation.
+            Defaults to 2.5.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
     
     Returns:
         data (pl.DataFrame):
@@ -1193,19 +1441,82 @@ def get_n_controversial_iconicity(data: pl.DataFrame,
             The number of controversial iconicity words is stored in a new
             column named 'n_controversial_iconicity'.
     """
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
+    data = get_n_controversial(data=data,
+                              lexicon=lexicon,
+                              lexicon_word_col="word",
+                              lexicon_sd_col="rating_sd",
+                              threshold=threshold,
+                              new_col_name="n_controversial_iconicity",
+                              backbone=backbone,
+                              **kwargs
+    )
 
-    data = data.with_columns(
-        pl.col("lemmas").map_elements(
-            lambda x: filter_lexicon(lexicon=lexicon,
-                                     words=x,
-                                     word_column="word"). \
-                select(pl.col("rating_sd")).filter(
-                    pl.col("rating_sd") > threshold). \
-                    count().item(),
-                return_dtype=pl.Int64).alias("n_controversial_iconicity")
-    ).fill_null(0) # If no words are found, set count to 0
+    return data
+
+def get_min_iconicity(data: pl.DataFrame,
+                      lexicon: pl.DataFrame,
+                      backbone: str = 'spacy',
+                      **kwargs: dict[str, str],
+                      ) -> pl.DataFrame:
+    """
+    Calculates the minimum iconicity score of a text.
+    Args:
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        lexicon (pl.DataFrame):
+            A Polars DataFrame containing the iconicity norms.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
+    
+    Returns:
+        data (pl.DataFrame):
+            A Polars DataFrame containing the minimum iconicity score
+            of the text data.
+            The minimum iconicity score is stored in a new column named
+            'min_iconicity'.
+    """
+    data = get_min(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col="word",
+                   lexicon_rating_col="rating",
+                   new_col_name="min_iconicity",
+                   backbone=backbone,
+                   **kwargs
+    )
+
+    return data
+
+def get_max_iconicity(data: pl.DataFrame,
+                      lexicon: pl.DataFrame,
+                      backbone: str = 'spacy',
+                      **kwargs: dict[str, str],
+                      ) -> pl.DataFrame:
+    """
+    Calculates the maximum iconicity score of a text.
+
+    Args:
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        lexicon (pl.DataFrame):
+            A Polars DataFrame containing the iconicity norms.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
+
+    Returns:
+        data (pl.DataFrame):
+            A Polars DataFrame containing the maximum iconicity score
+            of the text data.
+            The maximum iconicity score is stored in a new column named
+            'max_iconicity'.
+    """
+    data = get_max(data=data,
+                   lexicon=lexicon,
+                   lexicon_word_col="word",
+                   lexicon_rating_col="rating",
+                   new_col_name="max_iconicity",
+                   backbone=backbone,
+                   **kwargs
+    )
 
     return data
 
@@ -1267,8 +1578,9 @@ def get_avg_sensorimotor(data: pl.DataFrame,
         data (pl.DataFrame): A Polars DataFrame containing the text data.
         lexicon (pl.DataFrame):
             A Polars DataFrame containing the sensorimotor norms.
-        backbone (str): The NLP library used to process the text data.
-                Either 'spacy' or 'stanza'.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
         sensorimotor_vars (list[str]):
             A list of sensorimotor variables to calculate the average
             score for. Defaults to SENSORIMOTOR_VARS.
@@ -1282,20 +1594,17 @@ def get_avg_sensorimotor(data: pl.DataFrame,
     """
     sensorimotor_vars = sensorimotor_vars[language]
 
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
     for var in sensorimotor_vars:
-        data = data.with_columns(
-            pl.col("lemmas").map_elements(
-                lambda x: filter_lexicon(lexicon=lexicon,
-                                         words=x,
-                                         word_column="Word"). \
-                    select(pl.col(f"{var}.mean")).mean().item(),
-                    return_dtype=pl.Float64
-                    ).alias(f"avg_{var}_sensorimotor")
-        )
-    for var in sensorimotor_vars:
-        if data.filter(pl.col(f"avg_{var}_sensorimotor").is_nan()).shape[0] > 0:
+        data = get_avg(data=data,
+                       lexicon=lexicon,
+                       lexicon_word_col="Word",
+                       lexicon_rating_col=f"{var}.mean",
+                       new_col_name=f"avg_{var}_sensorimotor",
+                       backbone=backbone,
+                       **kwargs
+                       )
+        if data.filter(
+            pl.col(f"avg_{var}_sensorimotor").is_nan()).shape[0] > 0:
             warnings.warn(
                 f"Some texts do not contain any words from the {var} "
                 "sensorimotor norms. The average sensorimotor score for "
@@ -1320,8 +1629,9 @@ def get_avg_sd_sensorimotor(data: pl.DataFrame,
         data (pl.DataFrame): A Polars DataFrame containing the text data.
         lexicon (pl.DataFrame):
             A Polars DataFrame containing the sensorimotor norms.
-        backbone (str): The NLP library used to process the text data.
-                Either 'spacy' or 'stanza'.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
         sensorimotor_vars (list[str]):
             A list of sensorimotor variables to calculate the average
             standard deviation for.
@@ -1336,19 +1646,15 @@ def get_avg_sd_sensorimotor(data: pl.DataFrame,
     sensorimotor_vars = sensorimotor_vars[language]
 
     if language == "en":
-        if "lemmas" not in data.columns:
-            data = get_lemmas(data, backbone=backbone)
-        
         for var in sensorimotor_vars:
-            data = data.with_columns(
-                pl.col("lemmas").map_elements(
-                    lambda x: filter_lexicon(lexicon=lexicon,
-                                            words=x,
-                                            word_column="Word"). \
-                        select(pl.col(f"{var}.SD")).mean().item(),
-                        return_dtype=pl.Float64
-                        ).alias(f"avg_sd_{var}_sensorimotor")
-            )
+            data = get_avg(data=data,
+                           lexicon=lexicon,
+                           lexicon_word_col="Word",
+                           lexicon_rating_col=f"{var}.SD",
+                           new_col_name=f"avg_sd_{var}_sensorimotor",
+                           backbone=backbone,
+                           **kwargs
+                           )
             if data.filter(
                 pl.col(f"avg_sd_{var}_sensorimotor").is_nan()
                            ).shape[0] > 0:
@@ -1386,10 +1692,12 @@ def get_n_low_sensorimotor(data: pl.DataFrame,
         data (pl.DataFrame): A Polars DataFrame containing the text data.
         lexicon (pl.DataFrame):
             A Polars DataFrame containing the sensorimotor norms.
-        threshold (float): The threshold for the low-rating sensorimotor words.
-                    Defaults to 2.33.
-        backbone (str): The NLP library used to process the text data.
-                Either 'spacy' or 'stanza'.
+        threshold (float):
+            The threshold for the low-rating sensorimotor words.
+            Defaults to 2.33.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
         sensorimotor_vars (list[str]):
             A list of sensorimotor variables to calculate the number of
             low-rating words for. Defaults to SENSORIMOTOR_VARS.
@@ -1408,17 +1716,15 @@ def get_n_low_sensorimotor(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
     
     for var in sensorimotor_vars:
-        data = data.with_columns(
-            pl.col("lemmas").map_elements(
-                lambda x: filter_lexicon(lexicon=lexicon,
-                                         words=x,
-                                         word_column="Word"). \
-                    select(pl.col(f"{var}.mean")).filter(
-                        pl.col(f"{var}.mean") < threshold). \
-                        count().item(),
-                    return_dtype=pl.Int64).alias(f"n_low_{var}"
-                                                 "_sensorimotor")
-        ).fill_null(0) # If no words are found, set count to 0
+        data = get_n_low(data=data,
+                         lexicon=lexicon,
+                         lexicon_word_col="Word",
+                         lexicon_rating_col=f"{var}.mean",
+                         threshold=threshold,
+                         new_col_name=f"n_low_{var}_sensorimotor",
+                         backbone=backbone,
+                         **kwargs
+        )
 
     return data
 
@@ -1438,10 +1744,12 @@ def get_n_high_sensorimotor(data: pl.DataFrame,
         data (pl.DataFrame): A Polars DataFrame containing the text data.
         lexicon (pl.DataFrame):
             A Polars DataFrame containing the sensorimotor norms.
-        threshold (float): The threshold for the high-rating sensorimotor words.
-                    Defaults to 3.66.
-        backbone (str): The NLP library used to process the text data.
-                Either 'spacy' or 'stanza'.
+        threshold (float):
+            The threshold for the high-rating sensorimotor words.
+            Defaults to 3.66.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
         sensorimotor_vars (list[str]):
             A list of sensorimotor variables to calculate the
             number of high-rating words for.
@@ -1461,17 +1769,15 @@ def get_n_high_sensorimotor(data: pl.DataFrame,
         data = get_lemmas(data, backbone=backbone)
     
     for var in sensorimotor_vars:
-        data = data.with_columns(
-            pl.col("lemmas").map_elements(
-                lambda x: filter_lexicon(lexicon=lexicon,
-                                         words=x,
-                                         word_column="Word"). \
-                    select(pl.col(f"{var}.mean")).filter(
-                        pl.col(f"{var}.mean") > threshold). \
-                        count().item(),
-                    return_dtype=pl.Int64).alias(f"n_high_{var}"
-                                                 "_sensorimotor")
-        ).fill_null(0) # If no words are found, set count to 0
+        data = get_n_high(data=data,
+                          lexicon=lexicon,
+                          lexicon_word_col="Word",
+                          lexicon_rating_col=f"{var}.mean",
+                          threshold=threshold,
+                          new_col_name=f"n_high_{var}_sensorimotor",
+                          backbone=backbone,
+                          **kwargs
+        )
 
     return data
 
@@ -1492,10 +1798,12 @@ def get_n_controversial_sensorimotor(data: pl.DataFrame,
         data (pl.DataFrame): A Polars DataFrame containing the text data.
         lexicon (pl.DataFrame): 
             A Polars DataFrame containing the sensorimotor norms.
-        threshold (float): The threshold for the standard deviation.
-                 Defaults to 2.0.
-        backbone (str): The NLP library used to process the text data.
-                Either 'spacy' or 'stanza'.
+        threshold (float):
+            The threshold for the standard deviation.
+            Defaults to 2.0.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
         sensorimotor_vars (list[str]):
             A list of sensorimotor variables to calculate the
             number of controversial words for.
@@ -1510,21 +1818,17 @@ def get_n_controversial_sensorimotor(data: pl.DataFrame,
     """
     sensorimotor_vars = sensorimotor_vars[language]
 
-    if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone=backbone)
-
     if language == "en":
         for var in sensorimotor_vars:
-            data = data.with_columns(
-                pl.col("lemmas").map_elements(
-                    lambda x: filter_lexicon(lexicon=lexicon,
-                                            words=x,
-                                            word_column="Word"). \
-                        select(pl.col(f"{var}.SD")).filter(
-                            pl.col(f"{var}.SD") > threshold). \
-                            count().item(),
-                        return_dtype=pl.Int64).alias(f"n_controversial_{var}"
-                                                    "_sensorimotor")
+            data = get_n_controversial(data=data,
+                                      lexicon=lexicon,
+                                      lexicon_word_col="Word",
+                                      lexicon_sd_col=f"{var}.SD",
+                                      threshold=threshold,
+                                      new_col_name=f"n_controversial_"
+                                      f"{var}_sensorimotor",
+                                      backbone=backbone,
+                                      **kwargs
             )
     else:
         # warning, other languages do not have a standard deviation
@@ -1538,3 +1842,92 @@ def get_n_controversial_sensorimotor(data: pl.DataFrame,
 
     return data
 
+def get_min_sensorimotor(data: pl.DataFrame,
+                        lexicon: pl.DataFrame,
+                        backbone: str = 'spacy',
+                        sensorimotor_vars: list[str] = \
+                        SENSORIMOTOR_VARS,
+                        language: str = "en",
+                        **kwargs: dict[str, str],
+                        ) -> pl.DataFrame:
+    """
+    Calculates the minimum sensorimotor variable score of a text.
+
+    Args:
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        lexicon (pl.DataFrame):
+            A Polars DataFrame containing the sensorimotor norms.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
+        sensorimotor_vars (list[str]):
+            A list of sensorimotor variables to calculate the minimum
+            score for. Defaults to SENSORIMOTOR_VARS.
+        language (str):
+            The language of the text data. Defaults to "en".
+    
+    Returns:
+        data (pl.DataFrame):
+            A Polars DataFrame containing the minimum sensorimotor score
+            of the text data.
+            The minimum sensorimotor score is stored in new columns named
+            'min_{var}' where {var} is the sensorimotor variable.
+    """
+    sensorimotor_vars = sensorimotor_vars[language]
+
+    for var in sensorimotor_vars:
+        data = get_min(data=data,
+                       lexicon=lexicon,
+                       lexicon_word_col="Word",
+                       lexicon_rating_col=f"{var}.mean",
+                       new_col_name=f"min_{var}_sensorimotor",
+                       backbone=backbone,
+                       **kwargs
+        )
+    
+    return data
+
+def get_max_sensorimotor(data: pl.DataFrame,
+                        lexicon: pl.DataFrame,
+                        backbone: str = 'spacy',
+                        sensorimotor_vars: list[str] = \
+                        SENSORIMOTOR_VARS,
+                        language: str = "en",
+                        **kwargs: dict[str, str],
+                        ) -> pl.DataFrame:
+    """
+    Calculates the maximum sensorimotor variable score of a text.
+
+    Args:
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        lexicon (pl.DataFrame):
+            A Polars DataFrame containing the sensorimotor norms.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
+        sensorimotor_vars (list[str]):
+            A list of sensorimotor variables to calculate the maximum
+            score for. Defaults to SENSORIMOTOR_VARS.
+        language (str):
+            The language of the text data. Defaults to "en".
+    
+    Returns:
+        data (pl.DataFrame):
+            A Polars DataFrame containing the maximum sensorimotor score
+            of the text data.
+            The maximum sensorimotor score is stored in new columns named
+            'max_{var}' where {var} is the sensorimotor variable.
+    """
+    sensorimotor_vars = sensorimotor_vars[language]
+
+    for var in sensorimotor_vars:
+        data = get_max(data=data,
+                       lexicon=lexicon,
+                       lexicon_word_col="Word",
+                       lexicon_rating_col=f"{var}.mean",
+                       new_col_name=f"max_{var}_sensorimotor",
+                       backbone=backbone,
+                       **kwargs
+        )
+    
+    return data
