@@ -4,7 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "elfen"
+<<<<<<< HEAD
 version = "1.2.5"
+=======
+version = "1.2.6"
+>>>>>>> 78c1e15 (fix download for emotion lexicons)
 authors = [
   { name="Maximilian Maurer", email="mmmaurer@pm.me" },
 ]
