@@ -311,6 +311,7 @@ class Extractor:
                         ["n_tokens",
                          "n_types",
                          "n_sentences",
+                         "n_characters",
                          "n_lemmas",
                          "n_syllables"] and
                         f.startswith("n_")]
@@ -450,9 +451,6 @@ class Extractor:
                                            ) -> pl.DataFrame:
         """
         Helper function to gather resources for feature extraction.
-
-        TODO:
-            - Add handling for languages other than English.
 
         Args:
             feature (str): The feature to extract.
