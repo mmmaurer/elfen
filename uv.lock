@@ -608,7 +608,6 @@ name = "elfen"
 version = "1.3.0"
 =======
 version = "1.2.8"
->>>>>>> eaf3989 (hotfix schema datatypes)
 source = { editable = "." }
 dependencies = [
     { name = "fastexcel" },
@@ -656,7 +655,6 @@ dev = [
     { name = "ipykernel", specifier = ">=7.1.0" },
     { name = "ipywidgets", specifier = ">=8.1.8" },
     { name = "jupyter", specifier = ">=1.1.1" },
-    { name = "pytest", specifier = ">=9.0.2" },
 ]
 
 [[package]]
