@@ -4,9 +4,10 @@ This module contains functions to download external resources.
 If you are using the resources for research, please cite the original
 authors.
 """
-import requests
-import zipfile
 import os
+import requests
+import warnings
+import zipfile
 
 from .resource_utils.langs import LANGUAGES_NRC
 from .resource_utils.resource_map import RESOURCE_MAP
@@ -83,11 +84,19 @@ def get_resource(feature: str) -> None:
                              exist_ok=True)
     # Downloading the lexicon if it does not exist
     if not os.path.exists(RESOURCE_MAP[feature]["filepath"]):
-        download_lexicon(RESOURCE_MAP[feature]["link"],
-                         os.path.join(PROJECT_PATH, "elfen_resources",
-                                      RESOURCE_MAP[feature]["area"],
-                                      RESOURCE_MAP[feature]["subarea"]),
-                                      RESOURCE_MAP[feature]["filename"])
+        if "nrc" in feature:
+            # warn the user to download manually
+            warnings.warn(f"The resource for feature {feature} has to be "
+                          "downloaded manually due to website restrictions. "
+                          "Please see the instructions in the GitHub "
+                          "repository for more information.",
+                          UserWarning)
+        else:
+            download_lexicon(RESOURCE_MAP[feature]["link"],
+                            os.path.join(PROJECT_PATH, "elfen_resources",
+                                        RESOURCE_MAP[feature]["area"],
+                                        RESOURCE_MAP[feature]["subarea"]),
+                                        RESOURCE_MAP[feature]["filename"])
 
 def list_external_resources() -> None:
     """
