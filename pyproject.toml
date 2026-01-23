@@ -38,3 +38,12 @@ Issues = "https://github.com/mmmaurer/elfen/issues"
 
 [tool.setuptools]
 packages = ["elfen", "elfen.configs", "elfen.resource_utils"]
+
+[dependency-groups]
+dev = [
+    "datasets>=4.5.0",
+    "ipykernel>=7.1.0",
+    "ipywidgets>=8.1.8",
+    "jupyter>=1.1.1",
+    "pytest>=9.0.2",
+]
