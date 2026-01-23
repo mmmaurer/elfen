@@ -218,7 +218,6 @@ class Extractor:
                             feature=feature,
                             feature_lexicon_map=FEATURE_LEXICON_MAP)
                         if lexicon is not None:
-                            print(f"Extracting {feature}...")
                             self.__apply_function(feature,
                                                   lexicon=lexicon)
                     elif feature in FUNCTION_MAP:

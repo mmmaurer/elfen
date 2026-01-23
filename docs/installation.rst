@@ -65,6 +65,9 @@ Note that for some languages, you will need to install another wordnet collectio
 
 For more information on the available wordnet collections, consult the `wn package documentation`_.
 
+The NRC emotion and sentiment lexicons need to be downloaded manually due to licensing restrictions. Without these lexicons, only a subset of features will be available.
+Please see  this guide to download and install them: https://github.com/mmmaurer/elfen/blob/main/download_nrc.md
+
 Default norms and lexicons
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

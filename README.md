@@ -37,6 +37,9 @@ python -m wn download odenet:1.4
 
 For more information on the available wordnet collections, consult the [wn package documentation](https://wn.readthedocs.io/en/latest/guides/lexicons.html).
 
+> [!CAUTION]
+> Some of the external resources used for feature extraction (e.g., NRC lexicons) have to be downloaded manually due to licensing restrictions. For this, please see [this guide](download_nrc.md). Note that without these resources, only a subset of features will be available.
+
 ## Multiprocessing and limiting the numbers of cores used
 The underlying dataframe library, polars, uses all available cores by default.
 If you are working on a shared server, you may want to consider limiting the resources available to polars.
