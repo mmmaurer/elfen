@@ -4,12 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "elfen"
-<<<<<<< HEAD
-version = "1.2.6"
-
-=======
 version = "1.2.7"
->>>>>>> 7b6dfe9 (hotfix nrc lexicons/emotion features)
 authors = [
   { name="Maximilian Maurer", email="mmmaurer@pm.me" },
 ]
