@@ -834,7 +834,7 @@ def get_mtld(data: pl.DataFrame,
         pl.col("tokens").map_elements(lambda x: (
             sub_mtld(x, threshold=threshold) + \
                 sub_mtld(x, forward=False, threshold=threshold)
-            ) / 2.0, return_dtype=pl.Float32).alias("mtld")
+            ) / 2.0, return_dtype=pl.Float64).alias("mtld")
     )
 
     return data
@@ -885,7 +885,7 @@ def get_hdd(data: pl.DataFrame,
     
     data = data.with_columns(
         pl.col("tokens").map_elements(lambda x: hdd(x, draws=draws),
-                                      return_dtype=pl.Float32).alias("hdd")
+                                      return_dtype=pl.Float64).alias("hdd")
     )
 
     return data
@@ -936,7 +936,7 @@ def get_mattr(data: pl.DataFrame,
                                 # as it is not possible to
                                 # calculate MATTR for them
                                 np.nan,
-                            return_dtype=pl.Float32).alias("mattr")
+                            return_dtype=pl.Float64).alias("mattr")
     )
 
     # Warn if there are any NaN values in the MATTR column
@@ -1001,7 +1001,7 @@ def get_msttr(data: pl.DataFrame,
                                             # as it is not possible to
                                             # calculate MSTTR for them
                                             len(x) > 0 else np.nan,
-                                         return_dtype=pl.Float32). \
+                                         return_dtype=pl.Float64). \
                                             alias("msttr")
     )
 
@@ -1057,7 +1057,7 @@ def get_yule_k(data: pl.DataFrame,
     data = data.with_columns(
         (pl.lit(10**4) * \
         pl.col("token_freqs").map_elements(lambda x: inner_sum(x),
-                                           return_dtype=pl.Float32) - \
+                                           return_dtype=pl.Float64) - \
         (1 / pl.col("n_tokens"))).alias("yule_k")
     )
 
@@ -1111,7 +1111,7 @@ def get_simpsons_d(data: pl.DataFrame,
     
     data = data.with_columns(
         pl.col("token_freqs").map_elements(lambda x: simpsons_d(x),
-                                           return_dtype=pl.Float32). \
+                                           return_dtype=pl.Float64). \
                                             alias("simpsons_d")
     )
 

@@ -140,7 +140,7 @@ def get_tree_branching(data: pl.DataFrame,
          data = data.with_columns(
                pl.col('nlp').map_elements(
                 lambda x: get_branching(x),
-                return_dtype=pl.Float32
+                return_dtype=pl.Float64
                ).alias('tree_branching')
          )
     elif backbone == 'stanza':
@@ -183,7 +183,7 @@ def get_ramification_factor(data: pl.DataFrame,
         data = data.with_columns(
             pl.col('nlp').map_elements(
                 lambda x: get_ramification(x),
-                return_dtype=pl.Float32
+                return_dtype=pl.Float64
             ).alias('ramification_factor')
         )
     elif backbone == 'stanza':
