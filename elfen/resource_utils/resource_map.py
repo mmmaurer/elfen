@@ -554,5 +554,28 @@ RESOURCE_MAP = {
         }
         """
     },
+    # aoa norms for dutch
+    "aoa_moors": {
+        "link": "https://static-content.springer.com/esm/"
+                "art%3A10.3758%2Fs13428-012-0243-8/MediaObjects/"
+                "13428_2012_243_MOESM1_ESM.xlsx",
+        "area": "Psycholinguistics",
+        "subarea": "AgeofAcquisition",
+        "filename": "13428_2012_243_MOESM1_ESM.xlsx",
+        "filepath": os.path.join(PROJECT_PATH, "elfen_resources",
+                                 "Psycholinguistics",
+                                 "AgeofAcquisition",
+                                 "13428_2012_243_MOESM1_ESM.xlsx"),
+        "bibtex": rb"""
+        @article{aoa_moors,
+        title={Norms of valence, arousal, dominance, and age of acquisition for 4,300 Dutch words},
+        author={Moors, Agnes and De Houwer, Jan and Hermans, Dirk and Wanmaker, Sabine and van Schie, Kevin and Van Harmelen, Anne-Laura and De Schryver, Maarten and De Winne, Jeffrey and Brysbaert, Marc},
+        journal={Behavior Research Methods},
+        volume={45},
+        pages={169--177},
+        year={2013},
+        publisher={Springer}
+        """ 
+    }
 }
 

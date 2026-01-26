@@ -572,6 +572,16 @@ def load_aoa_norms(path: str,
         }).select(
             ["Word", "Rating.Mean", "Rating.SD"]
         )
+    elif language == "nl":
+        aoa_norms = pl.read_excel(path,
+                                  read_options={"header_row": 1})
+        aoa_norms = aoa_norms.rename({
+            "Words": "Word",
+            "M AoA": "Rating.Mean",
+            "SD AoA": "Rating.SD"
+        }).select(
+            ["Word", "Rating.Mean", "Rating.SD"]
+        )
     return aoa_norms
 
 def get_avg_aoa(data: pl.DataFrame,
