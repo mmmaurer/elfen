@@ -483,6 +483,8 @@ RESOURCE_MAP = {
     #     }
     #     """
     # }
+    # concreteness norms for spanish; also has valence and arousal ratings,
+    # imageability, context availability, and familiarity
     "affective_norms_guasch": {
         "link": "https://static-content.springer.com/"
                 "esm/art%3A10.3758%2Fs13428-015-0684-y/"
@@ -503,6 +505,30 @@ RESOURCE_MAP = {
         pages={1358--1369},
         year={2016},
         publisher={Springer}"""
-    }
+    },
+    # aoa norms for spanish; also has written and spoken frequency
+    "aoa_alonso": {
+        "link": "https://static-content.springer.com/esm/"
+                "art%3A10.3758%2Fs13428-014-0454-2/MediaObjects/"
+                "13428_2014_454_MOESM1_ESM.zip",
+        "area": "Psycholinguistics",
+        "subarea": "AgeofAcquisition",
+        "filename": "SpanishAoA.txt",
+        "filepath": os.path.join(PROJECT_PATH, "elfen_resources",
+                                 "Psycholinguistics",
+                                 "AgeofAcquisition",
+                                 "SpanishAoA.txt"),
+        "bibtex": rb"""
+        @article{aoa_alonso,
+        title={Subjective age-of-acquisition norms for 7,039 Spanish words},
+        author={Alonso, Mar\'ia and Fernandez, Angel and D\'iez, Emiliano},
+        journal={Behavior Research Methods},
+        volume={47},
+        pages={268--274},
+        year={2014},
+        publisher={Springer}
+        }
+        """
+    },
 }
 

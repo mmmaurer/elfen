@@ -546,7 +546,16 @@ def load_aoa_norms(path: str,
         }).select(
             ["Word", "Rating.Mean", "Rating.SD"]
         )
-        
+    elif language == "es":
+        aoa_norms = pl.read_csv(path, separator="\t", encoding="utf-16")
+        aoa_norms = aoa_norms.rename({
+            "word": "Word",
+            "averageAoA": "Rating.Mean",
+            "SD": "Rating.SD"
+        }).select(
+            ["Word", "Rating.Mean", "Rating.SD"]
+        )
+
     return aoa_norms
 
 def get_avg_aoa(data: pl.DataFrame,
