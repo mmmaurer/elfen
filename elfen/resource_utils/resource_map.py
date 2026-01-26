@@ -483,5 +483,26 @@ RESOURCE_MAP = {
     #     }
     #     """
     # }
+    "affective_norms_guasch": {
+        "link": "https://static-content.springer.com/"
+                "esm/art%3A10.3758%2Fs13428-015-0684-y/"
+                "MediaObjects/13428_2015_684_MOESM1_ESM.xlsx",
+        "area": "Psycholinguistics",
+        "subarea": "Concreteness",
+        "filename": "13428_2015_684_MOESM1_ESM.xlsx",
+        "filepath": os.path.join(PROJECT_PATH, "elfen_resources",
+                                 "Psycholinguistics",
+                                 "Concreteness",
+                                    "13428_2015_684_MOESM1_ESM.xlsx"),
+        "bibtex": rb"""
+        @article{guasch_es,
+        title={Spanish norms for affective and lexico-semantic variables for 1,400 words},
+        author={Guasch, Marc and Ferr\'e, Pilar and Fraga, Isabel},
+        journal={Behavior Research Methods},
+        volume={48},
+        pages={1358--1369},
+        year={2016},
+        publisher={Springer}"""
+    }
 }
 

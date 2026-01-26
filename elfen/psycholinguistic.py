@@ -145,6 +145,14 @@ def load_concreteness_norms(path: str,
         }).select(
             ["Word", "Conc.M", "Conc.SD"]
         ).drop_nans()  # Drop last three empty rows
+    elif language == "es":
+        concreteness_norms = pl.read_excel(path)
+        concreteness_norms = concreteness_norms.rename({
+            "CON_M": "Conc.M",
+            "CON_SD": "Conc.SD"
+        }).select(
+            ["Word", "Conc.M", "Conc.SD"]
+        )
 
     return concreteness_norms
 
