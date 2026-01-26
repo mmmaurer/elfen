@@ -530,5 +530,29 @@ RESOURCE_MAP = {
         }
         """
     },
+    # polish concreteness norms; also has valence, arousal, dominance,
+    # origin, significance, imageability, and age of acquisition
+    "concreteness_imbir": {
+        "link": "https://www.frontiersin.org/api/v4/articles/174568/file/"
+                "Data_Sheet_1.xlsx/"
+                "174568_supplementary-materials_datasheets_1_xlsx/2",
+        "area": "Psycholinguistics",
+        "subarea": "Concreteness",
+        "filename": "Data Sheet 1.xlsx",
+        "filepath": os.path.join(PROJECT_PATH, "elfen_resources",
+                                 "Psycholinguistics",
+                                 "Concreteness",
+                                 "Data Sheet 1.xlsx"),
+        "bibtex": rb"""
+        @article{concreteness_imbir,
+        title={Affective Norms for 4900 Polish Words Reload (ANPW_R): Assessments for Valence, Arousal, Dominance, Origin, Significance, Concreteness, Imageability and, Age of Acquisition},
+        author={Imbir, Kamil K.},
+        journal={Frontiers in Psychology},
+        volume={7},
+        year={2016},
+        publisher={Frontiers}
+        }
+        """
+    },
 }
 

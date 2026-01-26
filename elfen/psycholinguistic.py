@@ -153,7 +153,15 @@ def load_concreteness_norms(path: str,
         }).select(
             ["Word", "Conc.M", "Conc.SD"]
         )
-
+    elif language == "pl":
+        concreteness_norms = pl.read_excel(path)
+        concreteness_norms = concreteness_norms.rename({
+            "polish word": "Word",
+            "concretness_M": "Conc.M",
+            "concretness_SD": "Conc.SD"
+        }).select(
+            ["Word", "Conc.M", "Conc.SD"]
+        )
     return concreteness_norms
 
 def filter_concreteness_norms(concreness_norms: pl.DataFrame,
@@ -555,7 +563,15 @@ def load_aoa_norms(path: str,
         }).select(
             ["Word", "Rating.Mean", "Rating.SD"]
         )
-
+    elif language == "pl":
+        aoa_norms = pl.read_excel(path)
+        aoa_norms = aoa_norms.rename({
+            "polish word": "Word",
+            "ageOfAquisition_M": "Rating.Mean",
+            "ageOfAquisition_SD": "Rating.SD"
+        }).select(
+            ["Word", "Rating.Mean", "Rating.SD"]
+        )
     return aoa_norms
 
 def get_avg_aoa(data: pl.DataFrame,
