@@ -7,6 +7,7 @@ For a full overview of the features available, check the [overview table](featur
 
 The multilingual support is documented in the [multilingual support table](multilingual_support.md).
 
+Check out our [roadmap](roadmap.md) for planned features and improvements. Check out the [changelog](changelog.md) for recent changes.
 
 ## Installation
 Install this package using the current PyPI version
