@@ -9,7 +9,7 @@ To use them in elfen, find the `elfen_resources` directory in your local elfen i
 python -m pip show elfen
 ```
 
-Then, the `elfen_resources` directory is located in the same directory as the `elfen` package directory.
+Then, the `elfen_resources` directory should be located in the same directory as the `elfen` package directory.
 
 Create the following subdirectories if they do not exist yet:
 - `elfen_resources/Emotion/Sentiment`
