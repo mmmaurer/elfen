@@ -226,7 +226,7 @@ class Extractor:
                         print(f"Feature {feature} not found. Check "
                               "spelling.")
             else:
-                print("Feature group not found. Check spelling.")
+                print(f"Feature group {group} not found. Check spelling.")
     
     def __load_lexicon_from_featurename(self,
                                         filepath: str,
