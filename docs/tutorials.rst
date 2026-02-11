@@ -345,6 +345,7 @@ In cases where you want to extract features based on a custom lexicon that do no
 - ``get_avg_custom``: The average rating of words in a text that are in a custom lexicon
 
 To extract these custom lexicon-based features, you will need to load the respective custom lexicon as a polars DataFrame and extract the features as shown below.
+Note that currently, there is no possibility to pass custom lexicon-based features in a custom configuration, so you will have to extract these features separately using the respective template functions.
 
 .. code-block:: python
 
