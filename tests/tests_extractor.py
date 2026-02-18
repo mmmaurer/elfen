@@ -139,24 +139,34 @@ def test_empty_text_warning():
 def test_full_run_en(sample_data_en):
     """
     Test whether the Extractor runs without errors for English texts.
+    In the current implementation, this will exclude the Emotion feature
+    area, since resources have to be downloaded manually.
     """
     extractor = Extractor(data=sample_data_en,
                           backbone='spacy',
                           text_column='text',
                           language='en',
                           model='en_core_web_sm')
-    extractor.extract_features()
+    # extractor.extract_features()
+    for area in ["surface", "pos", "lexical_richness", "readability",
+                 "entities", "semantic", "psycholinguistic", "dependency"]:
+        extractor.extract_feature_group(area)
     assert extractor.data is not None
 
 def test_full_run_de(sample_data_de):
     """
     Test whether the Extractor runs without errors for German texts.
+    In the current implementation, this will exclude the Emotion feature
+    area, since resources have to be downloaded manually.
     """
     extractor = Extractor(data=sample_data_de,
                           backbone='spacy',
                           text_column='text',
                           language='de',
                           model='de_core_news_sm')
-    extractor.extract_features()
+    # extractor.extract_features()
+    for area in ["surface", "pos", "lexical_richness", "readability",
+                 "entities", "semantic", "psycholinguistic", "dependency"]:
+        extractor.extract_feature_group(area)
     assert extractor.data is not None
 
