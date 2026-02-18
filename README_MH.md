@@ -190,6 +190,7 @@ elfen
 -->
 
 For a comprehensive tutorial of all the features visit the [official documentation page](https://elfen.readthedocs.io/en/latest/tutorials.html#).
+For some quick examples, see this [repository](https://github.com/mmmaurer/elfen-examples).
 
 ## Technical Details
 <!--
