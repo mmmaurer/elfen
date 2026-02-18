@@ -237,20 +237,20 @@ RESOURCE_MAP = {
         }
         """
     },
-    # Coso, B., Guasch, M., Buganovic, I., Ferre, P., & Hinojosa, J. A. (2022).
-    # CROWD-5e: A croatian psycholinguistic database for affective norms for
-    # five discrete emotions.
-    # Behavior Research Methods, 55(1), 4018-4034.
-    # TODO: Handle processing the data
-    "affect_crowd5e": {
-        "link": "https://figshare.com/ndownloader/files/36434421",
-        "area": "Emotion",
-        "subarea": "Affect",
-        "filename": "CROWD-5e.xlsx",
-        "filepath": os.path.join(PROJECT_PATH, "elfen_resources", "Emotion",
-                                 "Affect", "CROWD-5e.xlsx"),
-        "bibtex": rb""  # TODO
-    },
+    # # Coso, B., Guasch, M., Buganovic, I., Ferre, P., & Hinojosa, J. A. (2022).
+    # # CROWD-5e: A croatian psycholinguistic database for affective norms for
+    # # five discrete emotions.
+    # # Behavior Research Methods, 55(1), 4018-4034.
+    # # TODO: Handle processing the data
+    # "affect_crowd5e": {
+    #     "link": "https://figshare.com/ndownloader/files/36434421",
+    #     "area": "Emotion",
+    #     "subarea": "Affect",
+    #     "filename": "CROWD-5e.xlsx",
+    #     "filepath": os.path.join(PROJECT_PATH, "elfen_resources", "Emotion",
+    #                              "Affect", "CROWD-5e.xlsx"),
+    #     "bibtex": rb""  # TODO
+    # },
     # Diveica, V, Pexman, P. M., & Binney, R. J. (2023).
     # Quantifying Social Semantics: An Inclusive Definition
     # of Socialness and Ratings for 8,388 English Words.
