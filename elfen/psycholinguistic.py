@@ -16,6 +16,7 @@ The psycholinguistic features implemented in this module are:
     - Number of controversial concreteness words
     - Minimum concreteness score
     - Maximum concreteness score
+    - Standard deviation of concreteness scores
 
 - Age of Acquisition:
     - Average age of acquisition score
@@ -25,6 +26,7 @@ The psycholinguistic features implemented in this module are:
     - Number of controversial age of acquisition words
     - Minimum age of acquisition score
     - Maximum age of acquisition score
+    - Standard deviation of age of acquisition scores
 
 - Word Prevalence:
     - Average prevalence score
@@ -32,6 +34,7 @@ The psycholinguistic features implemented in this module are:
     - Number of high prevalence words
     - Minimum prevalence score
     - Maximum prevalence score
+    - Standard deviation of prevalence scores
 
 - Socialness:
     - Average socialness score
@@ -41,6 +44,7 @@ The psycholinguistic features implemented in this module are:
     - Number of controversial socialness words
     - Minimum socialness score
     - Maximum socialness score
+    - Standard deviation of socialness scores
 
 - Iconicity:
     - Average iconicity score
@@ -50,6 +54,7 @@ The psycholinguistic features implemented in this module are:
     - Number of controversial iconicity words
     - Minimum iconicity score
     - Maximum iconicity score
+    - Standard deviation of iconicity scores
 
 - Sensorimotor; per dimension (e.g., Auditory, Gustatory, Haptic, etc.):
     - Average sensorimotor score
@@ -59,6 +64,7 @@ The psycholinguistic features implemented in this module are:
     - Number of controversial sensorimotor words
     - Minimum sensorimotor score
     - Maximum sensorimotor score
+    - Standard deviation of sensorimotor scores
 """
 import polars as pl
 import warnings
@@ -74,12 +80,10 @@ from .generic import (
     get_n_controversial,
     get_max,
     get_min,
+    get_sd,
 )
 from .preprocess import (
     get_lemmas,
-)
-from .util import (
-    filter_lexicon,
 )
 
 
@@ -141,7 +145,23 @@ def load_concreteness_norms(path: str,
         }).select(
             ["Word", "Conc.M", "Conc.SD"]
         ).drop_nans()  # Drop last three empty rows
-
+    elif language == "es":
+        concreteness_norms = pl.read_excel(path)
+        concreteness_norms = concreteness_norms.rename({
+            "CON_M": "Conc.M",
+            "CON_SD": "Conc.SD"
+        }).select(
+            ["Word", "Conc.M", "Conc.SD"]
+        )
+    elif language == "pl":
+        concreteness_norms = pl.read_excel(path)
+        concreteness_norms = concreteness_norms.rename({
+            "polish word": "Word",
+            "concretness_M": "Conc.M",
+            "concretness_SD": "Conc.SD"
+        }).select(
+            ["Word", "Conc.M", "Conc.SD"]
+        )
     return concreteness_norms
 
 def filter_concreteness_norms(concreness_norms: pl.DataFrame,
@@ -401,6 +421,13 @@ def get_min_concreteness(data: pl.DataFrame,
                    **kwargs
     )
 
+    if data.filter(pl.col("min_concreteness").is_null()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the concreteness "
+            "norms. The minimum concreteness for these texts is set to None/null."
+            "You may want to consider filling nulls with a specific value."
+        )
+
     return data
 
 def get_max_concreteness(data: pl.DataFrame,
@@ -434,6 +461,55 @@ def get_max_concreteness(data: pl.DataFrame,
                    backbone=backbone,
                    **kwargs
     )
+
+    if data.filter(pl.col("max_concreteness").is_null()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the concreteness "
+            "norms. The maximum concreteness for these texts is set to None/null."
+            "You may want to consider filling nulls with a specific value."
+        )
+
+    return data
+
+def get_sd_concreteness(data: pl.DataFrame,
+                        lexicon: pl.DataFrame,
+                        backbone: str = 'spacy',
+                        **kwargs: dict[str, str],
+                        ) -> pl.DataFrame:
+    """
+    Calculates the standard deviation of concreteness scores in a text.
+
+    Args:
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        lexicon (pl.DataFrame):
+            A Polars DataFrame containing the concreteness norms.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
+
+    Returns:
+        data (pl.DataFrame):
+            A Polars DataFrame containing the standard deviation of
+            concreteness scores in the text data.
+            The standard deviation of concreteness scores is stored in a
+            new column named 'sd_concreteness'.
+    """
+    data = get_sd(data=data,
+                  lexicon=lexicon,
+                  lexicon_word_col="Word",
+                  lexicon_rating_col="Conc.M",
+                  new_col_name="sd_concreteness",
+                  backbone=backbone,
+                  **kwargs
+    )
+
+    if data.filter(pl.col("sd_concreteness").is_null()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the concreteness "
+            "norms. The standard deviation of concreteness for these texts "
+            "is set to None/null. You may want to consider filling nulls with a "
+            "specific value."
+        )
 
     return data
 
@@ -478,7 +554,34 @@ def load_aoa_norms(path: str,
         }).select(
             ["Word", "Rating.Mean", "Rating.SD"]
         )
-        
+    elif language == "es":
+        aoa_norms = pl.read_csv(path, separator="\t", encoding="utf-16")
+        aoa_norms = aoa_norms.rename({
+            "word": "Word",
+            "averageAoA": "Rating.Mean",
+            "SD": "Rating.SD"
+        }).select(
+            ["Word", "Rating.Mean", "Rating.SD"]
+        )
+    elif language == "pl":
+        aoa_norms = pl.read_excel(path)
+        aoa_norms = aoa_norms.rename({
+            "polish word": "Word",
+            "ageOfAquisition_M": "Rating.Mean",
+            "ageOfAquisition_SD": "Rating.SD"
+        }).select(
+            ["Word", "Rating.Mean", "Rating.SD"]
+        )
+    elif language == "nl":
+        aoa_norms = pl.read_excel(path,
+                                  read_options={"header_row": 1})
+        aoa_norms = aoa_norms.rename({
+            "Words": "Word",
+            "M AoA": "Rating.Mean",
+            "SD AoA": "Rating.SD"
+        }).select(
+            ["Word", "Rating.Mean", "Rating.SD"]
+        )
     return aoa_norms
 
 def get_avg_aoa(data: pl.DataFrame,
@@ -714,6 +817,14 @@ def get_min_aoa(data: pl.DataFrame,
                    **kwargs
     )
 
+    if data.filter(pl.col("min_aoa").is_null()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the age of "
+            "acquisition norms. The minimum age of acquisition for these "
+            "texts is set to None/null. You may want to consider filling nulls "
+            "with a specific value."
+        )
+
     return data
 
 def get_max_aoa(data: pl.DataFrame,
@@ -747,6 +858,56 @@ def get_max_aoa(data: pl.DataFrame,
                    backbone=backbone,
                    **kwargs
     )
+
+    if data.filter(pl.col("max_aoa").is_null()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the age of "
+            "acquisition norms. The maximum age of acquisition for these "
+            "texts is set to None/null. You may want to consider filling nulls "
+            "with a specific value."
+        )
+
+    return data
+
+def get_sd_aoa(data: pl.DataFrame,
+               lexicon: pl.DataFrame,
+               backbone: str = 'spacy',
+               **kwargs: dict[str, str],
+               ) -> pl.DataFrame:
+    """
+    Calculates the standard deviation of age of acquisition scores in a text.
+
+    Args:
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        lexicon (pl.DataFrame):
+            A Polars DataFrame containing the age of acquisition norms.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
+        
+    Returns:
+        data (pl.DataFrame):
+            A Polars DataFrame containing the standard deviation of age of
+            acquisition scores in the text data.
+            The standard deviation of age of acquisition scores is stored in
+            a new column named 'sd_aoa'.
+    """
+    data = get_sd(data=data,
+                  lexicon=lexicon,
+                  lexicon_word_col="Word",
+                  lexicon_rating_col="Rating.Mean",
+                  new_col_name="sd_aoa",
+                  backbone=backbone,
+                  **kwargs
+    )
+
+    if data.filter(pl.col("sd_aoa").is_null()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the age of "
+            "acquisition norms. The standard deviation of age of "
+            "acquisition for these texts is set to None/null. You may want to "
+            "consider filling nulls with a specific value."
+        )
 
     return data
 
@@ -913,6 +1074,13 @@ def get_min_prevalence(data: pl.DataFrame,
                    backbone=backbone,
                    **kwargs
     )
+    
+    if data.filter(pl.col("min_prevalence").is_null()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the prevalence "
+            "norms. The minimum prevalence for these texts is set to None/null."
+            "You may want to consider filling nulls with a specific value."
+        )
 
     return data
 
@@ -947,6 +1115,55 @@ def get_max_prevalence(data: pl.DataFrame,
                    backbone=backbone,
                    **kwargs
     )
+
+    if data.filter(pl.col("max_prevalence").is_null()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the prevalence "
+            "norms. The maximum prevalence for these texts is set to None/null."
+            "You may want to consider filling nulls with a specific value."
+        )
+
+    return data
+
+def get_sd_prevalence(data: pl.DataFrame,
+                      lexicon: pl.DataFrame,
+                      backbone: str = 'spacy',
+                      **kwargs: dict[str, str],
+                      ) -> pl.DataFrame:
+    """
+    Calculates the standard deviation of prevalence scores in a text.
+
+    Args:
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        lexicon (pl.DataFrame):
+            A Polars DataFrame containing the word prevalence norms.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
+
+    Returns:
+        data (pl.DataFrame):
+            A Polars DataFrame containing the standard deviation of
+            prevalence scores in the text data.
+            The standard deviation of prevalence scores is stored in a
+            new column named 'sd_prevalence'.
+    """
+    data = get_sd(data=data,
+                  lexicon=lexicon,
+                  lexicon_word_col="Word",
+                  lexicon_rating_col="Prevalence",
+                  new_col_name="sd_prevalence",
+                  backbone=backbone,
+                  **kwargs
+    )
+
+    if data.filter(pl.col("sd_prevalence").is_null()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the prevalence "
+            "norms. The standard deviation of prevalence for these texts "
+            "is set to None/null. You may want to consider filling nulls with a "
+            "specific value."
+        )
 
     return data
 
@@ -1196,6 +1413,13 @@ def get_min_socialness(data: pl.DataFrame,
                    **kwargs
     )
 
+    if data.filter(pl.col("min_socialness").is_null()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the socialness "
+            "norms. The minimum socialness for these texts is set to None/null."
+            "You may want to consider filling nulls with a specific value."
+        )
+
     return data
 
 def get_max_socialness(data: pl.DataFrame,
@@ -1229,6 +1453,55 @@ def get_max_socialness(data: pl.DataFrame,
                    backbone=backbone,
                    **kwargs
     )
+
+    if data.filter(pl.col("max_socialness").is_null()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the socialness "
+            "norms. The maximum socialness for these texts is set to None/null."
+            "You may want to consider filling nulls with a specific value."
+        )
+
+    return data
+
+def get_sd_socialness(data: pl.DataFrame,
+                      lexicon: pl.DataFrame,
+                      backbone: str = 'spacy',
+                      **kwargs: dict[str, str],
+                      ) -> pl.DataFrame:
+    """
+    Calculates the standard deviation of socialness scores in a text.
+
+    Args:
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        lexicon (pl.DataFrame):
+            A Polars DataFrame containing the socialness norms.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
+
+    Returns:
+        data (pl.DataFrame):
+            A Polars DataFrame containing the standard deviation of
+            socialness scores in the text data.
+            The standard deviation of socialness scores is stored in a
+            new column named 'sd_socialness'.
+    """
+    data = get_sd(data=data,
+                  lexicon=lexicon,
+                  lexicon_word_col="Word",
+                  lexicon_rating_col="Mean",
+                  new_col_name="sd_socialness",
+                  backbone=backbone,
+                  **kwargs
+    )
+
+    if data.filter(pl.col("sd_socialness").is_null()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the socialness "
+            "norms. The standard deviation of socialness for these texts "
+            "is set to None/null. You may want to consider filling nulls with a "
+            "specific value."
+        )
 
     return data
 
@@ -1484,6 +1757,13 @@ def get_min_iconicity(data: pl.DataFrame,
                    **kwargs
     )
 
+    if data.filter(pl.col("min_iconicity").is_null()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the iconicity "
+            "norms. The minimum iconicity for these texts is set to None/null."
+            "You may want to consider filling nulls with a specific value."
+        )
+
     return data
 
 def get_max_iconicity(data: pl.DataFrame,
@@ -1518,7 +1798,56 @@ def get_max_iconicity(data: pl.DataFrame,
                    **kwargs
     )
 
+    if data.filter(pl.col("max_iconicity").is_null()).shape[0] > 0:
+        warnings.warn(
+            "Some texts do not contain any words from the iconicity "
+            "norms. The maximum iconicity for these texts is set to None/null."
+            "You may want to consider filling nulls with a specific value."
+        )
+
     return data
+
+def get_sd_iconicity(data: pl.DataFrame,
+                     lexicon: pl.DataFrame,
+                     backbone: str = 'spacy',
+                     **kwargs: dict[str, str],
+                     ) -> pl.DataFrame:
+        """
+        Calculates the standard deviation of iconicity scores in a text.
+    
+        Args:
+            data (pl.DataFrame): A Polars DataFrame containing the text data.
+            lexicon (pl.DataFrame):
+                A Polars DataFrame containing the iconicity norms.
+            backbone (str):
+                The NLP library used to process the text data.
+                Either 'spacy' or 'stanza'.
+    
+        Returns:
+            data (pl.DataFrame):
+                A Polars DataFrame containing the standard deviation of
+                iconicity scores in the text data.
+                The standard deviation of iconicity scores is stored in a
+                new column named 'sd_iconicity'.
+        """
+        data = get_sd(data=data,
+                      lexicon=lexicon,
+                      lexicon_word_col="word",
+                      lexicon_rating_col="rating",
+                      new_col_name="sd_iconicity",
+                      backbone=backbone,
+                      **kwargs
+        )
+
+        if data.filter(pl.col("sd_iconicity").is_null()).shape[0] > 0:
+            warnings.warn(
+                "Some texts do not contain any words from the iconicity "
+                "norms. The standard deviation of iconicity for these texts "
+                "is set to None/null. You may want to consider filling "
+                "nulls with a specific value."
+            )
+    
+        return data
 
 # ---------------------------------------------------- #
 #                   Sensorimotor                       #
@@ -1559,8 +1888,11 @@ def load_sensorimotor_norms(path: str,
         ).rename({ # rename columns to match the English norms
             var: f"{var}.mean" for var in sensorimotor_vars[language]
         })
-    elif language == "fr":
-        pass # TODO: add French sensorimotor norms
+    else:
+        raise ValueError(
+            f"Sensorimotor norms for language '{language}' are not "
+            "available. Supported languages are: 'en' and 'it'."
+        )
 
     return sensorimotor_norms
 
@@ -1604,11 +1936,12 @@ def get_avg_sensorimotor(data: pl.DataFrame,
                        **kwargs
                        )
         if data.filter(
-            pl.col(f"avg_{var}_sensorimotor").is_nan()).shape[0] > 0:
+            pl.col(f"avg_{var}_sensorimotor").is_null()).shape[0] > 0:
             warnings.warn(
                 f"Some texts do not contain any words from the {var} "
                 "sensorimotor norms. The average sensorimotor score for "
-                "these texts is set to NaN."
+                "these texts is set to None/null. You may want to consider "
+                "filling nulls with a specific value."
             )
 
     return data
@@ -1884,6 +2217,15 @@ def get_min_sensorimotor(data: pl.DataFrame,
                        backbone=backbone,
                        **kwargs
         )
+
+        if data.filter(pl.col(f"min_{var}_sensorimotor").is_null()
+                   ).shape[0] > 0:
+            warnings.warn(
+                f"Some texts do not contain any words from the {var} "
+                "sensorimotor norms. The minimum sensorimotor score for "
+                "these texts is set to None/null. You may want to consider "
+                "filling nulls with a specific value."
+            )
     
     return data
 
@@ -1929,5 +2271,69 @@ def get_max_sensorimotor(data: pl.DataFrame,
                        backbone=backbone,
                        **kwargs
         )
+
+        if data.filter(pl.col(f"max_{var}_sensorimotor").is_null()
+                   ).shape[0] > 0:
+            warnings.warn(
+                f"Some texts do not contain any words from the {var} "
+                "sensorimotor norms. The maximum sensorimotor score for "
+                "these texts is set to None/null. You may want to consider "
+                "filling nulls with a specific value."
+            )
     
     return data
+
+def get_sd_sensorimotor(data: pl.DataFrame,
+                       lexicon: pl.DataFrame,
+                       backbone: str = 'spacy',
+                       sensorimotor_vars: list[str] = \
+                        SENSORIMOTOR_VARS,
+                       language: str = "en",
+                       **kwargs: dict[str, str],
+                       ) -> pl.DataFrame:
+    """
+    Calculates the standard deviation of sensorimotor variable scores in a text.
+
+    Args:
+        data (pl.DataFrame): A Polars DataFrame containing the text data.
+        lexicon (pl.DataFrame):
+            A Polars DataFrame containing the sensorimotor norms.
+        backbone (str):
+            The NLP library used to process the text data.
+            Either 'spacy' or 'stanza'.
+        sensorimotor_vars (list[str]):
+            A list of sensorimotor variables to calculate the standard deviation
+            for. Defaults to SENSORIMOTOR_VARS.
+        language (str):
+            The language of the text data. Defaults to "en".
+    
+    Returns:
+        data (pl.DataFrame):
+            A Polars DataFrame containing the standard deviation of sensorimotor
+            scores in the text data.
+            The standard deviation of sensorimotor scores is stored in new columns
+            named 'sd_{var}' where {var} is the sensorimotor variable.
+    """
+    sensorimotor_vars = sensorimotor_vars[language]
+
+    for var in sensorimotor_vars:
+        data = get_sd(data=data,
+                      lexicon=lexicon,
+                      lexicon_word_col="Word",
+                      lexicon_rating_col=f"{var}.mean",
+                      new_col_name=f"sd_{var}_sensorimotor",
+                      backbone=backbone,
+                      **kwargs
+        )
+
+        if data.filter(pl.col(f"sd_{var}_sensorimotor").is_null()
+                   ).shape[0] > 0:
+            warnings.warn(
+                f"Some texts do not contain any words from the {var} "
+                "sensorimotor norms. The standard deviation of sensorimotor "
+                f"for these texts is None/null. You may want to consider "
+                "filling NaNs with a specific value."
+            )
+    
+    return data
+

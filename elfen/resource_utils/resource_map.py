@@ -237,20 +237,20 @@ RESOURCE_MAP = {
         }
         """
     },
-    # Coso, B., Guasch, M., Buganovic, I., Ferre, P., & Hinojosa, J. A. (2022).
-    # CROWD-5e: A croatian psycholinguistic database for affective norms for
-    # five discrete emotions.
-    # Behavior Research Methods, 55(1), 4018-4034.
-    # TODO: Handle processing the data
-    "affect_crowd5e": {
-        "link": "https://figshare.com/ndownloader/files/36434421",
-        "area": "Emotion",
-        "subarea": "Affect",
-        "filename": "CROWD-5e.xlsx",
-        "filepath": os.path.join(PROJECT_PATH, "elfen_resources", "Emotion",
-                                 "Affect", "CROWD-5e.xlsx"),
-        "bibtex": rb""  # TODO
-    },
+    # # Coso, B., Guasch, M., Buganovic, I., Ferre, P., & Hinojosa, J. A. (2022).
+    # # CROWD-5e: A croatian psycholinguistic database for affective norms for
+    # # five discrete emotions.
+    # # Behavior Research Methods, 55(1), 4018-4034.
+    # # TODO: Handle processing the data
+    # "affect_crowd5e": {
+    #     "link": "https://figshare.com/ndownloader/files/36434421",
+    #     "area": "Emotion",
+    #     "subarea": "Affect",
+    #     "filename": "CROWD-5e.xlsx",
+    #     "filepath": os.path.join(PROJECT_PATH, "elfen_resources", "Emotion",
+    #                              "Affect", "CROWD-5e.xlsx"),
+    #     "bibtex": rb""  # TODO
+    # },
     # Diveica, V, Pexman, P. M., & Binney, R. J. (2023).
     # Quantifying Social Semantics: An Inclusive Definition
     # of Socialness and Ratings for 8,388 English Words.
@@ -483,5 +483,99 @@ RESOURCE_MAP = {
     #     }
     #     """
     # }
+    # concreteness norms for spanish; also has valence and arousal ratings,
+    # imageability, context availability, and familiarity
+    "affective_norms_guasch": {
+        "link": "https://static-content.springer.com/"
+                "esm/art%3A10.3758%2Fs13428-015-0684-y/"
+                "MediaObjects/13428_2015_684_MOESM1_ESM.xlsx",
+        "area": "Psycholinguistics",
+        "subarea": "Concreteness",
+        "filename": "13428_2015_684_MOESM1_ESM.xlsx",
+        "filepath": os.path.join(PROJECT_PATH, "elfen_resources",
+                                 "Psycholinguistics",
+                                 "Concreteness",
+                                    "13428_2015_684_MOESM1_ESM.xlsx"),
+        "bibtex": rb"""
+        @article{guasch_es,
+        title={Spanish norms for affective and lexico-semantic variables for 1,400 words},
+        author={Guasch, Marc and Ferr\'e, Pilar and Fraga, Isabel},
+        journal={Behavior Research Methods},
+        volume={48},
+        pages={1358--1369},
+        year={2016},
+        publisher={Springer}"""
+    },
+    # aoa norms for spanish; also has written and spoken frequency
+    "aoa_alonso": {
+        "link": "https://static-content.springer.com/esm/"
+                "art%3A10.3758%2Fs13428-014-0454-2/MediaObjects/"
+                "13428_2014_454_MOESM1_ESM.zip",
+        "area": "Psycholinguistics",
+        "subarea": "AgeofAcquisition",
+        "filename": "SpanishAoA.txt",
+        "filepath": os.path.join(PROJECT_PATH, "elfen_resources",
+                                 "Psycholinguistics",
+                                 "AgeofAcquisition",
+                                 "SpanishAoA.txt"),
+        "bibtex": rb"""
+        @article{aoa_alonso,
+        title={Subjective age-of-acquisition norms for 7,039 Spanish words},
+        author={Alonso, Mar\'ia and Fernandez, Angel and D\'iez, Emiliano},
+        journal={Behavior Research Methods},
+        volume={47},
+        pages={268--274},
+        year={2014},
+        publisher={Springer}
+        }
+        """
+    },
+    # polish concreteness norms; also has valence, arousal, dominance,
+    # origin, significance, imageability, and age of acquisition
+    "concreteness_imbir": {
+        "link": "https://www.frontiersin.org/api/v4/articles/174568/file/"
+                "Data_Sheet_1.xlsx/"
+                "174568_supplementary-materials_datasheets_1_xlsx/2",
+        "area": "Psycholinguistics",
+        "subarea": "Concreteness",
+        "filename": "Data Sheet 1.xlsx",
+        "filepath": os.path.join(PROJECT_PATH, "elfen_resources",
+                                 "Psycholinguistics",
+                                 "Concreteness",
+                                 "Data Sheet 1.xlsx"),
+        "bibtex": rb"""
+        @article{concreteness_imbir,
+        title={Affective Norms for 4900 Polish Words Reload (ANPW_R): Assessments for Valence, Arousal, Dominance, Origin, Significance, Concreteness, Imageability and, Age of Acquisition},
+        author={Imbir, Kamil K.},
+        journal={Frontiers in Psychology},
+        volume={7},
+        year={2016},
+        publisher={Frontiers}
+        }
+        """
+    },
+    # aoa norms for dutch
+    "aoa_moors": {
+        "link": "https://static-content.springer.com/esm/"
+                "art%3A10.3758%2Fs13428-012-0243-8/MediaObjects/"
+                "13428_2012_243_MOESM1_ESM.xlsx",
+        "area": "Psycholinguistics",
+        "subarea": "AgeofAcquisition",
+        "filename": "13428_2012_243_MOESM1_ESM.xlsx",
+        "filepath": os.path.join(PROJECT_PATH, "elfen_resources",
+                                 "Psycholinguistics",
+                                 "AgeofAcquisition",
+                                 "13428_2012_243_MOESM1_ESM.xlsx"),
+        "bibtex": rb"""
+        @article{aoa_moors,
+        title={Norms of valence, arousal, dominance, and age of acquisition for 4,300 Dutch words},
+        author={Moors, Agnes and De Houwer, Jan and Hermans, Dirk and Wanmaker, Sabine and van Schie, Kevin and Van Harmelen, Anne-Laura and De Schryver, Maarten and De Winne, Jeffrey and Brysbaert, Marc},
+        journal={Behavior Research Methods},
+        volume={45},
+        pages={169--177},
+        year={2013},
+        publisher={Springer}
+        """ 
+    }
 }
 

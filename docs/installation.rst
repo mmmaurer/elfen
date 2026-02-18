@@ -71,10 +71,15 @@ Please see  this guide to download and install them: https://github.com/mmmaurer
 Default norms and lexicons
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The package uses some established norms and lexicons for some features (psycholinguistic norms, sentiment/emotion lexicons, etc.). These will be downloaded automatically when you first use the respective features via the ``extractor`` functionality [#f1]_ . Please note that the usage of these norms and lexicons is subject to their respective licenses. 
+The package uses some established norms and lexicons for some features (psycholinguistic norms, etc.). These will be downloaded automatically when you first use the respective features via the ``extractor`` functionality [#f1]_ . Please note that the usage of these norms and lexicons is subject to their respective licenses. 
 
 .. important::
 
     We only provide download functionality, and the user is responsible for complying with the respective licenses.
 
 .. [#f1] For more information on the extractor functionality, see the :ref:`elfen.extractor` documentation or the :ref:`quickstart` and  :ref:`tutorials` sections.
+
+NRC emotion and sentiment lexicons
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The NRC emotion and sentiment lexicons need to be downloaded manually due to licensing restrictions. Without these lexicons, only a subset of features will be available.
+Please see  this guide to download and install them: https://github.com/mmmaurer/elfen/blob/main/download_nrc.md

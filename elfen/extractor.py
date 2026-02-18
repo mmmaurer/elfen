@@ -226,7 +226,7 @@ class Extractor:
                         print(f"Feature {feature} not found. Check "
                               "spelling.")
             else:
-                print("Feature group not found. Check spelling.")
+                print(f"Feature group {group} not found. Check spelling.")
     
     def __load_lexicon_from_featurename(self,
                                         filepath: str,
@@ -558,7 +558,7 @@ class Extractor:
                 if "lexicon" in kwargs:
                     lexicon = kwargs["lexicon"]
                     self.__apply_function(feature_name,
-                                        **kwargs)
+                                          **kwargs)
                 elif feature_name in FEATURE_LEXICON_MAP and \
                     "lexicon" not in kwargs:
                     lexicon = self.__gather_resource_from_featurename(
