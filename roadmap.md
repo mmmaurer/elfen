@@ -1,8 +1,9 @@
 # Roadmap
-This document outlines the planned features and improvements for our project. The roadmap is divided into upcoming changes, mid-term improvements, and long-term goals.
+This document outlines the planned features and improvements for this project. The roadmap is divided into upcoming changes, mid-term improvements, and long-term goals.
 
 ## Upcoming Changes
-- Extended multilingual support for psycholinguistic norms. 
+- Extended multilingual support for psycholinguistic norms.
+- Integration of additional wn features, such as hypernyms, hyponyms, holonyms, and meronyms.
 
 ## Mid-Term Improvements
 - OSF download functionality to allow for integration of more lexicons.
