@@ -63,14 +63,15 @@ While all feature extraction functions in this package are written from scratch,
 We use the [`wn`](https://github.com/goodmami/wn) Python package to extract Open  Multilingual Wordnet synsets.
 
 ## Citation
-If you use this package in your work, for now, please cite
+If you use this package in your work, please cite the [System Demonstration paper](ELFEN_System_Demo.pdf) describing the package, to appear in the proceedings of the 19th Conference of the European Chapter of the Association for Computational Linguistics (EACL 2026):
 ```bibtex
-@misc{maurer-2025-elfen,
+@inproceedings{maurer-2026-elfen,
   author = {Maurer, Maximilian},
-  title = {ELFEN - Efficient Linguistic Feature Extraction for Natural Language Datasets},
-  year = {2025},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  howpublished = {\url{https://github.com/mmmaurer/elfen}},
+  title = {elfen: A Python Package for Efficient Linguistic Feature Extraction for Natural Language Datasets},
+  booktitle = "Proceedings of the 19th Conference of the European Chapter of the Association for Computational Linguistics: System Demonstrations",
+  month = mar,
+  year = "2026",
+  address = "Rabat, Morocco",
+  publisher = "Association for Computational Linguistics",
 }
 ```
