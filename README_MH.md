@@ -54,9 +54,11 @@ A Python package to efficiently extract linguistic features at scale for text da
 3. Each use case may list publications in which the use case occurs (e.g., in APA7 style, https://apastyle.apa.org/style-grammar-guidelines/references/examples).
 -->
 
-Though none of the following example use our package, the features can be used, for example, for:
-- Assessment of stylistic differences of social media texts for different sociodemographic groups [(e.g. Flekova et al., 2016)](https://aclanthology.org/P16-2051/)
-- Finding patterns in LLM-produced text [(e.g. Miaschi et al., 2024)](https://aclanthology.org/2024.emnlp-main.166/)
+elfen has been used in a variety of use cases, for example:
+- Analyzing differences between human-written and LLM-generated counterarguments (see [Dönmez, Maurer et al., 2025](https://aclanthology.org/2025.emnlp-main.1755/)).
+- Perceived gendered text style differences (see [Chen et al., 2025](https://aclanthology.org/2025.emnlp-main.1602/)).
+- Disagreement patterns of humans and LLMs for moral foundations and human values (see [Falk & Lapesa, 2025](https://aclanthology.org/2025.acl-long.1116/)).
+- Analyzing LLM multi-agent communication (see [Parfenova et al., 2025](https://aclanthology.org/2025.blackboxnlp-1.12/)).
 
 ## Input Data
 <!--
@@ -74,7 +76,7 @@ The expected format is a [polars](https://pola.rs/) dataframe with a column cont
 2. The output data section should link to a small example output file in the same repository that can be re-created (as far as the method is non-random) from the input data (as described in the section "How to Use").
 -->
 
-The input is a polars dataframe with a column containing text instances:
+The input is a polars dataframe with a column containing text instances in the column "text", with two additional columns "subject" and "condition" for metadata:
 
 ```
 > print(df)
@@ -161,6 +163,8 @@ python -m wn download omw:1.4
 ```
 
 For more information on the available wordnet collections, consult the [wn package documentation](https://wn.readthedocs.io/en/latest/guides/lexicons.html).
+
+For the full functionality of the emotion features, you will need to download the NRC emotion lexicon following [this guide](https://github.com/mmmaurer/elfen/blob/main/download_nrc.md).
 
 ## Repository structure
 
