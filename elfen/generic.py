@@ -47,7 +47,8 @@ def get_avg(data: pl.DataFrame,
         pl.col("lemmas").map_elements(
             lambda x: filter_lexicon(lexicon=lexicon,
                                      words=x,
-                                     word_column=lexicon_word_col). \
+                                     word_column=lexicon_word_col,
+                                     keep_duplicates=True). \
                 select(pl.col(lexicon_rating_col)).mean().item(),
                 return_dtype=pl.Float64
                 ).alias(new_col_name)
@@ -95,7 +96,8 @@ def get_n_low(data: pl.DataFrame,
         pl.col("lemmas").map_elements(
             lambda x: filter_lexicon(lexicon=lexicon,
                                      words=x,
-                                     word_column=lexicon_word_col). \
+                                     word_column=lexicon_word_col,
+                                     keep_duplicates=True). \
                 select(pl.col(lexicon_rating_col)).filter(
                     pl.col(lexicon_rating_col) < threshold).shape[0],
                 return_dtype=pl.Int64
@@ -144,7 +146,8 @@ def get_n_high(data: pl.DataFrame,
         pl.col("lemmas").map_elements(
             lambda x: filter_lexicon(lexicon=lexicon,
                                      words=x,
-                                     word_column=lexicon_word_col). \
+                                     word_column=lexicon_word_col,
+                                     keep_duplicates=True). \
                 select(pl.col(lexicon_rating_col)).filter(
                     pl.col(lexicon_rating_col) > threshold).shape[0],
                 return_dtype=pl.Int64
@@ -195,7 +198,8 @@ def get_n_controversial(data: pl.DataFrame,
         pl.col("lemmas").map_elements(
             lambda x: filter_lexicon(lexicon=lexicon,
                                      words=x,
-                                     word_column=lexicon_word_col). \
+                                     word_column=lexicon_word_col,
+                                     keep_duplicates=True). \
                 select(pl.col(lexicon_sd_col)).filter(
                     pl.col(lexicon_sd_col) > threshold).shape[0],
                 return_dtype=pl.Int64
@@ -242,7 +246,8 @@ def get_max(data: pl.DataFrame,
         pl.col("lemmas").map_elements(
             lambda x: filter_lexicon(lexicon=lexicon,
                                      words=x,
-                                     word_column=lexicon_word_col). \
+                                     word_column=lexicon_word_col,
+                                     keep_duplicates=True). \
                 select(pl.col(lexicon_rating_col)).max().item(),
                 return_dtype=pl.Float64
                 ).alias(new_col_name)
@@ -288,7 +293,8 @@ def get_min(data: pl.DataFrame,
         pl.col("lemmas").map_elements(
             lambda x: filter_lexicon(lexicon=lexicon,
                                      words=x,
-                                     word_column=lexicon_word_col). \
+                                     word_column=lexicon_word_col,
+                                     keep_duplicates=True). \
                 select(pl.col(lexicon_rating_col)).min().item(),
                 return_dtype=pl.Float64
                 ).alias(new_col_name)
@@ -334,7 +340,8 @@ def get_sd(data: pl.DataFrame,
         pl.col("lemmas").map_elements(
             lambda x: filter_lexicon(lexicon=lexicon,
                                      words=x,
-                                     word_column=lexicon_word_col). \
+                                     word_column=lexicon_word_col,
+                                     keep_duplicates=True). \
                 select(pl.col(lexicon_rating_col)).std().item(),
                 return_dtype=pl.Float64
                 ).alias(new_col_name)

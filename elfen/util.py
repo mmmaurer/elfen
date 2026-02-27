@@ -69,7 +69,8 @@ def normalize_column(data: pl.DataFrame,
 
 def filter_lexicon(lexicon: pl.DataFrame,
                    words: pl.Series,
-                   word_column: str = "Word"
+                   word_column: str = "Word",
+                   keep_duplicates: bool = False
                    ) -> pl.DataFrame:
     """
     Filters a lexicon to only include the words in a list.
@@ -84,7 +85,15 @@ def filter_lexicon(lexicon: pl.DataFrame,
         filtered_lexicon (pl.DataFrame):
             A Polars DataFrame containing only the words in the list.
     """
-    return lexicon.filter(pl.col(word_column).is_in(words))
+    if not keep_duplicates:
+        return lexicon.filter(pl.col(word_column).is_in(words))
+    else:
+        return pl.DataFrame(
+            {"word": words}
+            ).join(lexicon, 
+                   left_on="word", 
+                   right_on=word_column,
+                   how="inner").drop("word")
 
 def upos_to_wn(upos_tag: str) -> str:
     """
