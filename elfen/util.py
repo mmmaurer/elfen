@@ -67,34 +67,6 @@ def normalize_column(data: pl.DataFrame,
 
     return normalized_data
 
-def filter_lexicon(lexicon: pl.DataFrame,
-                   words: pl.Series,
-                   word_column: str = "Word",
-                   keep_duplicates: bool = False
-                   ) -> pl.DataFrame:
-    """
-    Filters a lexicon to only include the words in a list.
-
-    Args:
-        lexicon (pl.DataFrame): A Polars DataFrame containing the lexicon.
-        words (pl.Series): A Polars Series containing the words to include.
-        word_column (str):
-            The name of the column containing the words in the lexicon.
-
-    Returns:
-        filtered_lexicon (pl.DataFrame):
-            A Polars DataFrame containing only the words in the list.
-    """
-    if not keep_duplicates:
-        return lexicon.filter(pl.col(word_column).is_in(words))
-    else:
-        return pl.DataFrame(
-            {"word": words}
-            ).join(lexicon, 
-                   left_on="word", 
-                   right_on=word_column,
-                   how="inner").drop("word")
-
 def upos_to_wn(upos_tag: str) -> str:
     """
     Converts a Universal POS tag to a (Senti)WordNet POS tag.
@@ -149,4 +121,4 @@ def zero_token_warning_null(feature: str) -> None:
                   f"values for the {feature}. Consider filtering "
                   f"these texts or filling Null values using "
                   f"`fill_null()` or removing them for further analysis.")
-    
+
