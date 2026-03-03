@@ -1,7 +1,6 @@
 from elfen.util import (
     rescale_column,
     normalize_column,
-    filter_lexicon,
     upos_to_wn
 )
 import polars as pl
