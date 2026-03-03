@@ -28,6 +28,12 @@ python -m wn download odenet:1.4
 
 For more information on the available wordnet collections, consult the [wn package documentation](https://wn.readthedocs.io/en/latest/guides/lexicons.html).
 
+Note that if you have used elfen or the wn package before, you may encounter errors from the wn package about an incompatible database schema. In that case, you can use the following command to reset the database:
+```python
+  import wn
+  wn.reset_database(rebuild=True)
+```
+
 ### Emotion lexicons
 The emotion lexicons used in this package have to be downloaded manually due to licensing restrictions.
 After downloading, the extracted folders have to be placed in the respective directories.
