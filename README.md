@@ -72,12 +72,18 @@ We use the [`wn`](https://github.com/goodmami/wn) Python package to extract Open
 If you use this package in your work, please cite the [System Demonstration paper](ELFEN_System_Demo.pdf) describing the package, to appear in the proceedings of the 19th Conference of the European Chapter of the Association for Computational Linguistics (EACL 2026):
 ```bibtex
 @inproceedings{maurer-2026-elfen,
-  author = {Maurer, Maximilian},
-  title = {elfen: A Python Package for Efficient Linguistic Feature Extraction for Natural Language Datasets},
-  booktitle = "Proceedings of the 19th Conference of the European Chapter of the Association for Computational Linguistics: System Demonstrations",
-  month = mar,
-  year = "2026",
-  address = "Rabat, Morocco",
-  publisher = "Association for Computational Linguistics",
+    title = "elfen: A Python Package for Efficient Linguistic Feature Extraction for Natural Language Datasets",
+    author = "Maurer, Maximilian",
+    editor = "Croce, Danilo  and
+      Leidner, Jochen  and
+      Moosavi, Nafise Sadat",
+    booktitle = "Proceedings of the 19th Conference of the {E}uropean Chapter of the {A}ssociation for {C}omputational {L}inguistics (Volume 3: System Demonstrations)",
+    month = mar,
+    year = "2026",
+    address = "Rabat, Marocco",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2026.eacl-demo.5/",
+    pages = "61--74",
+    ISBN = "979-8-89176-382-1"
 }
 ```
