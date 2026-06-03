@@ -111,6 +111,16 @@ class Extractor:
         else:
             max_length = 1_000_000
 
+        if "n_process" in self.config:
+            n_process = self.config["n_process"]
+        else:
+            n_process = pl.thread_pool_size()
+
+        if "batch_size" in self.config:
+            batch_size = self.config["batch_size"]
+        else:
+            batch_size = 1
+
         # Check if the backbone is valid
         if self.config["backbone"] not in ["spacy", "stanza"]:
             raise ValueError("Backbone must be 'spacy' or 'stanza'.")
@@ -120,6 +130,8 @@ class Extractor:
                                     backbone=self.config["backbone"],
                                     lang=self.config["language"],
                                     model=self.config["model"],
+                                    batch_size=batch_size,
+                                    n_process=n_process,
                                     max_length=max_length)
         
         self.helper_cols = [
