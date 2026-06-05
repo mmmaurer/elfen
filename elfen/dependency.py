@@ -100,8 +100,10 @@ def get_tree_depth(data: pl.DataFrame,
     if backbone == 'spacy':
         data = data.with_columns(
             pl.col('nlp').map_elements(
-                lambda x: np.mean([walk_tree(sent.root, 0) for sent in
-                                   x.sents]) if len(list(x.sents)) > 0 else 0,
+                lambda x: np.mean([walk_tree(sent.root, 0) 
+                                   for sent 
+                                   in x.sents]) 
+                                   if len(list(x.sents)) > 0 else 0.0,
             return_dtype=pl.Float64
             ).alias('tree_depth')
         )
