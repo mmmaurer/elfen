@@ -192,7 +192,7 @@ def get_flesch_reading_ease(data: pl.DataFrame,
     data = data.with_columns(
         (206.835 - (1.015 * (pl.col("n_tokens") / \
                              pl.col("n_sentences"))) - \
-         (84.6 * (pl.col("n_syllables") / pl.col("n_sentences")))
+         (84.6 * (pl.col("n_syllables") / pl.col("n_tokens")))
          ).alias("flesch_reading_ease"),
     )
     if data.filter(pl.col("n_tokens") == 0).shape[0] > 0:
@@ -229,7 +229,7 @@ def get_flesch_kincaid_grade(data: pl.DataFrame,
 
     data = data.with_columns(
         (0.39 * (pl.col("n_tokens") / pl.col("n_sentences")) + \
-         11.8 * (pl.col("n_syllables") / pl.col("n_sentences")) - 15.59
+         11.8 * (pl.col("n_syllables") / pl.col("n_tokens")) - 15.59
          ).alias("flesch_kincaid_grade"),
     )
     if data.filter(pl.col("n_tokens") == 0).shape[0] > 0:
