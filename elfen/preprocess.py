@@ -29,6 +29,8 @@ def preprocess_data(data: pl.DataFrame,
                     backbone: str = 'spacy',
                     model: str = 'en_core_web_sm',
                     max_length: int = 1000000,
+                    batch_size: int = 1,
+                    n_process: int = 1,
                     **kwargs: dict[str, str],
                     ) -> pl.DataFrame:
     """
@@ -54,14 +56,26 @@ def preprocess_data(data: pl.DataFrame,
             nlp.add_pipe("syllables")
         else:
             nlp.add_pipe("syllables", after="tagger")
+
+        # Process the text data to retrieve nlp objects
+        docs = list(
+            nlp.pipe(
+                data[text_column],
+                batch_size = batch_size,
+                n_process = n_process
+            )
+        )
+        processed = pl.Series("nlp", docs)
+
     elif backbone == 'stanza':
         nlp = stanza.Pipeline(model=model,
                               processors='tokenize,pos,lemma,depparse')
+        
+        # Process the text data to retrieve nlp objects
+        processed = pl.Series("nlp", [nlp(text) for text in data[text_column]])
     else:
         raise ValueError(f"Unsupported backbone: {backbone}")
     
-    # Process the text data to retrieve nlp objects
-    processed = pl.Series("nlp", [nlp(text) for text in data[text_column]])
 
     # Create a new DataFrame to output to ensure the original data is
     # preserved unaltered
