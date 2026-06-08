@@ -33,6 +33,7 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx_copybutton',
     'sphinx.ext.autodoc.preserve_defaults',
+    'sphinx_click'
 ]
 
 templates_path = ['_templates']
