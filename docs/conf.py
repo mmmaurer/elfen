@@ -20,9 +20,9 @@ sys.path.insert(0, setup_py_dir)
 sys.path.insert(0, os.path.abspath(elfen_dir))
 
 project = 'ELFEN'
-copyright = '2025, Maximilian Maurer'
+copyright = '2026, Maximilian Maurer'
 author = 'Maximilian Maurer'
-release = '1.3.2'
+release = '1.3.3'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
