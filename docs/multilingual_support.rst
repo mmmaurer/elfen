@@ -14,4 +14,4 @@ For psycholinguistic norms, the following table provides an overview of the avai
 .. csv-table::
    :header-rows: 1
    :file: ../psycholinguistic_norms.csv
-   :widths: 30, 10, 10, 10, 10, 10, 10, 10
+   :widths: 10, 10, 10, 10, 10, 10, 10, 10
