@@ -1733,6 +1733,7 @@ def get_min_iconicity(data: pl.DataFrame,
                       ) -> pl.DataFrame:
     """
     Calculates the minimum iconicity score of a text.
+    
     Args:
         data (pl.DataFrame): A Polars DataFrame containing the text data.
         lexicon (pl.DataFrame):
