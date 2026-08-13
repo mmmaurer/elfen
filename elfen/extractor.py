@@ -125,6 +125,12 @@ class Extractor:
         if self.config["backbone"] not in ["spacy", "stanza"]:
             raise ValueError("Backbone must be 'spacy' or 'stanza'.")
 
+        # Check whether the text column has Null/None values
+        if self.data[self.config["text_column"]].null_count() > 0:
+            raise ValueError(f"Text column '{self.config['text_column']}' "
+                             "contains Null/None values. Please remove or "
+                             "impute these values before proceeding.")
+
         self.data = preprocess_data(data=self.data,
                                     text_column=self.config["text_column"],
                                     backbone=self.config["backbone"],

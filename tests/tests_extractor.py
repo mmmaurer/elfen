@@ -32,6 +32,36 @@ def sample_data_de():
     df = pl.DataFrame(data)
     return df
 
+@pytest.fixture
+def sample_data_empty_text():
+    """
+    Fixture to provide sample data with an empty text for testing.
+    """
+    data = {
+        'text': [
+            "This is a test sentence.",
+            "",
+            "Yet another test sentence."
+        ]
+    }
+    df = pl.DataFrame(data)
+    return df
+
+@pytest.fixture
+def sample_data_with_nulls():
+    """
+    Fixture to provide sample data with Null values for testing.
+    """
+    data = {
+        'text': [
+            "This is a test sentence.",
+            None,
+            "Yet another test sentence."
+        ]
+    }
+    df = pl.DataFrame(data)
+    return df
+
 def test_initialization(sample_data_en):
     """
     Test the initialization of the Extractor class.
@@ -169,4 +199,15 @@ def test_full_run_de(sample_data_de):
                  "entities", "semantic", "psycholinguistic", "dependency"]:
         extractor.extract_feature_group(area)
     assert extractor.data is not None
+
+def test_null_text_column(sample_data_with_nulls):
+    """
+    Test whether the Extractor raises an error when the text column contains Null values.
+    """
+    with pytest.raises(ValueError, match="Text column 'text' contains Null/None values."):
+        Extractor(data=sample_data_with_nulls,
+                  backbone='spacy',
+                  text_column='text',
+                  language='en',
+                  model='en_core_web_sm')
 
