@@ -1162,6 +1162,9 @@ def get_avg_emotion_intensity(data: pl.DataFrame,
         data (pl.DataFrame):
             The input data with the average emotion intensity columns
     """
+    if "lemmas" not in data.columns:
+        data = get_lemmas(data, backbone=backbone)
+
     if language != "en":
         word_column = LANGUAGES_NRC[language]
     else:
@@ -1330,6 +1333,9 @@ def get_max_emotion_intensity(data: pl.DataFrame,
             each emotion. The column names are in the format
             "max_intensity_{emotion}".
     """
+    if "lemmas" not in data.columns:
+        data = get_lemmas(data, backbone=backbone)
+
     if language != "en":
         word_column = LANGUAGES_NRC[language]
     else:
@@ -1387,6 +1393,9 @@ def get_min_emotion_intensity(data: pl.DataFrame,
             each emotion. The column names are in the format
             "min_intensity_{emotion}".
     """
+    if "lemmas" not in data.columns:
+        data = get_lemmas(data, backbone=backbone)
+
     if language != "en":
         word_column = LANGUAGES_NRC[language]
     else:
@@ -1444,6 +1453,9 @@ def get_sd_emotion_intensity(data: pl.DataFrame,
             columns for each emotion. The column names are in the format
             "sd_intensity_{emotion}".
     """
+    if "lemmas" not in data.columns:
+        data = get_lemmas(data, backbone=backbone)
+
     if language != "en":
         word_column = LANGUAGES_NRC[language]
     else:
