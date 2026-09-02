@@ -148,7 +148,7 @@ def get_num_tokens_per_sentence(data: pl.DataFrame,
 
     data = data.with_columns(
         (pl.col("n_tokens") / pl.col("n_sentences")). \
-            alias("tokens_per_sentence"),
+            alias("n_tokens_per_sentence"),
     )
 
     return data
