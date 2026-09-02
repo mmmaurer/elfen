@@ -445,7 +445,7 @@ def get_rix(data: pl.DataFrame,
         (pl.col("n_long_words") / pl.col("n_sentences")
          ).alias("rix"),
     )
-    if data.filter(pl.col("n_tokens") == 0).shape[0] > 0:
+    if data.filter(pl.col("n_sentences") == 0).shape[0] > 0:
         zero_token_warning_nan("rix")
 
     return data
