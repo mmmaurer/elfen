@@ -140,7 +140,7 @@ VAD_SCHEMA_NRC_MULTILINGUAL = {
     'Valence': pl.Float32,
     'Arousal': pl.Float32,
     'Dominance': pl.Float32,
-}.update(LANGS_NRC)
+} | LANGS_NRC
 
 VAD_SCHEMA_WARRINER = {
     '': pl.UInt32,
@@ -224,7 +224,7 @@ INTENSITY_SCHEMA_MULTILINGUAL = {
     'English Word': pl.String,
     'Emotion': pl.String,
     'Emotion-Intensity Score': pl.Float32,
-}.update(LANGS_NRC)
+} | LANGS_NRC
 
 # ---------------------------------------- #
 #               Sentiment                  #
@@ -257,7 +257,7 @@ SENTIMENT_NRC_SCHEMA_MULTILINGUAL = {
     "sadness": pl.UInt8,
     "surprise": pl.UInt8,
     "trust": pl.UInt8,
-}.update(LANGS_NRC)
+} | LANGS_NRC
 
 # ======================================== #
 #        Psycholinguistic Features         #
