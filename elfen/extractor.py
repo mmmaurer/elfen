@@ -79,11 +79,11 @@ class Extractor:
     """
     def __init__(self, 
                  data: pl.DataFrame,
-                 config: dict[str, str] = CONFIG_ALL,
+                 config: dict[str, str] = None,
                  **kwargs,
                  ) -> None:
         self.data = data
-        self.config = config
+        self.config = dict(CONFIG_ALL) if config is None else dict(config)
         self.basic_features = []
         self.ratio_features = {
             "type": [],
