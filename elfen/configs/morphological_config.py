@@ -289,7 +289,7 @@ MORPH_CONFIG = {
         "Abbr": ABBR,
         "Foreign": FOREIGN,
     },
-    "Aux": {
+    "AUX": {
         "VerbForm": ["Fin",
                      "Inf",
                      "Part"],
