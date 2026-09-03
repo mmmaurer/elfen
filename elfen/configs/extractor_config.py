@@ -17,7 +17,7 @@ CONFIG_ALL = {
             "n_long_words",
             "n_lemmas"
         ],
-        "morphology": ["n_per_morph_feature"],
+        "morphological": ["n_per_morph_feature"],
         "dependency": [
             "tree_width",
             "tree_depth",
