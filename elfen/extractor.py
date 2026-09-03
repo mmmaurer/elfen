@@ -322,20 +322,26 @@ class Extractor:
                     (pl.col(feature) / pl.col("n_tokens")). \
                         alias(feature)
                 )
-        elif features == "all":
-            # exclude n_tokens, n_types, and n_sentences
-            feats = [f for f in self.get_feature_names() if f not in
-                        ["n_tokens",
-                         "n_types",
-                         "n_sentences",
-                         "n_characters",
-                         "n_lemmas",
-                         "n_syllables"] and
-                        f.startswith("n_")]
-            for feature in feats:
+        else:
+            if features == "all":
+                # exclude n_tokens, n_types, and n_sentences
+                feats = [f for f in self.get_feature_names() if f not in
+                            ["n_tokens",
+                             "n_types",
+                             "n_sentences",
+                             "n_characters",
+                             "n_lemmas",
+                             "n_syllables"] and
+                            f.startswith("n_")]
+                for feature in feats:
+                    self.data = self.data.with_columns(
+                        (pl.col(feature) / pl.col("n_tokens")). \
+                            alias(feature)
+                    )
+            else:  # single feature in str format
                 self.data = self.data.with_columns(
-                    (pl.col(feature) / pl.col("n_tokens")). \
-                        alias(feature)
+                    (pl.col(features) / pl.col("n_tokens")). \
+                        alias(features)
                 )
 
     def ratio_normalize(self,
