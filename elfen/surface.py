@@ -139,7 +139,7 @@ def get_num_tokens_per_sentence(data: pl.DataFrame,
         data (pl.DataFrame):
             A Polars DataFrame containing the average number of tokens per
             sentence in the text data. The average number of tokens per
-            sentence is stored in a new column named 'tokens_per_sentence'.
+            sentence is stored in a new column named 'n_tokens_per_sentence'.
     """
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
