@@ -240,11 +240,11 @@ def get_avg_valence(data: pl.DataFrame,
     )
     
     # raise warning: if no words from the lexicon are found in the text
-    if data.filter(pl.col("avg_valence").is_nan()).shape[0] > 0:
+    if data.filter(pl.col("avg_valence").is_null()).shape[0] > 0:
         warnings.warn(
             "Some texts do not contain any words from the VAD lexicon. "
-            f"The average valence for these texts is set to NaN."
-            "You may want to consider filling NaNs with a specific value."
+            f"The average valence for these texts is set to null."
+            "You may want to consider filling nulls with a specific value."
         )
     
     return data
@@ -288,11 +288,11 @@ def get_avg_arousal(data: pl.DataFrame,
     )
 
     # raise warning: if no words from the lexicon are found in the text
-    if data.filter(pl.col("avg_arousal").is_nan()).shape[0] > 0:
+    if data.filter(pl.col("avg_arousal").is_null()).shape[0] > 0:
         warnings.warn(
             "Some texts do not contain any words from the VAD lexicon. "
-            f"The average arousal for these texts is set to NaN."
-            "You may want to consider filling NaNs with a specific value."
+            f"The average arousal for these texts is set to null."
+            "You may want to consider filling nulls with a specific value."
         )
     
     return data
@@ -338,11 +338,11 @@ def get_avg_dominance(data: pl.DataFrame,
     )
 
     # raise warning: if no words from the lexicon are found in the text
-    if data.filter(pl.col("avg_dominance").is_nan()).shape[0] > 0:
+    if data.filter(pl.col("avg_dominance").is_null()).shape[0] > 0:
         warnings.warn(
             f"Some texts do not contain any words from the VAD lexicon. "
-            f"The average dominance for these texts is set to NaN."
-            "You may want to consider filling NaNs with a specific value."
+            f"The average dominance for these texts is set to null."
+            "You may want to consider filling nulls with a specific value."
         )
 
     return data
@@ -1185,12 +1185,12 @@ def get_avg_emotion_intensity(data: pl.DataFrame,
     
         # raise warning: if no words from the lexicon are found in the text
         if data.filter(
-            pl.col(f"avg_intensity_{emotion}").is_nan()).shape[0] > 0:
+            pl.col(f"avg_intensity_{emotion}").is_null()).shape[0] > 0:
             warnings.warn(
                 "Some texts do not contain any words from the "
                 f"emotion intensity lexicon for the emotion '{emotion}'. "
-                "The average intensity for these texts is set to NaN."
-                "You may want to consider filling NaNs with a specific "
+                "The average intensity for these texts is set to null."
+                "You may want to consider filling nulls with a specific "
                 "value."
             )
 

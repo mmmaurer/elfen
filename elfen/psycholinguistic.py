@@ -218,11 +218,11 @@ def get_avg_concreteness(data: pl.DataFrame,
                    **kwargs
                    )
 
-    if data.filter(pl.col("avg_concreteness").is_nan()).shape[0] > 0:
+    if data.filter(pl.col("avg_concreteness").is_null()).shape[0] > 0:
         warnings.warn(
             "Some texts do not contain any words from the concreteness "
-            "norms. The average concreteness for these texts is set to NaN."
-            "You may want to consider filling NaNs with a specific value."
+            "norms. The average concreteness for these texts is set to null."
+            "You may want to consider filling nulls with a specific value."
         )
 
     return data
@@ -261,12 +261,12 @@ def get_avg_sd_concreteness(data: pl.DataFrame,
                    **kwargs
                    )
     
-    if data.filter(pl.col("avg_sd_concreteness").is_nan()).shape[0] > 0:
+    if data.filter(pl.col("avg_sd_concreteness").is_null()).shape[0] > 0:
         warnings.warn(
             "Some texts do not contain any words from the concreteness "
             "norms. The average standard deviation of concreteness for "
-            "these texts is set to NaN. You may want to consider filling "
-            "NaNs with a specific value."
+            "these texts is set to null. You may want to consider filling "
+            "nulls with a specific value."
         )
 
     return data
@@ -617,11 +617,11 @@ def get_avg_aoa(data: pl.DataFrame,
                    backbone=backbone
     )
 
-    if data.filter(pl.col("avg_aoa").is_nan()).shape[0] > 0:
+    if data.filter(pl.col("avg_aoa").is_null()).shape[0] > 0:
         warnings.warn(
             "Some texts do not contain any words from the age of "
             "acquisition norms. The average age of acquisition for these "
-            "texts is set to NaN. You may want to consider filling NaNs "
+            "texts is set to null. You may want to consider filling nulls "
             "with a specific value."
         )
 
@@ -659,12 +659,12 @@ def get_avg_sd_aoa(data: pl.DataFrame,
                    backbone=backbone
     )
 
-    if data.filter(pl.col("avg_sd_aoa").is_nan()).shape[0] > 0:
+    if data.filter(pl.col("avg_sd_aoa").is_null()).shape[0] > 0:
         warnings.warn(
             "Some texts do not contain any words from the age of "
             "acquisition norms. The average standard deviation of age of "
-            "acquisition for these texts is set to NaN. You may want to "
-            "consider filling NaNs with a specific value."
+            "acquisition for these texts is set to null. You may want to "
+            "consider filling nulls with a specific value."
         )
 
     return data
@@ -966,11 +966,11 @@ def get_avg_prevalence(data: pl.DataFrame,
                    **kwargs
                    )
 
-    if data.filter(pl.col("avg_prevalence").is_nan()).shape[0] > 0:
+    if data.filter(pl.col("avg_prevalence").is_null()).shape[0] > 0:
         warnings.warn(
             "Some texts do not contain any words from the prevalence "
-            "norms. The average prevalence for these texts is set to NaN."
-            "You may want to consider filling NaNs with a specific value."
+            "norms. The average prevalence for these texts is set to null."
+            "You may want to consider filling nulls with a specific value."
         )
 
     return data              
@@ -1219,11 +1219,11 @@ def get_avg_socialness(data: pl.DataFrame,
                    **kwargs
                    )
 
-    if data.filter(pl.col("avg_socialness").is_nan()).shape[0] > 0:
+    if data.filter(pl.col("avg_socialness").is_null()).shape[0] > 0:
         warnings.warn(
             "Some texts do not contain any words from the socialness "
-            "norms. The average socialness for these texts is set to NaN."
-            "You may want to consider filling NaNs with a specific value."
+            "norms. The average socialness for these texts is set to null."
+            "You may want to consider filling nulls with a specific value."
         )
 
     return data
@@ -1261,11 +1261,11 @@ def get_avg_sd_socialness(data: pl.DataFrame,
                    **kwargs
                    )
     
-    if data.filter(pl.col("avg_sd_socialness").is_nan()).shape[0] > 0:
+    if data.filter(pl.col("avg_sd_socialness").is_null()).shape[0] > 0:
         warnings.warn(
             "Some texts do not contain any words from the socialness "
             "norms. The average standard deviation of socialness for these "
-            "texts is set to NaN. You may want to consider filling NaNs "
+            "texts is set to null. You may want to consider filling nulls "
             "with a specific value."
         )
 
@@ -1557,11 +1557,11 @@ def get_avg_iconicity(data: pl.DataFrame,
                    **kwargs
                    )
     
-    if data.filter(pl.col("avg_iconicity").is_nan()).shape[0] > 0:
+    if data.filter(pl.col("avg_iconicity").is_null()).shape[0] > 0:
         warnings.warn(
             "Some texts do not contain any words from the iconicity "
-            "norms. The average iconicity for these texts is set to NaN."
-            "You may want to consider filling NaNs with a specific value."
+            "norms. The average iconicity for these texts is set to null."
+            "You may want to consider filling nulls with a specific value."
         )
 
     return data
@@ -1600,11 +1600,11 @@ def get_avg_sd_iconicity(data: pl.DataFrame,
                    **kwargs
                    )
     
-    if data.filter(pl.col("avg_sd_iconicity").is_nan()).shape[0] > 0:
+    if data.filter(pl.col("avg_sd_iconicity").is_null()).shape[0] > 0:
         warnings.warn(
             "Some texts do not contain any words from the iconicity "
             "norms. The average standard deviation of iconicity for these "
-            "texts is set to NaN."
+            "texts is set to null."
         )
 
     return data
@@ -1990,13 +1990,13 @@ def get_avg_sd_sensorimotor(data: pl.DataFrame,
                            **kwargs
                            )
             if data.filter(
-                pl.col(f"avg_sd_{var}_sensorimotor").is_nan()
+                pl.col(f"avg_sd_{var}_sensorimotor").is_null()
                            ).shape[0] > 0:
                 warnings.warn(
                     f"Some texts do not contain any words from the {var} "
                     "sensorimotor norms. The average standard deviation "
-                    f"of {var} for these texts is set to NaN. You may want "
-                    "to consider filling NaNs with a specific value."
+                    f"of {var} for these texts is set to null. You may want "
+                    "to consider filling nulls with a specific value."
                 )
     else:
         # warning, other languages do not have a standard deviation
