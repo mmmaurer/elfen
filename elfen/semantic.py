@@ -21,6 +21,9 @@ The semantic features implemented in this module are:
 import polars as pl
 import wn
 
+from .preprocess import (
+    get_tokens,
+)
 from .surface import (
     get_num_tokens,
 )
@@ -60,7 +63,7 @@ def load_hedges(hedges_file: str,
 
 def get_num_hedges(data: pl.DataFrame,
                    lexicon: list[str],
-                   text_column: str = 'text',
+                   backbone: str = 'spacy', 
                    **kwargs: dict[str, str],
                    ) -> pl.DataFrame:
     """
@@ -69,27 +72,19 @@ def get_num_hedges(data: pl.DataFrame,
     Args:
         data (pl.DataFrame): Polars DataFrame.
         lexicon (list[str]): List of hedges.
-        text_column (str): Name of the column containing the text.
-
+        backbone (str):
+            NLP library used. 'spacy' or 'stanza'.
     Returns:
         data (pl.DataFrame):
             Polars DataFrame with the number of hedges.
     """
-    def n_matches(string: str, patterns: list[str]) -> int:
-        """
-        Helper function.
-        Returns the number of matches of the patterns in the string.
-        """
-        total_matches = 0
-        for pattern in patterns:
-            total_matches += string.count(pattern)
-        return total_matches
-    
+    if "tokens" not in data.columns:
+        data = get_tokens(data, backbone=backbone)
+
     data = data.with_columns(
-        pl.col(text_column).map_elements(lambda x: 
-                                         n_matches(x, lexicon),
-            return_dtype=pl.UInt16
-            ).alias("n_hedges"),
+        pl.col("tokens").map_elements(lambda x:
+                                      [1 for token in x if token in lexicon],
+            return_dtype=pl.List(pl.Int64)).list.len().alias("n_hedges")
     )
     
     return data
