@@ -42,7 +42,8 @@ def get_avg(data: pl.DataFrame,
     exploded = _explode_and_join(data,
                                  lexicon,
                                  lexicon_word_col,
-                                 lexicon_rating_col)
+                                 lexicon_rating_col,
+                                 backbone=backbone)
 
     return _aggregate_and_rejoin(
         data,
@@ -88,7 +89,8 @@ def get_n_low(data: pl.DataFrame,
     exploded = _explode_and_join(data,
                                  lexicon,
                                  lexicon_word_col,
-                                 lexicon_rating_col)
+                                 lexicon_rating_col,
+                                 backbone=backbone)
     
     return _aggregate_and_rejoin(
         data,
@@ -134,7 +136,8 @@ def get_n_high(data: pl.DataFrame,
     exploded = _explode_and_join(data,
                                  lexicon,
                                  lexicon_word_col,
-                                 lexicon_rating_col)
+                                 lexicon_rating_col,
+                                 backbone=backbone)
     
     return _aggregate_and_rejoin(
         data,
@@ -182,7 +185,8 @@ def get_n_controversial(data: pl.DataFrame,
     exploded = _explode_and_join(data,
                                  lexicon,
                                  lexicon_word_col,
-                                 lexicon_sd_col)
+                                 lexicon_sd_col,
+                                 backbone=backbone)
     
     return _aggregate_and_rejoin(
         data,
@@ -226,7 +230,8 @@ def get_max(data: pl.DataFrame,
     exploded = _explode_and_join(data,
                                  lexicon,
                                  lexicon_word_col,
-                                 lexicon_rating_col)
+                                 lexicon_rating_col,
+                                 backbone=backbone)
     
     return _aggregate_and_rejoin(
         data,
@@ -270,7 +275,8 @@ def get_min(data: pl.DataFrame,
     exploded = _explode_and_join(data,
                                  lexicon,
                                  lexicon_word_col,
-                                 lexicon_rating_col)
+                                 lexicon_rating_col,
+                                 backbone=backbone)
     
     return _aggregate_and_rejoin(
         data,
@@ -314,7 +320,8 @@ def get_sd(data: pl.DataFrame,
     exploded = _explode_and_join(data,
                                  lexicon,
                                  lexicon_word_col,
-                                 lexicon_rating_col)
+                                 lexicon_rating_col,
+                                 backbone=backbone)
     
     return _aggregate_and_rejoin(
         data,
@@ -328,6 +335,7 @@ def _explode_and_join(data: pl.DataFrame,
                      lexicon: pl.DataFrame,
                      lexicon_word_col: str,
                      lexicon_rating_col: str,
+                     backbone: str = "spacy",
                      ) -> pl.DataFrame:
     """
     Helper function to explode lemmas and join with lexicon ratings.
@@ -341,6 +349,8 @@ def _explode_and_join(data: pl.DataFrame,
             Column name in lexicon for words.
         lexicon_rating_col (str):
             Column name in lexicon for ratings.
+        backbone (str, optional):
+            NLP backbone to use. Defaults to "spacy".
 
     Returns:
         pl.DataFrame:
@@ -348,7 +358,7 @@ def _explode_and_join(data: pl.DataFrame,
     """
     
     if "lemmas" not in data.columns:
-        data = get_lemmas(data, backbone="spacy")
+        data = get_lemmas(data, backbone=backbone)
 
     return (
         data

@@ -89,6 +89,11 @@ def entropy(string: str,
     Returns:
         entropy (float): The Shannon entropy of the input string.
     """
+    # Guard against empty strings; lower bound is 0 which maps to
+    # basically no information, no complexity
+    if len(string) == 0:
+        return 0.0
+
     chars = np.array(list(string))
 
     _, counts = np.unique(chars, return_counts=True)

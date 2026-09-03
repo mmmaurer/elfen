@@ -139,7 +139,7 @@ def get_num_tokens_per_sentence(data: pl.DataFrame,
         data (pl.DataFrame):
             A Polars DataFrame containing the average number of tokens per
             sentence in the text data. The average number of tokens per
-            sentence is stored in a new column named 'tokens_per_sentence'.
+            sentence is stored in a new column named 'n_tokens_per_sentence'.
     """
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
@@ -148,7 +148,7 @@ def get_num_tokens_per_sentence(data: pl.DataFrame,
 
     data = data.with_columns(
         (pl.col("n_tokens") / pl.col("n_sentences")). \
-            alias("tokens_per_sentence"),
+            alias("n_tokens_per_sentence"),
     )
 
     return data
@@ -283,7 +283,7 @@ def get_avg_word_length(data: pl.DataFrame,
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
     if 'n_characters' not in data.columns:
-        data = get_num_characters(data, text_column=text_column)
+        data = get_num_characters(data, backbone=backbone)
 
     data = data.with_columns(
         (
@@ -516,7 +516,7 @@ def get_global_lemma_frequencies(data: pl.DataFrame,
         lemma_freqs = dict(Counter([token.lemma for text in
                                     data["nlp"].to_list() for
                                     sent in text.sentences for
-                                    token in sent.tokens]
+                                    token in sent.words]
         ))
     else:
         raise ValueError(f"Unsupported backbone '{backbone}'. "
