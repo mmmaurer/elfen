@@ -1552,6 +1552,17 @@ def filter_sentiment_lexicon(lexicon: pl.DataFrame,
             (pl.col(sentiment) == 1) &
             (pl.col(word_column).is_in(words))
         )
+    else:  # unknown lexicon schema
+        raise ValueError(
+            "The sentiment lexicon does not have the expected columns. "
+            "Please check the lexicon schema."
+            "If you are trying to use a custom lexicon, " 
+            "please ensure that it has the following columns: "
+            "'word', 'emotion', and 'label'. 'emotion' should contain "
+            "the sentiment labels, and 'label' should contain binary "
+            "values (0 or 1) indicating whether the word is associated "
+            "with positive (1) or negative (0) sentiment."
+        )
     
     return filtered_sentiment_nrc
 
