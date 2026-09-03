@@ -42,7 +42,8 @@ def get_avg(data: pl.DataFrame,
     exploded = _explode_and_join(data,
                                  lexicon,
                                  lexicon_word_col,
-                                 lexicon_rating_col)
+                                 lexicon_rating_col,
+                                 backbone=backbone)
 
     return _aggregate_and_rejoin(
         data,
@@ -88,7 +89,8 @@ def get_n_low(data: pl.DataFrame,
     exploded = _explode_and_join(data,
                                  lexicon,
                                  lexicon_word_col,
-                                 lexicon_rating_col)
+                                 lexicon_rating_col,
+                                 backbone=backbone)
     
     return _aggregate_and_rejoin(
         data,
@@ -134,7 +136,8 @@ def get_n_high(data: pl.DataFrame,
     exploded = _explode_and_join(data,
                                  lexicon,
                                  lexicon_word_col,
-                                 lexicon_rating_col)
+                                 lexicon_rating_col,
+                                 backbone=backbone)
     
     return _aggregate_and_rejoin(
         data,
@@ -182,7 +185,8 @@ def get_n_controversial(data: pl.DataFrame,
     exploded = _explode_and_join(data,
                                  lexicon,
                                  lexicon_word_col,
-                                 lexicon_sd_col)
+                                 lexicon_sd_col,
+                                 backbone=backbone)
     
     return _aggregate_and_rejoin(
         data,

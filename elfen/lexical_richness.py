@@ -488,7 +488,7 @@ def get_n_global_lemma_hapax_legomena(data: pl.DataFrame,
         data = data.with_columns(
             pl.col("nlp").map_elements(lambda x: len(
                 [token.lemma for sent in x.sentences for 
-                 token in sent.tokens
+                 token in sent.words
                  if lemma_freqs[token.lemma] == 1]),
                 return_dtype=pl.UInt32). \
                     alias("n_global_lemma_hapax_legomena")
@@ -621,7 +621,7 @@ def get_n_global_lemma_hapax_dislegomena(data: pl.DataFrame,
         data = data.with_columns(
             pl.col("nlp").map_elements(lambda x: len(
                 [token.lemma for sent in x.sentences for 
-                 token in sent.tokens
+                 token in sent.words
                  if lemma_freqs[token.lemma] <= 2]),
                 return_dtype=pl.UInt32). \
                     alias("n_global_lemma_hapax_dislegomena")

@@ -516,7 +516,7 @@ def get_global_lemma_frequencies(data: pl.DataFrame,
         lemma_freqs = dict(Counter([token.lemma for text in
                                     data["nlp"].to_list() for
                                     sent in text.sentences for
-                                    token in sent.tokens]
+                                    token in sent.words]
         ))
     else:
         raise ValueError(f"Unsupported backbone '{backbone}'. "
