@@ -113,6 +113,7 @@ CONFIG_ALL = {
             "n_high_prevalence",
             "min_prevalence",
             "max_prevalence",
+            "sd_prevalence",
             "avg_socialness",
             "n_low_socialness",
             "n_high_socialness",
@@ -153,8 +154,8 @@ CONFIG_ALL = {
         ],
         "semantic": [
             "n_hedges",
-            "avg_num_synsets",
-            "avg_num_synsets_per_pos",
+            "avg_n_synsets",
+            "avg_n_synsets_per_pos",
             "n_low_synsets",
             "n_high_synsets",
             "n_high_synsets_per_pos",
