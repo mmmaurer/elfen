@@ -1151,9 +1151,11 @@ def get_herdan_v(data: pl.DataFrame,
         data = get_yule_k(data, backbone=backbone)
 
     data = data.with_columns(
-        (pl.col("yule_k") + (1 / pl.col("n_tokens")) - \
-         (1 / pl.col("n_types")).sqrt()
+        (
+            (pl.col("yule_k") + (1 / pl.col("n_tokens")) - 
+             (1 / pl.col("n_types"))).sqrt()
         ).alias("herdan_v")
+
     )
 
     # Warn if there are any NaN values in the Herdan's V column
