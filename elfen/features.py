@@ -331,8 +331,8 @@ FUNCTION_MAP = {
     "n_syllables": get_num_syllables,
     # SEMANTIC FEATURES
     "n_hedges": get_num_hedges,
-    "avg_num_synsets": get_avg_num_synsets,
-    "avg_num_synsets_per_pos": get_avg_num_synsets_per_pos,
+    "avg_n_synsets": get_avg_num_synsets,
+    "avg_n_synsets_per_pos": get_avg_num_synsets_per_pos,
     "n_high_synsets": get_num_high_synsets,
     "n_low_synsets": get_num_low_synsets,
     "n_high_synsets_per_pos": get_high_synsets_per_pos,
@@ -503,8 +503,8 @@ FEATURE_AREA_MAP = {
     ],
     "semantic": [
         "n_hedges",
-        "avg_num_synsets",
-        "avg_num_synsets_per_pos",
+        "avg_n_synsets",
+        "avg_n_synsets_per_pos",
         "n_high_synsets",
         "n_low_synsets",
         "n_high_synsets_per_pos",
