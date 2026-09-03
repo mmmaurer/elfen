@@ -283,7 +283,7 @@ def get_avg_word_length(data: pl.DataFrame,
     if 'n_tokens' not in data.columns:
         data = get_num_tokens(data, backbone=backbone)
     if 'n_characters' not in data.columns:
-        data = get_num_characters(data, text_column=text_column)
+        data = get_num_characters(data, backbone=backbone)
 
     data = data.with_columns(
         (
