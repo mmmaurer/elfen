@@ -4,6 +4,8 @@ This document outlines the planned features and improvements for this project. T
 ## Upcoming Changes
 - Extended multilingual support for psycholinguistic norms.
 - Integration of additional wn features, such as hypernyms, hyponyms, holonyms, and meronyms.
+- Support for token-level custom lexicon features, allowing for more granular analysis of text data.
+- Implementation of binary "occurs" features for custom lexicons, enabling the detection of the presence or absence of specific words in the text.
 
 ## Mid-Term Improvements
 - OSF download functionality to allow for integration of more lexicons.

@@ -89,8 +89,6 @@ You can extract multiple specific features at once by passing a list of features
 
     print(extractor.data.head())
 
-Unfortunately, at the moment you cannot pass additional parameters to the features when extracting multiple features at once.
-
 Extracting feature areas
 ------------------------
 
@@ -197,7 +195,7 @@ Whenever you extract features that are based on the occurrence of words in a tex
     extractor.extract("n_low_valence")
 
     # Token normalize extracted features
-    extractor.token_normalize("all") # Token normalizes all extracted features starting with "n_" except for "n_tokens", "n_types" and "n_sentences", "n_lemmas" and "n_syllables"
+    extractor.token_normalize("all") # Token normalizes all extracted features starting with "n_" except for "n_tokens", "n_characters", "n_types", "n_sentences", "n_lemmas" and "n_syllables"
     # OR
     extractor.token_normalize("n_low_valence") # Token normalizes specific feature
     # OR
@@ -267,7 +265,7 @@ Rescale
 
 Specifying the model, language, text column, maximum length, and the used resources
 ===================================================================================
-By default, the Extractor class uses the spaCy backbone and the `en_core_web_sm` model, the column `text`, and a maximum length of 100,000 tokens for feature extraction. However, you can specify the model, language, text column, and maximum length of the text to process by passing the respective parameters to the Extractor class.
+By default, the Extractor class uses the spaCy backbone and the `en_core_web_sm` model, the column `text`, and a maximum length of 100,000 characters for feature extraction. However, you can specify the model, language, text column, and maximum length of the text to process by passing the respective parameters to the Extractor class.
 
 .. code-block:: python
 
@@ -298,7 +296,7 @@ Extracting features using a custom configuration
 
 In cases where you want to extract features using a specific model (either from spacy or stanza), in a specific language, or you have a specific set of features you want to extract, you can use a custom configuration.
 
-To extract features using a custom configuration, you will need to pass a dictionary with the desired configuration to the ``extract`` method.
+To extract features using a custom configuration, you will need to pass a dictionary with the desired configuration to the Extractor constructor.
 
 For example, you can extract features using the spacy backbone, in German, using the model ``de_dep_news_trf``, with a maximum length of 10,000 and only extract the average word length from the surface features and the number of low-valence words and high-valence words from the emotion features.
 
@@ -381,15 +379,13 @@ Note that currently, there is no possibility to pass custom lexicon-based featur
     df = get_n_custom(data=df,  # DataFrame with text data
                       lexicon=custom_lexicon,  # DataFrame with custom lexicon
                       feature_name="n_custom",  # Name of the feature-column after extraction
-                      word_column="word",  # Name of the column in the lexicon with the words
-                      measurement_level="tokens")  # Measurement level of the feature; either "tokens" or "lemmas"
+                      word_column="word")  # Name of the column in the lexicon with the words
     
     # Whether or not a text contains a word from a custom lexicon
     df = get_occurs_custom(data=df,  # DataFrame with text data
                            lexicon=custom_lexicon,  # DataFrame with custom lexicon
                            feature_name="occurs_custom",  # Name of the feature-column after extraction
-                           word_column="word",  # Name of the column in the lexicon with the words
-                           measurement_level="tokens")  # Measurement level of the feature; either "tokens" or "lemmas"
+                           word_column="word")  # Name of the column in the lexicon with the words
 
     # Number of words in a text that are in a custom lexicon and have a rating above a certain threshold
     df = get_n_custom_high(data=df,  # DataFrame with text data
@@ -397,8 +393,7 @@ Note that currently, there is no possibility to pass custom lexicon-based featur
                            threshold=0.5,  # Threshold for the rating
                            feature_name="n_custom_high",  # Name of the feature-column after extraction
                            word_column="word",  # Name of the column in the lexicon with the words
-                           feature_column="rating",  # Name of the column in the lexicon with the ratings
-                           measurement_level="tokens")  # Measurement level of the feature; either "tokens" or "lemmas"
+                           feature_column="rating")  # Name of the column in the lexicon with the ratings
 
     # Number of words in a text that are in a custom lexicon and have a rating below a certain threshold
     df = get_n_custom_low(data=df,  # DataFrame with text data
@@ -406,18 +401,18 @@ Note that currently, there is no possibility to pass custom lexicon-based featur
                           threshold=0.5,  # Threshold for the rating
                           feature_name="n_custom_low",  # Name of the feature-column after extraction
                           word_column="word",  # Name of the column in the lexicon with the words
-                          feature_column="rating",  # Name of the column in the lexicon with the ratings
-                          measurement_level="tokens")  # Measurement level of the feature; either "tokens" or "lemmas"
+                          feature_column="rating")  # Name of the column in the lexicon with the ratings
 
     # Average rating of words in a text that are in a custom lexicon
     df = get_avg_custom(data=df,  # DataFrame with text data
                         lexicon=custom_lexicon,  # DataFrame with custom lexicon
                         feature_name="avg_custom",  # Name of the feature-column after extraction
                         word_column="word",  # Name of the column in the lexicon with the words
-                        feature_column="rating",  # Name of the column in the lexicon with the ratings
-                        measurement_level="tokens")  # Measurement level of the feature; either "tokens" or "lemmas"
+                        feature_column="rating")  # Name of the column in the lexicon with the ratings
 
     print(df.head())
+
+Note that these functions operate on the preprocessed text column and will compare your lexicon to the lemmatized tokens of the text.
 
 Limiting the numbers of cores used
 ----------------------------------
