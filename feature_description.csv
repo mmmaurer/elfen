@@ -4,23 +4,20 @@ Number of tokens,surface,n_tokens,n_tokens,get_num_tokens,Number of tokens in th
 Number of sentences,surface,n_sentences,n_sentences,get_num_sentences,Number of sentences in the text,
 Number of token per sentence,surface,n_tokens_per_sentence,n_tokens_per_sentence,get_num_tokens_per_sentence,Average number of tokens per sentence: n_tokens / n_sentences,
 Number of characters,surface,n_characters,n_characters,get_num_characters,Number of characters in the text (excluding whitespaces),
-Characters per sentence,surface,characters_per_sentence,characters_per_sentence,get_chars_per_sentence,Average number of characters per sentence: n_characters / n_sentences,
-Raw sequence length per sentence,surface,raw_length_per_sentence,raw_length_per_sentence,get_raw_length_per_sentence,Average number of characters per sentence: raw_sequence_length / n_sentences,
 Average word length,surface,avg_word_length,avg_word_length,get_avg_word_length,Average word length (in characters): n_characters / n_tokens,
 Number of types,surface,n_types,n_types,get_num_types,Number of types (unique tokens) in the text,
-Number of long words,surface,n_long_words,n_long_words,get_num_long_words,Number of long words (i.t.o. characters),Threshold of what is considered a long word defaults to >6 characters; can be adapted in the config
+Number of long words,surface,n_long_words,n_long_words,get_num_long_words,Number of long words (i.t.o. characters),Threshold of what is considered a long word defaults to >=6 characters; can be adapted in the config
 Number of lemmas,surface,n_lemmas,n_lemmas,get_num_lemmas,Number of lemmas in the text,
-Token frequencies,surface,token_freqs,token_freqs,get_token_freqs,Token frequencies of the types in the text,"As this produces a list in a column, writing to file has to be handled"
-Number of lexical tokens,pos,n_lexical_tokens,n_lexical_tokens,get_num_lexical_tokens,"Number of lexical tokens (tokens w/ upos tag NOUN, ADVERB, ADJ, ADV)",
+Number of lexical tokens,pos,n_lexical_tokens,n_lexical_tokens,get_num_lexical_tokens,"Number of lexical tokens (tokens w/ upos tag NOUN, VERB, ADJ, ADV)",
 POS variability,pos,pos_variability,pos_variability,get_pos_variability,POS variability of the text: (unique upos text in the text) / n_tokens,
-Number of tokens with upos tag {pos},pos,n_per_pos,n_{pos},get_num_per_pos,Number of tokens with a given upos tag in the text. Takes a list of upos tag to extract this feature for,"pos_list defaults to all  upos tags; if you only need a subset, this can be adapted in the config"
+Number of tokens with upos tag {pos},pos,n_per_pos,n_{pos},get_num_per_pos,Number of tokens with a given upos tag in the text. Takes a list of upos tag to extract this feature for,"pos_tags defaults to all upos tags; if you only need a subset, this can be adapted in the config"
 Lemma token ratio,lexical_richness,lemma_token_ratio,lemma_token_ratio,get_lemma_token_ratio,Lemma token ratio of the text: n_lemmas / n_tokens,
 Type token ratio,lexical_richness,ttr,ttr,get_ttr,Type token ratio of the text: n_types / n_tokens,
-Root type token ratio,lexical_richness,rttr,rttr,get_rttr,Root type token ratio of the text: sqrt(n_types / n_tokens),
+Root type token ratio,lexical_richness,rttr,rttr,get_rttr,Root type token ratio of the text: n_types / sqrt(n_tokens),Also known as Guiraud's R or Guiraud's index
 Corrected type token ratio,lexical_richness,cttr,cttr,get_cttr,Corrected type token ratio of the text: n_types / sqrt(2 * n_tokens),
 Herdan's C,lexical_richness,herdan_c,herdan_c,get_herdan_c,Herdan's C of a text: log(n_types) / log(n_tokens),
 Summer's type token ratio/ index,lexical_richness,summer_index,summer_index,get_summer_index,Summer's text token ratio of the text: log(log(n_types)) / log(log(n_tokens)),
-Dugast's Uber index,lexical_richness,dugast_u,dugast_u,get_dugast_u,Dugast's Uber index of the text: log(n_types)^2 / (log(n_tokens) - log( n_types)),
+Dugast's Uber index,lexical_richness,dugast_u,dugast_u,get_dugast_u,Dugast's Uber index of the text: log(n_tokens)^2 / (log(n_tokens) - log( n_types)),
 Maas' text token ratio/index,lexical_richness,maas_index,maas_index,get_maas_index,Maas' text token ratio of the text: (n_tokens - n_types) / log(n_types)^2,
 Number of local hapax legomena,lexical_richness,n_hapax_legomena,n_hapax_legomena,get_n_hapax_legomena,Number of hapax legomena (tokens that occur only once) in the text,
 Number of global token hapax legomena,lexical_richness,n_global_token_hapax_legomena,n_global_token_hapax_legomena,get_n_global_token_hapax_legomena,Number of hapax legomena (tokens that occur only once) in the entire corpus in the text instance,
@@ -52,10 +49,9 @@ LIX,readability,lix,lix,get_lix,,For reference: https://en.wikipedia.org/wiki/Li
 RIX,readability,rix,rix,get_rix,,For reference: https://www.jstor.org/stable/40031755
 Compressibility,information,compressibility,compressibility,get_compressibility,Compressibility is the ratio of the length of the compressed text to the length of the original text. This is a proxy for the Kolmogorov complexity of the text,
 Entropy,information,entropy,entropy,get_entropy,Shannon entropy of the text,
-Number of named entities,entities,n_entitites,n_entitites,get_num_entities,Number of named entities in the text,
+Number of named entities,entities,n_entities,n_entities,get_num_entities,Number of named entities in the text,
 Number of named entities of type {ent},entities,n_per_entity_type,n_{ent},get_num_per_entity_type,Number of named entities in the text with type {ent}. Takes a list of entity types to extract this feature for,"ent_types defaults to all possible entity types; if you only need a subset, this can be adapted in the config"
 Number of hedge words,semantic,n_hedges,n_hedges,get_num_hedges,Number of hedge words in the text (words expressing uncertainty of the speaker).,requires a hedge lexicon; currently only supported in English
-Hedges token ratio,semantic,hedges_ratio,hedges_ratio,get_hedges_ratio,Ratio of hedges in the text: n_hedges / n_tokens,
 Average number of synsets,semantic,avg_n_synsets,avg_n_synsets,get_avg_num_synsets,Average number of wordnet synsets of lexical tokens; proxy for ambiguity/polysemy,
 Number of words with a low number of synsets per pos,semantic,n_low_synsets_per_pos,n_low_synsets_{pos},get_low_synsets_{pos},Number of lexical tokens with a low number of synsets per pos tag,Threshold defaults to 2
 Number of words with a high number of synsets per pos,semantic,n_high_synsets_per_pos,n_high_synsets_{pos},get_high_synsets_{pos},Number of lexical tokens with a high number of synsets per pos tag,Threshold defaults to 5
@@ -80,12 +76,12 @@ Maximum emotion intensity for {emotion},emotion,max_emotion_intensity,max_intens
 Minimum emotion intensity for {emotion},emotion,min_emotion_intensity,min_intensity_{emotion},get_min_emotion_intensity,Minimum intensity of an emotion; takes a list of emotions,For reference: https://saifmohammad.com/WebPages/AffectIntensity.htm
 Standard deviation of emotion intensity for {emotion},emotion,sd_emotion_intensity,sd_intensity_{emotion},get_sd_emotion_intensity,Standard deviation of intensity of an emotion; takes a list of emotions,For reference: https://saifmohammad.com/WebPages/AffectIntensity.htm
 Average emotion intensity for {emotion},emotion,avg_emotion_intensity,avg_intensity_{emotion},get_avg_emotion_intensity,Average intensity of an emotion; takes a list of emotions,For reference: https://saifmohammad.com/WebPages/AffectIntensity.htm
-Number of high intensity tokens for {emotion},emotion,n_high_emotion_intensity,n_high_intensity_{emotion},get_n_high_emotion_intensity,Number of high intensity tokens for a given emotion,Threshold defaults to 0.33; For reference: https://saifmohammad.com/WebPages/AffectIntensity.htm
-Number of low intensity tokens for {emotion},emotion,n_low_emotion_intensity,n_low_intensity_{emotion},get_n_low_emotion_intensity,Number of high§§ intensity tokens for a given emotion,Threshold defaults to 0.66; For reference: https://saifmohammad.com/WebPages/AffectIntensity.htm
+Number of high intensity tokens for {emotion},emotion,n_high_intensity,n_high_intensity_{emotion},get_n_high_intensity,Number of high intensity tokens for a given emotion,Threshold defaults to 0.66; For reference: https://saifmohammad.com/WebPages/AffectIntensity.htm
+Number of low intensity tokens for {emotion},emotion,n_low_intensity,n_low_intensity_{emotion},get_n_low_intensity,Number of high intensity tokens for a given emotion,Threshold defaults to 0.33; For reference: https://saifmohammad.com/WebPages/AffectIntensity.htm
 Maximum intensity for {emotion},emotion,max_{emotion},max_{emotion},get_max_{emotion},Maximum value for a given emotion; takes a list of emotions,For reference: https://saifmohammad.com/WebDocs/NRC-Emotion-Lexicon.htm
 Minimum intensity for {emotion},emotion,min_{emotion},min_{emotion},get_min_{emotion},Minimum value for a given emotion; takes a list of emotions,For reference: https://saifmohammad.com/WebDocs/NRC-Emotion-Lexicon.htm
 Standard deviation of intensity for {emotion},emotion,sd_{emotion},sd_{emotion},get_sd_{emotion},Standard deviation of values for a given emotion; takes a list of emotions,For reference: https://saifmohammad.com/WebDocs/NRC-Emotion-Lexicon.htm
-Sentiment score,emotion,sentiment_score,sentiment_score,get_sentiment_score,Difference between the number of positive and negative sentiment words in the text: (n_positive_sentiment - n_negative_sentiment) / n_tokens,"Values in range (-1,1) where 0 is neutral, -1 is completely negative sentiment, and 1 is completely positive sentiment; For reference: https://saifmohammad.com/WebDocs/NRC-Emotion-Lexicon.htm"
+Sentiment score,emotion,sentiment_score,sentiment_score,get_sentiment_score,Difference between the number of positive and negative sentiment words in the text: (n_positive_sentiment - n_negative_sentiment) / n_tokens,"Values in range [-1,1] where 0 is neutral, -1 is completely negative sentiment, and 1 is completely positive sentiment; For reference: https://saifmohammad.com/WebDocs/NRC-Emotion-Lexicon.htm"
 Number of negative sentiment tokens,emotion,n_negative_sentiment,n_negative_sentiment,get_n_negative_sentiment,Number of negative sentiment tokens,For reference: https://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm
 Number of positive sentiment tokens,emotion,n_positive_sentiment,n_positive_sentiment,get_n_positive_sentiment,Number of positive sentiment tokens,For reference: https://saifmohammad.com/WebDocs/NRC-Emotion-Lexicon.htm
 Average concreteness,psycholinguistic,avg_concreteness,avg_concreteness,get_avg_concreteness,Average human concreteness ratings of the tokens in the text,For reference: https://link.springer.com/article/10.3758/s13428-013-0403-5
@@ -136,11 +132,11 @@ Maximum sensorimotor score,psycholinguistic,max_sensorimotor,max_{var}_sensorimo
 Standard deviation of sensorimotor score,psycholinguistic,sd_sensorimotor,sd_{var}_sensorimotor,get_sd_sensorimotor,Standard deviation of the sensorimotor ratings of the tokens in the text,
 Morphological feature counts,morphological,n_per_morph_feature,n_{pos}_{feature}_{val},get_morph_feats,"Number of tokens with {pos} {feature} {val} (e.g. VERB VerbForm Inf), takes a dictionary of pos and associated features and values for them",Default dictionary is the full set of UD options; adapt if you do not need all of them (may be language-specific)
 Dependency tree width,dependency,tree_width,tree_width,get_tree_width,Maximum number of siblings of a node at any level,
-Dependency tree depth,dependency,tree_depth,tree_depth,get_tree_depth,Maximum distance of a token to the root of the dependency tree,
+Dependency tree depth,dependency,tree_depth,tree_depth,get_tree_depth,"Maximum distance of a token to the root of the dependency tree; values are the mean of the per-sentence depths, not the maximum depth of the tree",
 Tree branching factor,dependency,tree_branching,tree_branching,get_tree_branching,Average number of children of a token in the dependency tree,
 Tree ramification factor,dependency,ramification_factor,ramification_factor,get_ramification_factor,Average number of children per level,
 Number of noun chunks,dependency,n_noun_chunks,n_noun_chunks,get_n_noun_chunks,Number of noun chunks in the dependency tree,
 Number of dependencies of type {type},dependency,n_per_dependency_type,n_dependency_{type},get_n_per_dependency_type,,
-{Feature} token ratio,ratios/normalization,,{feature}_token_ratio,get_feature_token_ratio,,
-{Feature} type ratio,ratios/normalization,,{feature}_type_ratio,get_feature_type_ratio,,
-{Feature} sentence ratio,ratios/normalization,,{feature}_sentence ratio,get_feature_sentence_ratio,,
+{Feature} token ratio,,,{feature}_token_ratio,get_feature_token_ratio,,"Not in a feature area, but can be used to calculate the ratio of a feature in the text: n_{feature} / n_tokens"
+{Feature} type ratio,,,{feature}_type_ratio,get_feature_type_ratio,,"Not in a feature area, but can be used to calculate the ratio of a feature in the text: n_{feature} / n_types"
+{Feature} sentence ratio,,,{feature}_sentence_ratio,get_feature_sentence_ratio,,"Not in a feature area, but can be used to calculate the ratio of a feature in the text: n_{feature} / n_sentences"
