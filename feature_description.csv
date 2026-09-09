@@ -2,7 +2,7 @@ Feature,Feature Area,Feature name,Name in extracted dataframe,Function,Descripti
 Raw sequence length/total number of characters,surface,raw_sequence_length,raw_sequence_length,get_raw_sequence_length,Number of characters in the text (including whitespaces),
 Number of tokens,surface,n_tokens,n_tokens,get_num_tokens,Number of tokens in the text,
 Number of sentences,surface,n_sentences,n_sentences,get_num_sentences,Number of sentences in the text,
-Number of token per sentence,surface,tokens_per_sentence,tokens_per_sentence,get_num_tokens_per_sentence,Average number of tokens per sentence: n_tokens / n_sentences,
+Number of token per sentence,surface,n_tokens_per_sentence,n_tokens_per_sentence,get_num_tokens_per_sentence,Average number of tokens per sentence: n_tokens / n_sentences,
 Number of characters,surface,n_characters,n_characters,get_num_characters,Number of characters in the text (excluding whitespaces),
 Characters per sentence,surface,characters_per_sentence,characters_per_sentence,get_chars_per_sentence,Average number of characters per sentence: n_characters / n_sentences,
 Raw sequence length per sentence,surface,raw_length_per_sentence,raw_length_per_sentence,get_raw_length_per_sentence,Average number of characters per sentence: raw_sequence_length / n_sentences,
