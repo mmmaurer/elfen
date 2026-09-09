@@ -12,10 +12,10 @@ The full specification of the custom configuration is as follows:
         "language": str,  # Language to use for feature extraction. E.g. "en" for English, "de" for German
         # NOTE: The language must be supported by the specified backbone
         "model": str,  # Model to use for feature extraction. E.g. "en_core_web_sm" for English, "de_dep_news_trf" for German
-        "max_length": int,  # Maximum length (chars) of the text to process. Default is 100000
-        "remove_constant_cols": bool,  # Remove feature columns with constant values, i.e. where all texts produce the same feature value. Default is True
+        "max_length": int,  # Maximum length (chars) of the text to process. Default is 1_000_000
+        "remove_constant_cols": bool,  # Remove feature columns with constant values, i.e. where all texts produce the same feature value. Default is False
         "text_column": str,  # Name of the text column in the DataFrame. Default is "text"
-        "n_processes": int,  # Number of processes to use for feature extraction. Default is the number of available CPU cores
+        "n_process": int,  # Number of processes to use for feature extraction. Default is the number of available CPU cores
         "batch_size": int,  # Batch size to use for feature extraction. Default is 1
         "features": {  # Features to extract, grouped by feature area; each feature area is a list of feature names.
             "dependency": List[str],
@@ -27,8 +27,9 @@ The full specification of the custom configuration is as follows:
             "pos": List[str],
             "readability": List[str],
             "semantic": List[str],
-            "surface": List[str]
+            "surface": List[str],
+            "psycholinguistic": List[str]
         }
     }
 
-For a fully specified configuration, check `CONFIG_ALL` in the `elfen.config` module.
+For a fully specified configuration, check `CONFIG_ALL` in the `elfen.extractor_config` module.
