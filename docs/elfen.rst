@@ -77,13 +77,13 @@ elfen.extractor module
    :show-inheritance:
    :exclude-members: Extractor
 
-   .. autoclass:: Extractor(data: pl.DataFrame, config: dict[str, str] = CONFIG)
+   .. autoclass:: Extractor(data: pl.DataFrame, config: dict = CONFIG_ALL, **kwargs)
       :members:
       :undoc-members:
       :show-inheritance:
       :exclude-members: extract_feature_group
 
-      .. automethod:: extract_feature_group(feature_group: str | list[str] = 'all', feature_area_map: dict[str, list[str]] = FEATURE_AREA_MAP)
+      .. automethod:: extract_feature_group(feature_group: str | list[str], feature_area_map: dict[str, str] = FEATURE_AREA_MAP)
 
 elfen.features module
 ---------------------
